@@ -6,24 +6,26 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.feerbox.client.db.FeerboxDB;
-import com.feerbox.client.db.SaveAnswer;
+import com.feerbox.client.db.ReadAnswer;
 import com.feerbox.client.model.Answer;
 import com.feerbox.client.registers.InternetAccess;
 import com.feerbox.client.registers.UploadAnswersRegister;
+import com.feerbox.client.services.SaveAnswerService;
 
 public class UploadAnswersTest {
 
 	@Test
 	public void testLocal1() {
 		InternetAccess.getInstance().setAccess(false);
-		Integer id1 = SaveAnswer.saveAnswer(3);
-		Integer id2 = SaveAnswer.saveAnswer(1);
-		Integer id3 = SaveAnswer.saveAnswer(2);
+		Answer answer1 = new Answer();
+		answer1.setButton(3);
+		Integer id1 = SaveAnswerService.saveAnswer(3);
+		Integer id2 = SaveAnswerService.saveAnswer(1);
+		Integer id3 = SaveAnswerService.saveAnswer(2);
 		InternetAccess.getInstance().setAccess(true);
 		UploadAnswersRegister uploadAnswersRegister = new UploadAnswersRegister();
 		uploadAnswersRegister.run();
-		List<Answer> list = FeerboxDB.readAnswersNotUploaded();
+		List<Answer> list = ReadAnswer.readAnswersNotUploaded();
 		assertTrue(list.size()==0);
 	}
 

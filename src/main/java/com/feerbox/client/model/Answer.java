@@ -1,5 +1,6 @@
 package com.feerbox.client.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Answer {
@@ -7,6 +8,7 @@ public class Answer {
 	private Date time;
 	private int button;
 	private boolean upload;
+	private String customer;
 	
 	public int getId() {
 		return Id;
@@ -31,6 +33,16 @@ public class Answer {
 	}
 	public void setUpload(boolean upload) {
 		this.upload = upload;
+	}
+	public String getCustomer() {
+		return customer;
+	}
+	public void setCustomer(String customer) {
+		this.customer = customer;
+	}
+	public String getTimeText() {
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+		return df.format(this.time);
 	}
 	
 	

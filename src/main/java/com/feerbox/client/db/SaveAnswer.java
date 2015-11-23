@@ -1,87 +1,71 @@
 package com.feerbox.client.db;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.feerbox.client.model.Answer;
-import com.feerbox.client.registers.ClientRegister;
-import com.feerbox.client.registers.InternetAccess;
 
-public class SaveAnswer{
-	private static final String FEERBOX_SERVER_URL = "http://feerbox.herokuapp.com/";
+public class SaveAnswer extends FeerboxDB{
 	
-
-	public static Integer saveAnswer(int buttonNumber) {
+	public static int save(Answer answer) {
+		System.out.println("going to save answer locally...");
 		int id = 0;
-		if(InternetAccess.getInstance().getAccess()){
-			System.out.println("Answer internet");
-			saveAnswerInternet(buttonNumber);
+		Statement statement = null;
+		try {
+			// create a database connection
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+
+			// statement.executeUpdate("drop table if exists person");
+			createTableIfNotExists(statement, "Answers");
+			statement.executeUpdate(
+					"insert into Answers (time, button, upload, customer) values(CURRENT_TIMESTAMP," + answer.getButton() + ", 0, \""+answer.getCustomer()+"\")");
+			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM Answers LIMIT 1");
+			while (rs.next()) {
+				id = rs.getInt("rowid");
+			}
+			System.out.println("Answered registered offline: "+id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		else{
-			id = FeerboxDB.saveAnswer(buttonNumber);
-		}
-		if(id==0) return null;
 		return id;
 	}
 
-	private static boolean saveAnswerInternet(int buttonNumber) {
-		boolean ok = true;
+	public static void upload(Answer answer) {
+		System.out.println("Upload "+answer.getId());
+		Statement statement = null;
 		try {
-			String customer = ClientRegister.getInstance().getCustomer();
-			URL myURL = new URL(FEERBOX_SERVER_URL+"/db/"+customer+"/button/"+buttonNumber);
-			URLConnection myURLConnection = myURL.openConnection();
-			myURLConnection.setRequestProperty("Content-Length", "1000");
-			//myURLConnection.setRequestProperty("Content-Type", "application\\json");
-			myURLConnection.getInputStream();
-		} catch (MalformedURLException e) {
+			// create a database connection
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+
+			// statement.executeUpdate("drop table if exists person");
+			createTableIfNotExists(statement, "Answers");
+			statement.executeUpdate(
+					"update Answers set upload=1 where id="+answer.getId());
+		} catch (SQLException e) {
 			e.printStackTrace();
-			ok = false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			ok = false;
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		return ok;
-	}
-
-	public static void tryConnection() throws SaveAnswerError {
-		try {
-			URL myURL = new URL(FEERBOX_SERVER_URL);
-			URLConnection myURLConnection = myURL.openConnection();
-			myURLConnection.setRequestProperty("Content-Length", "1000");
-			myURLConnection.getInputStream();
-		} catch (MalformedURLException e) {
-			throw new SaveAnswerError(e);
-		} catch (IOException e) {
-			throw new SaveAnswerError(e);
-		}
-		
-	}
-
-	public static void saveIP(String iface, String ip) {
-		try {
-			URL myURL = new URL(FEERBOX_SERVER_URL+"/iface/"+iface+"/ip/"+ip);
-			URLConnection myURLConnection = myURL.openConnection();
-			myURLConnection.setRequestProperty("Content-Length", "1000");
-			myURLConnection.getInputStream();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-
-	public static boolean saveOnServer(Answer answer) {
-		return saveAnswerInternet(answer.getButton());
-	}
-
-	public static void markAsUploaded(Answer answer) {
-		answer.setUpload(true);
-		FeerboxDB.saveAnswer(answer);
 	}
 
 }

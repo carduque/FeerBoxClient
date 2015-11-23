@@ -5,7 +5,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-import com.feerbox.client.db.SaveAnswer;
+import com.feerbox.client.services.SaveAnswerService;
 
 public class IPRegister implements Runnable {
 	private static final String FEERBOX_SERVER_URL = "http://feerbox.herokuapp.com/";
@@ -23,7 +23,7 @@ public class IPRegister implements Runnable {
 			    while(addresses.hasMoreElements()) {
 			        InetAddress addr = addresses.nextElement();
 			        String ip = addr.getHostAddress();
-			        SaveAnswer.saveIP(iface.getName(), ip);
+			        SaveAnswerService.saveIP(iface.getName(), ip);
 			        Thread.sleep(1000);
 			    }
 			}

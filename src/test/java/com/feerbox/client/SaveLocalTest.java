@@ -14,16 +14,20 @@ public class SaveLocalTest {
 	@Test
 	public void testLocal1() {
 		InternetAccess.getInstance().setAccess(false);
-		Integer id = SaveAnswer.saveAnswer(3);
-		Answer answer = ReadAnswer.readAnswer(id);
+		Answer answer = new Answer();
+		answer.setButton(3);
+		Integer id = SaveAnswer.save(answer);
+		answer = ReadAnswer.readAnswer(id);
 		assertTrue(answer.getButton() == 3);
 	}
 	
 	@Test
 	public void testLocal2() {
 		InternetAccess.getInstance().setAccess(false);
-		Integer id = SaveAnswer.saveAnswer(4);
-		Answer answer = ReadAnswer.readAnswer(id);
+		Answer answer = new Answer();
+		answer.setButton(4);
+		Integer id = SaveAnswer.save(answer);
+		answer = ReadAnswer.readAnswer(id);
 		assertTrue(answer.getButton() == 4);
 	}
 	

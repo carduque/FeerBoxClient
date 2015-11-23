@@ -2,7 +2,7 @@ package com.feerbox.client;
 
 import java.util.Date;
 
-import com.feerbox.client.db.SaveAnswer;
+import com.feerbox.client.services.SaveAnswerService;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
@@ -26,9 +26,9 @@ public class ButtonListener implements GpioPinListenerDigital {
 		// display pin state on console
         //System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
         if(event.getState().equals(PinState.LOW)){
-            SaveAnswer.saveAnswer(buttonNumber);
+            SaveAnswerService.saveAnswer(buttonNumber);
         	//FileStore.saveAnswer(buttonNumber);
-			Led.pulse(2000, true); // set second argument to 'true' use a blocking call
+			Led.pulse(1000, true); // set second argument to 'true' use a blocking call
 		}
         if(event.getState().equals(PinState.HIGH)){
         	this.exactTime = new Date();

@@ -4,11 +4,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.feerbox.client.db.SaveAnswer;
 import com.feerbox.client.db.SaveAnswerError;
 import com.feerbox.client.registers.IPRegister;
 import com.feerbox.client.registers.InternetAccessRegister;
 import com.feerbox.client.registers.UploadAnswersRegister;
+import com.feerbox.client.services.SaveAnswerService;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
@@ -97,9 +97,9 @@ public class StartFeerBoxClient {
 		Led4.pulse(500, true);
 		Led5.pulse(500, true);
 		try {
-			SaveAnswer.tryConnection();
+			SaveAnswerService.tryConnection();
 		} catch (SaveAnswerError e) {
-			Led3.pulse(3000, true);
+			Led3.pulse(2000, true);
 		}
 		try {
 			Thread.sleep(1000);
