@@ -23,7 +23,7 @@ public class SaveAnswer extends FeerboxDB{
 			// statement.executeUpdate("drop table if exists person");
 			createTableIfNotExists(statement, "Answers");
 			statement.executeUpdate(
-					"insert into Answers (time, button, upload, customer) values(CURRENT_TIMESTAMP," + answer.getButton() + ", 0, \""+answer.getCustomer()+"\")");
+					"insert into Answers (time, button, upload, customer) values(datetime('now', 'localtime')," + answer.getButton() + ", 0, \""+answer.getCustomer()+"\")");
 			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM Answers LIMIT 1");
 			while (rs.next()) {
 				id = rs.getInt("rowid");
