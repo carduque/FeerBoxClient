@@ -85,7 +85,7 @@ public class SaveAnswerService extends FeerboxDB{
 		boolean ok = true;
 		try {
 			String customer = ClientRegister.getInstance().getCustomer();
-			URL myURL = new URL(FEERBOX_SERVER_URL+"/db/"+customer+"/button/"+buttonNumber);
+			URL myURL = new URL(FEERBOX_SERVER_URL+"db/"+customer+"/button/"+buttonNumber);
 			URLConnection myURLConnection = myURL.openConnection();
 			myURLConnection.setRequestProperty("Content-Length", "1000");
 			//myURLConnection.setRequestProperty("Content-Type", "application\\json");
@@ -116,7 +116,8 @@ public class SaveAnswerService extends FeerboxDB{
 
 	public static void saveIP(String iface, String ip) {
 		try {
-			URL myURL = new URL(FEERBOX_SERVER_URL+"/iface/"+iface+"/ip/"+ip);
+			System.out.println(FEERBOX_SERVER_URL+"iface/"+iface+"/ip/"+ip);
+			URL myURL = new URL(FEERBOX_SERVER_URL+"iface/"+iface+"/ip/"+ip);
 			URLConnection myURLConnection = myURL.openConnection();
 			myURLConnection.setRequestProperty("Content-Length", "1000");
 			myURLConnection.getInputStream();
