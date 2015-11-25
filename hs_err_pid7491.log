@@ -1,0 +1,114 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGILL (0x4) at pc=0xac7d9cb0, pid=7491, tid=3057640560
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0-b132) (build 1.8.0-b132)
+# Java VM: Java HotSpot(TM) Client VM (25.0-b70 mixed mode linux-arm )
+# Problematic frame:
+# C  [sqlite-3.8.11.2-9f694649-288e-4914-aa70-b044ef3e8e76-libsqlitejdbc.so+0x5cb0]  _init+0x290b
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.sun.com/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00e7ca40):  JavaThread "main" [_thread_in_native, id=7494, stack(0xb63af000,0xb63ff000)]
+
+siginfo:si_signo=SIGILL: si_errno=0, si_code=1 (ILL_ILLOPC), si_addr=0xac7d9cb0
+
+Registers:
+  r0  = 0x00000005
+  r1  = 0xbe8f7694
+  r2  = 0x0000015c
+  r3  = 0x00000000
+  r4  = 0x00000005
+  r5  = 0xbe8f7694
+  r6  = 0x00f8da58
+  r7  = 0xbe8f76ac
+  r8  = 0xbe8f7694
+  r9  = 0xb6fdb048
+  r10 = 0x00000005
+  fp  = 0xb63fbc64
+  r12 = 0xb63fbe38
+  sp  = 0xb63fbba8
+  lr  = 0xac7d73ab
+  pc  = 0xac7d9cb0
+  cpsr = 0xa0000030
+
+Top of Stack: (sp=0xb63fbba8)
+0xb63fbba8:   ac7d73a5 b6fc4210 be8f76ac 00000001
+0xb63fbbb8:   00000000 00f8da58 be8f76ac be8f7694
+0xb63fbbc8:   00000005 b6fc436c 00f8da58 b6fdb560
+0xb63fbbd8:   00f8dbb4 b6fdb048 00000003 00000003
+0xb63fbbe8:   00000001 b6fc83b8 00000001 b6fdb094
+0xb63fbbf8:   00f8da58 00f8da58 80000000 00000000
+0xb63fbc08:   00000000 00000000 00071764 00000000
+0xb63fbc18:   00000000 000716a4 00000000 b63fbc00 
+
+Instructions: (pc=0xac7d9cb0)
+0xac7d9c90:   2018f8d8 65933b01 9c179b30 b021601c
+0xac7d9ca0:   8ff0e8bd 0006626c 4a044b03 589b447b
+0xac7d9cb0:   f7fdb10b 4770bca5 00075350 0000015c
+0xac7d9cc0:   b5084a09 4b09447a 447b7812 4a08b95a 
+
+Register to memory mapping:
+
+  r0  = 0x00000005
+0x00000005 is an unknown value
+
+  r1  = 0xbe8f7694
+0xbe8f7694 is an unknown value
+
+  r2  = 0x0000015c
+0x0000015c is an unknown value
+
+  r3  = 0x00000000
+0x00000000 is an unknown value
+
+  r4  = 0x00000005
+0x00000005 is an unknown value
+
+  r5  = 0xbe8f7694
+0xbe8f7694 is an unknown value
+
+  r6  = 0x00f8da58
+0x00f8da58 is an unknown value
+
+  r7  = 0xbe8f76ac
+0xbe8f76ac is an unknown value
+
+  r8  = 0xbe8f7694
+0xbe8f7694 is an unknown value
+
+  r9  = 0xb6fdb048
+0xb6fdb048: _rtld_global+0 in /lib/ld-linux-armhf.so.3 at 0xb6fb5000
+
+  r10 = 0x00000005
+0x00000005 is an unknown value
+
+  fp  = 0xb63fbc64
+0xb63fbc64 is pointing into the stack for thread: 0x00e7ca40
+
+  r12 = 0xb63fbe38
+0xb63fbe38 is pointing into the stack for thread: 0x00e7ca40
+
+  sp  = 0xb63fbba8
+0xb63fbba8 is pointing into the stack for thread: 0x00e7ca40
+
+  lr  = 0xac7d73ab
+0xac7d73ab: <offset 0x33ab> in /tmp/sqlite-3.8.11.2-9f694649-288e-4914-aa70-b044ef3e8e76-libsqlitejdbc.so at 0xac7d4000
+
+  pc  = 0xac7d9cb0
+0xac7d9cb0: <offset 0x5cb0> in /tmp/sqlite-3.8.11.2-9f694649-288e-4914-aa70-b044ef3e8e76-libsqlitejdbc.so at 0xac7d4000
+
+
+
+Stack: [0xb63af000,0xb63ff000],  sp=0xb63fbba8,  free space=306k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [sqlite-3.8.11.2-9f694649-288e-4914-aa70-b044ef3e8e76-libsqlitejdbc.so+0x5cb0]  _init+0x290b
