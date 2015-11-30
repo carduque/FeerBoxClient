@@ -116,6 +116,7 @@ public class SaveAnswerService extends FeerboxDB{
 
 	public static void saveIP(String iface, String ip) {
 		try {
+			System.out.println(FEERBOX_SERVER_URL+"iface/"+iface+"/ip/"+ip);
 			URL myURL = new URL(FEERBOX_SERVER_URL+"iface/"+iface+"/ip/"+ip);
 			URLConnection myURLConnection = myURL.openConnection();
 			myURLConnection.setRequestProperty("Content-Length", "1000");
