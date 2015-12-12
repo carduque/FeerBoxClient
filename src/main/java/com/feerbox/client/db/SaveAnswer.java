@@ -10,7 +10,7 @@ import com.feerbox.client.model.Answer;
 public class SaveAnswer extends FeerboxDB{
 	
 	public static int save(Answer answer) {
-		System.out.println("going to save answer locally...");
+		System.out.println("going to save answer locally: "+answer.getButton());
 		int id = 0;
 		Statement statement = null;
 		try {
