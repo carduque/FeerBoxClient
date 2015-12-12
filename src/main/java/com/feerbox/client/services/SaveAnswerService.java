@@ -27,7 +27,7 @@ public class SaveAnswerService extends FeerboxDB{
 		answer.setCustomer(ClientRegister.getInstance().getCustomer());
 		
 		if(InternetAccess.getInstance().getAccess()){
-			System.out.println("Answer internet");
+			System.out.println("Answer internet: "+buttonNumber);
 			boolean ok = saveAnswerInternet(answer);
 			if(!ok){
 				id = SaveAnswer.save(answer);
@@ -116,7 +116,7 @@ public class SaveAnswerService extends FeerboxDB{
 
 	public static void saveIP(String iface, String ip) {
 		try {
-			System.out.println(FEERBOX_SERVER_URL+"iface/"+iface+"/ip/"+ip);
+			//System.out.println(FEERBOX_SERVER_URL+"iface/"+iface+"/ip/"+ip);
 			URL myURL = new URL(FEERBOX_SERVER_URL+"iface/"+iface+"/ip/"+ip);
 			URLConnection myURLConnection = myURL.openConnection();
 			myURLConnection.setRequestProperty("Content-Length", "1000");

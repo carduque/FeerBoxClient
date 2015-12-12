@@ -14,11 +14,13 @@ public class UploadAnswersRegister extends Thread {
 		if(InternetAccess.getInstance().getAccess()){
 			System.out.println("Going to update answers "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			List<Answer> list = ReadAnswer.readAnswersNotUploaded();
-			for(Answer answer: list){
-				boolean ok = SaveAnswerService.saveAnswerInternet(answer);
-				System.out.println("Upload to Internet? "+ok);
-				if(ok){
-					SaveAnswer.upload(answer);
+			if(list!=null){
+				for(Answer answer: list){
+					boolean ok = SaveAnswerService.saveAnswerInternet(answer);
+					System.out.println("Upload to Internet? "+ok);
+					if(ok){
+						SaveAnswer.upload(answer);
+					}
 				}
 			}
 		}
