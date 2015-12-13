@@ -1,5 +1,6 @@
 package com.feerbox.client;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -16,6 +17,8 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.gpio.trigger.GpioCallbackTrigger;
+import com.pi4j.io.gpio.trigger.GpioSetStateTrigger;
 
 public class StartFeerBoxClient {
 	private static GpioPinDigitalInput Button1 = null;
@@ -81,7 +84,7 @@ public class StartFeerBoxClient {
 		Button1.addListener(buttonListener1);
 		ButtonListener buttonListener2 = new ButtonListener(Button2, Led2, 2);
 		Button2.addListener(buttonListener2);
-		ButtonListener buttonListener3 = new ButtonListener(Button3, Led3, 3);
+		ButtonListenerAndPowerOff buttonListener3 = new ButtonListenerAndPowerOff(Button3, Led3, 3);
 		Button3.addListener(buttonListener3);
 		ButtonListener buttonListener4 = new ButtonListener(Button4, Led4, 4);
 		Button4.addListener(buttonListener4);
