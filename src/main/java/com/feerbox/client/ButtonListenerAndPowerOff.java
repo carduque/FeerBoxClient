@@ -1,5 +1,6 @@
 package com.feerbox.client;
 
+import java.io.IOException;
 import java.util.Date;
 
 import com.feerbox.client.services.SaveAnswerService;
@@ -30,7 +31,14 @@ public class ButtonListenerAndPowerOff implements GpioPinListenerDigital {
         	if(exactTime!=null){
         		long seconds = (new Date().getTime()-exactTime.getTime())/1000;
         		if(seconds>10){
-        			
+        			System.out.println("Going to poweroff");
+        			Led.blink(500, 10000); // continuously blink the led every 1/2 second for 10 seconds
+        			try {
+						Runtime.getRuntime().exec("shutdown -h now");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
         		}
         		else{
         			Led.pulse(1000, true); // set second argument to 'true' use a blocking call
