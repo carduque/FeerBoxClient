@@ -1,12 +1,16 @@
 package com.feerbox.client.registers;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Properties;
 
 public class ClientRegister {
 	private static ClientRegister instance= null;
-	private String customer = null;
-	private boolean internet;
+	private String email = null;
+	private String reference = null;
+	private String environment = null;
+	private boolean internet = true;
+	private Date lastAnswerSaved;
 	
 	
 
@@ -21,8 +25,10 @@ public class ClientRegister {
 		    prop.load(this.getClass().getClassLoader().getResourceAsStream("config.properties"));
 
 		    //get the property value and print it out
-		    System.out.println(prop.getProperty("customer"));
-		    this.customer = prop.getProperty("customer");
+		    System.out.println(prop.getProperty("reference"));
+		    this.reference = prop.getProperty("reference");
+		    this.environment = prop.getProperty("environment");
+		    this.email = prop.getProperty("email");
 		    this.internet = Boolean.parseBoolean(prop.getProperty("internet"));
 
 		} 
@@ -38,12 +44,30 @@ public class ClientRegister {
 		return instance;
 	}
 
-	public String getCustomer() {
-		return this.customer;
-	}
+	
 
 	public boolean getInternet() {
 		return this.internet;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getReference() {
+		return reference;
+	}
+
+	public String getEnvironment() {
+		return environment;
+	}
+
+	public void setLastAnswerSaved(Date date) {
+		this.lastAnswerSaved = date;
+	}
+
+	public Date getLastAnswerSaved() {
+		return lastAnswerSaved;
 	}
 
 }

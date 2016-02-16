@@ -18,7 +18,7 @@ public class SaveInternetTest {
 		InternetAccess.getInstance().setAccess(false);
 		Answer answer = new Answer();
 		answer.setButton(3);
-		answer.setCustomer("igt");
+		answer.setReference("2015001");
 		Integer id = SaveAnswer.save(answer);
 		//Thread.sleep(60000);
 		InternetAccess.getInstance().setAccess(true);

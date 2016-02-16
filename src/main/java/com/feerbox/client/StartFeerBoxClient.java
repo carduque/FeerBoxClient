@@ -1,13 +1,12 @@
 package com.feerbox.client;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.feerbox.client.db.SaveAnswerError;
-import com.feerbox.client.registers.IPRegister;
 import com.feerbox.client.registers.InternetAccessRegister;
+import com.feerbox.client.registers.StatusRegister;
 import com.feerbox.client.registers.UploadAnswersRegister;
 import com.feerbox.client.services.SaveAnswerService;
 import com.pi4j.io.gpio.GpioController;
@@ -17,10 +16,10 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
-import com.pi4j.io.gpio.trigger.GpioCallbackTrigger;
-import com.pi4j.io.gpio.trigger.GpioSetStateTrigger;
 
 public class StartFeerBoxClient {
+	public static final String version = "1.2";
+	
 	private static GpioPinDigitalInput Button1 = null;
 	private static GpioPinDigitalOutput Led1 = null;
 	private static GpioPinDigitalInput Button2 = null;
@@ -43,7 +42,7 @@ public class StartFeerBoxClient {
         lights();
         
         StartInternetAccessThreat();
-        StartIPRegisterThreat();
+        StartStatusThreat();
         saveAnswersOnlineThreat();
         
         // create and register gpio pin listener
@@ -60,10 +59,10 @@ public class StartFeerBoxClient {
     }
 
 
-	private static void StartIPRegisterThreat() {
-		IPRegister ipRegister = new IPRegister();
+	private static void StartStatusThreat() {
+		StatusRegister ipRegister = new StatusRegister();
 		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleAtFixedRate(ipRegister, 0, 60, TimeUnit.MINUTES);
+		scheduler.scheduleAtFixedRate(ipRegister, 0, 30, TimeUnit.MINUTES);
 	}
 	
 	private static void StartInternetAccessThreat() {

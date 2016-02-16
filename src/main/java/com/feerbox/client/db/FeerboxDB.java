@@ -26,7 +26,7 @@ public class FeerboxDB {
 		connection = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			connection = DriverManager.getConnection("jdbc:sqlite:/opt/pi4j/examples/feerbox.db");
+			connection = DriverManager.getConnection("jdbc:sqlite:/opt/pi4j/examples/feerbox2.db");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -41,7 +41,7 @@ public class FeerboxDB {
 			System.out.println("Creating table if not exists...");
 			//table = ClientRegister.getInstance().getCustomer();
 			String sql = "create table if not exists " + tableName
-					+ " (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, button integer, customer varchar, upload integer)";
+					+ " (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, button integer, reference varchar, upload integer)";
 			//System.out.println(sql);
 			statement.executeUpdate(sql);
 			tableCreated = true;

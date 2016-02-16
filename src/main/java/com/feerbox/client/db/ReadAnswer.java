@@ -24,7 +24,7 @@ public class ReadAnswer extends FeerboxDB{
 
 			// statement.executeUpdate("drop table if exists person");
 			createTableIfNotExists(statement, "Answers");
-			ResultSet rs = statement.executeQuery("select id, time, button, customer, upload from Answers where upload=0");
+			ResultSet rs = statement.executeQuery("select id, time, button, reference, upload from Answers where upload=0");
 			while (rs.next()) {
 				Answer answer = new Answer();
 				answer.setId(rs.getInt("id"));
@@ -32,7 +32,7 @@ public class ReadAnswer extends FeerboxDB{
 				answer.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time));
 				answer.setButton(rs.getInt("button"));
 				answer.setUpload(rs.getInt("upload")==1); //1: true - 0: false
-				answer.setCustomer(rs.getString("customer"));
+				answer.setReference(rs.getString("reference"));
 				answers.add(answer);
 			}
 		} catch (SQLException e) {
@@ -63,13 +63,13 @@ public class ReadAnswer extends FeerboxDB{
 
 			// statement.executeUpdate("drop table if exists person");
 			createTableIfNotExists(statement, "Answers");
-			ResultSet rs = statement.executeQuery("select id, time, button, customer from Answers where id=" + id);
+			ResultSet rs = statement.executeQuery("select id, time, button, reference from Answers where id=" + id);
 			while (rs.next()) {
 				answer.setId(rs.getInt("id"));
 				String time = rs.getString("time");
 				answer.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time));
 				answer.setButton(rs.getInt("button"));
-				answer.setCustomer("customer");
+				answer.setReference("reference");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
