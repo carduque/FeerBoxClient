@@ -33,6 +33,7 @@ public class StartFeerBoxClient {
 	private static UploadAnswersRegister uploadJob = null;
 	
 	private static final GpioController gpio = GpioFactory.getInstance();
+	private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
 	
 	public static void main(String args[]) throws InterruptedException {
         System.out.println("FeerBoxClient Started");
@@ -61,19 +62,16 @@ public class StartFeerBoxClient {
 
 	private static void StartStatusThreat() {
 		StatusRegister ipRegister = new StatusRegister();
-		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(ipRegister, 0, 1, TimeUnit.MINUTES);
 	}
 	
 	private static void StartInternetAccessThreat() {
 		InternetAccessRegister internetRegister = new InternetAccessRegister();
-		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(internetRegister, 0, 1, TimeUnit.MINUTES);
 	}
 	
 	private static void saveAnswersOnlineThreat() {
 		UploadAnswersRegister uploadAnswersRegister = new UploadAnswersRegister();
-		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(uploadAnswersRegister, 0, 1, TimeUnit.MINUTES);
 	}
 
