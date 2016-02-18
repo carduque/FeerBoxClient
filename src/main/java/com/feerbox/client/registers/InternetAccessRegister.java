@@ -23,7 +23,7 @@ public class InternetAccessRegister implements Runnable {
             urlConnect.setReadTimeout(5000);
             Object objData = urlConnect.getContent();
             if(ClientRegister.getInstance().getInternet()){
-    			System.out.println("YES Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+    			//System.out.println("YES Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
     			InternetAccess.getInstance().setAccess(true);
     		}
     		else{

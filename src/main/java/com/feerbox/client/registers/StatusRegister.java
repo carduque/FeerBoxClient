@@ -29,6 +29,7 @@ public class StatusRegister implements Runnable {
 
 	public void run() {
 		try {
+			System.out.println("Going to update status for "+ClientRegister.getInstance().getReference());
 			Status status = new Status();
 			status.setReference(ClientRegister.getInstance().getReference());
 			HashMap<String, String> info = new HashMap<String, String>();
