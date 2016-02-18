@@ -32,13 +32,20 @@ public class StatusRegister implements Runnable {
 			System.out.println("Going to update status for "+ClientRegister.getInstance().getReference());
 			Status status = new Status();
 			status.setReference(ClientRegister.getInstance().getReference());
+			System.out.println("Status1");
 			HashMap<String, String> info = new HashMap<String, String>();
 			info.put(Status.infoKeys.INTERNET.name(), getInternetStatus());
+			System.out.println("Status2");
 			info.put(Status.infoKeys.IP.name(), getIp());
+			System.out.println("Status3");
 			info.put(Status.infoKeys.SW_VERSION.name(), getSoftwareVersion());
+			System.out.println("Status4");
 			info.put(Status.infoKeys.LAST_ANSWER.name(), getLastAnswerTime());
+			System.out.println("Status5");
 			info.put(Status.infoKeys.TIME_UP.name(), getTimeSystemUp());
+			System.out.println("Status6");
 			info.put(Status.infoKeys.SYSTEM_TIME.name(), getSystemTime());
+			System.out.println("Status7");
 			status.setInfo(info);
 			
 			URL myURL = new URL(FEERBOX_SERVER_URL+"/status/add");
@@ -61,13 +68,13 @@ public class StatusRegister implements Runnable {
 			conn.disconnect();
 			
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}
