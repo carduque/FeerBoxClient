@@ -114,8 +114,13 @@ public class StatusRegister implements Runnable {
 	}
 
 	private String getLastAnswerTime() {
+		String out = "";
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
-		return df.format(ClientRegister.getInstance().getLastAnswerSaved());
+		Date last = ClientRegister.getInstance().getLastAnswerSaved();
+		if(last!=null){
+			out = df.format(last);
+		}
+		return out;
 	}
 
 	private String getSoftwareVersion() {
