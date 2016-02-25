@@ -88,7 +88,7 @@ public class StatusRegister implements Runnable {
 
 	private String getSystemTime() {
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
-		return df.format(new Date());
+		return df.format(new Date(System.currentTimeMillis()));
 	}
 
 	private String getTimeSystemUp() throws IOException {

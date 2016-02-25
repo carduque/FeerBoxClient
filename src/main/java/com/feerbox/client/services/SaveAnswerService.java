@@ -24,7 +24,7 @@ public class SaveAnswerService extends FeerboxDB{
 		int id = 0;
 		Answer answer = new Answer();
 		answer.setButton(buttonNumber);
-		Date date = new Date();
+		Date date = new Date(System.currentTimeMillis()); //To be check if this is the best alternative to get current time
 		answer.setTime(date);
 		answer.setReference(ClientRegister.getInstance().getReference());
 		if(InternetAccess.getInstance().getAccess()){
