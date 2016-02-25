@@ -131,6 +131,7 @@ public class StatusRegister implements Runnable {
 	}
 
 	private String getInternetStatus() throws SocketException, InterruptedException {
+		System.out.println("going to check wifi conection");
 		String out = "false";
 		Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 		while (interfaces.hasMoreElements()) {
@@ -143,7 +144,7 @@ public class StatusRegister implements Runnable {
 		    while(addresses.hasMoreElements()) {
 		        InetAddress addr = addresses.nextElement();
 		        System.out.println(iface.getName());
-		        if(iface.getName().toUpperCase().contains("WIFI")){
+		        if(iface.getName().toUpperCase().contains("WLAN0")){
 		        	this.ip = addr.getHostAddress();
 		        	out = "true";
 		        }
