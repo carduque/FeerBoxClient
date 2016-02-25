@@ -61,7 +61,7 @@ public class StatusRegister implements Runnable {
 			os.write(json.toString().getBytes());
 			os.flush();
 
-			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
 				System.out.println("Failed to send status: HTTP error code : "+ conn.getResponseCode());
 			}
 
@@ -96,7 +96,10 @@ public class StatusRegister implements Runnable {
 		Process uptimeProc = Runtime.getRuntime().exec("uptime");
         BufferedReader in = new BufferedReader(new InputStreamReader(uptimeProc.getInputStream()));
         String line = in.readLine();
+        //07:33:54 up 11 min,  1 user,  load average: 1.14, 0.96, 0.55
+        //16:30:34 up  6:40,  1 user,  load average: 0.01, 0.01, 0.00
         if (line != null) {
+        	System.out.println(line);
             Pattern parse = Pattern.compile("((\\d+) days,)? (\\d+):(\\d+)");
             Matcher matcher = parse.matcher(line);
             if (matcher.find()) {
@@ -139,6 +142,7 @@ public class StatusRegister implements Runnable {
 		    Enumeration<InetAddress> addresses = iface.getInetAddresses();
 		    while(addresses.hasMoreElements()) {
 		        InetAddress addr = addresses.nextElement();
+		        System.out.println(iface.getName());
 		        if(iface.getName().toUpperCase().contains("WIFI")){
 		        	this.ip = addr.getHostAddress();
 		        	out = "true";
