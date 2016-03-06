@@ -7,6 +7,8 @@ import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.feerbox.client.services.LedService;
+
 public class InternetAccessRegister implements Runnable {
 
 	public void run() {
@@ -42,6 +44,19 @@ public class InternetAccessRegister implements Runnable {
             System.out.println("No Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             InternetAccess.getInstance().setAccess(false);
         }
+		
+		aliveLights();
+		
+	}
+
+	private void aliveLights() {
+		if(ClientRegister.getInstance().getAliveLights()){
+			Date lastAnswer = ClientRegister.getInstance().getLastAnswerSaved();
+			long seconds = (new Date().getTime()-lastAnswer.getTime())/1000;
+			if(seconds>120){
+				LedService.animation();
+			}
+		}
 	}
 
 }

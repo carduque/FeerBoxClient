@@ -11,6 +11,7 @@ public class ClientRegister {
 	private String environment = null;
 	private boolean internet = true;
 	private Date lastAnswerSaved;
+	private boolean aliveLights = false;
 	
 	
 
@@ -30,6 +31,7 @@ public class ClientRegister {
 		    this.environment = prop.getProperty("environment");
 		    this.email = prop.getProperty("email");
 		    this.internet = Boolean.parseBoolean(prop.getProperty("internet"));
+		    this.setAliveLights(Boolean.parseBoolean(prop.getProperty("alive_lights")));
 
 		} 
 		catch (IOException ex) {
@@ -68,6 +70,18 @@ public class ClientRegister {
 
 	public Date getLastAnswerSaved() {
 		return lastAnswerSaved;
+	}
+
+	public boolean isAliveLights() {
+		return aliveLights;
+	}
+	
+	public boolean getAliveLights() {
+		return aliveLights;
+	}
+
+	public void setAliveLights(boolean aliveLights) {
+		this.aliveLights = aliveLights;
 	}
 
 }

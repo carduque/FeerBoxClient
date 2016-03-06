@@ -27,7 +27,6 @@ public class ButtonListenerAndPowerOff implements GpioPinListenerDigital {
 		// display pin state on console
         //System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
         if(event.getState().equals(PinState.LOW)){
-        	System.out.println("LOW");
         	if(exactTime!=null){
         		long seconds = (new Date().getTime()-exactTime.getTime())/1000;
         		if(seconds>10){
@@ -48,7 +47,6 @@ public class ButtonListenerAndPowerOff implements GpioPinListenerDigital {
         	}
 		}
         if(event.getState().equals(PinState.HIGH)){
-        	System.out.println("HIGH");
         	this.exactTime = new Date();
         }
 	}
