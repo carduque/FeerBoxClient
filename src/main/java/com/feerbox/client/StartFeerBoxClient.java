@@ -22,7 +22,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.2.3";
+	public static final String version = "1.2.4";
 	public static KismetClient kismet;
 	
 	
