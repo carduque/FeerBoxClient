@@ -5,7 +5,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.feerbox.client.db.SaveAnswerError;
-import com.feerbox.client.registers.InternetAccessRegister;
+import com.feerbox.client.registers.ClientRegister;
+import com.feerbox.client.registers.AliveRegister;
+import com.feerbox.client.registers.KismetClient;
 import com.feerbox.client.registers.StatusRegister;
 import com.feerbox.client.registers.UploadAnswersRegister;
 import com.feerbox.client.services.ButtonService;
@@ -20,12 +22,12 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.2.2";
-	
+	public static final String version = "1.2.3";
+	public static KismetClient kismet;
 	
 	
 	private static final GpioController gpio = GpioFactory.getInstance();
-	private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
+	private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
 	
 	public static void main(String args[]) throws InterruptedException {
         System.out.println("FeerBoxClient Started");
@@ -37,6 +39,7 @@ public class StartFeerBoxClient {
         StartInternetAccessThreat();
         StartStatusThreat();
         saveAnswersOnlineThreat();
+        StartWifiDetectionThreat();
         
         // create and register gpio pin listener
         registerButtonListeners();
@@ -52,13 +55,22 @@ public class StartFeerBoxClient {
     }
 
 
+	private static void StartWifiDetectionThreat() {
+		if(ClientRegister.getInstance().getWifiDetection()){
+			kismet = new KismetClient();
+			kismet.connectToServer();
+		}
+	}
+
+
 	private static void StartStatusThreat() {
 		StatusRegister ipRegister = new StatusRegister();
 		scheduler.scheduleAtFixedRate(ipRegister, 0, 30, TimeUnit.MINUTES);
 	}
 	
 	private static void StartInternetAccessThreat() {
-		InternetAccessRegister internetRegister = new InternetAccessRegister();
+		//check Internet & alivelights & KismetServer alive
+		AliveRegister internetRegister = new AliveRegister();
 		scheduler.scheduleAtFixedRate(internetRegister, 0, 1, TimeUnit.MINUTES);
 	}
 	

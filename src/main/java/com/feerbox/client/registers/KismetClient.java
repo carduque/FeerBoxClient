@@ -2,9 +2,12 @@ package com.feerbox.client.registers;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 
@@ -15,10 +18,17 @@ public class KismetClient implements Runnable {
 	private Socket socket;
 	private BufferedReader fromServer;
 	private BufferedWriter toServer;
+	private  PrintWriter log = null;
 
 	public KismetClient() {
 		this.port = 2501;
 		this.host = "localhost";
+		try {
+			this.log = new PrintWriter(new File("kismet.txt"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public KismetClient(String h, int p) {
@@ -35,10 +45,10 @@ public class KismetClient implements Runnable {
 			fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			toServer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			// Announce connection to console
-			System.out.println("Connected to " + this.host + ":" + this.port);
+			log.println("Connected to " + this.host + ":" + this.port);
 			// Send Kismet commands
 			toServer.write("!0 REMOVE TIME\r\n");
-			toServer.write("!0 ENABLE BSSID bssid,channel,type\r\n");
+			//toServer.write("!0 ENABLE BSSID bssid,channel,type\r\n");
 			toServer.write("!0 ENABLE CLIENT mac,signal_dbm\r\n");
 			// Flush the output stream
 			toServer.flush();
@@ -49,7 +59,7 @@ public class KismetClient implements Runnable {
 			return true;
 		} catch (IOException ex) {
 			// Respond with invalid connection
-			System.err.println("Cannot connect to kismet server, it is probably down.");
+			log.println("Cannot connect to kismet server, it is probably down.");
 			return false;
 		}
 	}
@@ -58,9 +68,9 @@ public class KismetClient implements Runnable {
 		try {
 			// Close the socket connection
 			socket.close();
-			System.out.println("You disconnected from the local server.");
+			log.println("You disconnected from the local server.");
 		} catch (Exception ex) {
-			System.err.println(ex);
+			log.println(ex);
 		}
 	}
 
@@ -71,10 +81,10 @@ public class KismetClient implements Runnable {
 			while (true) {
 				// grab next kismet message
 				String kismetData = fromServer.readLine();
-				System.out.println(kismetData);
+				log.println(kismetData);
 			}
 		} catch (Exception ex) {
-			System.err.println(ex);
+			log.println(ex);
 		}
 	}
 }

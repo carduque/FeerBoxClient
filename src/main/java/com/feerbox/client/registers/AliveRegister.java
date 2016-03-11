@@ -7,11 +7,25 @@ import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.feerbox.client.StartFeerBoxClient;
 import com.feerbox.client.services.LedService;
 
-public class InternetAccessRegister implements Runnable {
+public class AliveRegister implements Runnable {
 
 	public void run() {
+		checkInternetAccess();
+		aliveLights();
+		checkWifiDetection();
+		
+	}
+
+	private void checkWifiDetection() {
+		if(!ClientRegister.getInstance().getWifiDetection() && StartFeerBoxClient.kismet!=null){
+			StartFeerBoxClient.kismet.disconnectFromServer();
+		}
+	}
+
+	private void checkInternetAccess() {
 		try {
             //make a URL to a known source
             URL url = new URL("http://www.google.com");
@@ -44,9 +58,6 @@ public class InternetAccessRegister implements Runnable {
             System.out.println("No Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             InternetAccess.getInstance().setAccess(false);
         }
-		
-		aliveLights();
-		
 	}
 
 	private void aliveLights() {
