@@ -88,6 +88,8 @@ public class SaveAnswerService extends FeerboxDB{
 		try {
 			URL myURL = new URL(FEERBOX_SERVER_URL);
 			URLConnection myURLConnection = myURL.openConnection();
+			myURLConnection.setConnectTimeout(5000);
+			myURLConnection.setReadTimeout(5000);
 			myURLConnection.setRequestProperty("Content-Length", "1000");
 			myURLConnection.getInputStream();
 		} catch (MalformedURLException e) {
