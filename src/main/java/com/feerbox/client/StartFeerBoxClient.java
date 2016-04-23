@@ -22,7 +22,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.2.5";
+	public static final String version = "1.2.6";
 	public static KismetClient kismet;
 	
 	
@@ -89,7 +89,8 @@ public class StartFeerBoxClient {
 		ButtonService.getButton3().addListener(buttonListener3);
 		ButtonListener buttonListener4 = new ButtonListener(ButtonService.getButton4(), LedService.getLed4(), 4);
 		ButtonService.getButton4().addListener(buttonListener4);
-		ButtonListener buttonListener5 = new ButtonListener(ButtonService.getButton5(), LedService.getLed5(), 5);
+		//ButtonListener buttonListener5 = new ButtonListener(ButtonService.getButton5(), LedService.getLed5(), 5);
+		ButtonListenerAndReboot buttonListener5 = new ButtonListenerAndReboot(ButtonService.getButton5(), LedService.getLed5(), 5);
 		ButtonService.getButton5().addListener(buttonListener5);
 	}
 
