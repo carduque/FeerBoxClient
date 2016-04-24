@@ -3,6 +3,7 @@ package com.feerbox.client.model;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class Answer {
 	private int Id;
@@ -47,6 +48,7 @@ public class Answer {
 	}
 	public String getTimeFormatted() {
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+		df.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
 		return df.format(time);
 	}
 	
