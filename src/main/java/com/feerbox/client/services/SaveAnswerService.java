@@ -27,6 +27,7 @@ public class SaveAnswerService extends FeerboxDB{
 		Date date = new Date(System.currentTimeMillis()); //To be check if this is the best alternative to get current time
 		answer.setTime(date);
 		answer.setReference(ClientRegister.getInstance().getReference());
+		/*
 		if(InternetAccess.getInstance().getAccess()){
 			System.out.println("Answer internet: "+buttonNumber);
 			boolean ok = saveAnswerInternet(answer);
@@ -34,9 +35,9 @@ public class SaveAnswerService extends FeerboxDB{
 				id = SaveAnswer.save(answer);
 			}
 		}
-		else{
-			id = SaveAnswer.save(answer);
-		}
+		*/
+		id = SaveAnswer.save(answer);
+		
 		if(id==0) return null;
 		ClientRegister.getInstance().setLastAnswerSaved(date);
 		return id;
