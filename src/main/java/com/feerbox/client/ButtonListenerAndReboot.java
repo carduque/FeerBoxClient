@@ -27,7 +27,9 @@ public class ButtonListenerAndReboot implements GpioPinListenerDigital {
 		// display pin state on console
         //System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
         if(event.getState().equals(PinState.LOW)){
+        	System.out.println("LOW");
         	if(exactTime!=null){
+        		System.out.println("exactime!=null");
         		long seconds = (new Date().getTime()-exactTime.getTime())/1000;
         		if(seconds>10){
         			System.out.println("Going to reboot");
@@ -40,6 +42,7 @@ public class ButtonListenerAndReboot implements GpioPinListenerDigital {
 					}
         		}
         		else{
+        			System.out.println("saving answer");
         			Led.pulse(1000, true); // set second argument to 'true' use a blocking call
                     SaveAnswerService.saveAnswer(buttonNumber);
                 	//FileStore.saveAnswer(buttonNumber);
