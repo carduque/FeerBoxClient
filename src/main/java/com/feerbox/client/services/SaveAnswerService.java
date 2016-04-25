@@ -18,7 +18,6 @@ import com.google.gson.JsonObject;
 
 public class SaveAnswerService extends FeerboxDB{
 	private static final String FEERBOX_SERVER_URL = ClientRegister.getInstance().getEnvironment();
-	static long previous_now;
 
 	public static Integer saveAnswer(int buttonNumber) {
 		int id = 0;
@@ -37,11 +36,7 @@ public class SaveAnswerService extends FeerboxDB{
 			}
 		}
 		*/
-		if(previous_now==now){
-			System.out.println("Time equals!!!");
-		}
 		id = SaveAnswer.save(answer);
-		previous_now = now;
 		if(id==0) return null;
 		ClientRegister.getInstance().setLastAnswerSaved(date);
 		return id;
