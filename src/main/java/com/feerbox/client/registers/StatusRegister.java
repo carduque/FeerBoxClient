@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 import com.feerbox.client.StartFeerBoxClient;
 import com.feerbox.client.model.Status;
+import com.feerbox.client.services.StatusService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -47,7 +48,10 @@ public class StatusRegister implements Runnable {
 			info.put(Status.infoKeys.SYSTEM_TIME.name(), getSystemTime());
 			System.out.println("Status7");
 			status.setInfo(info);
+			//Save locally
+			StatusService.save(status);
 			
+			//Save to Internet
 			URL myURL = new URL(FEERBOX_SERVER_URL+"/status/add");
 			HttpURLConnection conn = (HttpURLConnection) myURL.openConnection();
 			conn.setRequestProperty("Content-Length", "1000");

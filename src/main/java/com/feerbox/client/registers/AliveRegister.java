@@ -54,7 +54,7 @@ public class AliveRegister implements Runnable {
         }
         catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            //e.printStackTrace();
             System.out.println("No Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             InternetAccess.getInstance().setAccess(false);
         }

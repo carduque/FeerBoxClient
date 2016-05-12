@@ -6,7 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class FeerboxDB {
-	private static boolean tableCreated = false;
+	private static boolean answersTableCreated = false;
+	private static boolean statusTableCreated = false;
 	private static Connection connection;
 
 	
@@ -36,15 +37,25 @@ public class FeerboxDB {
 		}
 	}
 
-	protected static void createTableIfNotExists(Statement statement, String tableName) throws SQLException {
-		if (!tableCreated) {
-			System.out.println("Creating table if not exists...");
+	protected static void createAnswersTableIfNotExists(Statement statement) throws SQLException {
+		if (!answersTableCreated) {
+			//System.out.println("Creating table if not exists...");
 			//table = ClientRegister.getInstance().getCustomer();
-			String sql = "create table if not exists " + tableName
-					+ " (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, button integer, reference varchar, upload integer)";
+			String sql = "create table if not exists Answers (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, button integer, reference varchar, upload integer)";
 			//System.out.println(sql);
 			statement.executeUpdate(sql);
-			tableCreated = true;
+			answersTableCreated = true;
+		}
+	}
+	
+	protected static void createStatusTableIfNotExists(Statement statement) throws SQLException {
+		if (!statusTableCreated) {
+			//System.out.println("Creating table if not exists...");
+			//table = ClientRegister.getInstance().getCustomer();
+			String sql = "create table if not exists Status (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, reference varchar, internet varchar)";
+			//System.out.println(sql);
+			statement.executeUpdate(sql);
+			statusTableCreated = true;
 		}
 	}
 

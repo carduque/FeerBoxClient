@@ -23,7 +23,7 @@ public class ReadAnswer extends FeerboxDB{
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createTableIfNotExists(statement, "Answers");
+			createAnswersTableIfNotExists(statement);
 			ResultSet rs = statement.executeQuery("select id, time, button, reference, upload from Answers where upload=0");
 			while (rs.next()) {
 				Answer answer = new Answer();
@@ -62,7 +62,7 @@ public class ReadAnswer extends FeerboxDB{
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createTableIfNotExists(statement, "Answers");
+			createAnswersTableIfNotExists(statement);
 			ResultSet rs = statement.executeQuery("select id, time, button, reference from Answers where id=" + id);
 			while (rs.next()) {
 				answer.setId(rs.getInt("id"));
