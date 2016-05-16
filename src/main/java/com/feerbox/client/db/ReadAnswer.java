@@ -29,7 +29,7 @@ public class ReadAnswer extends FeerboxDB{
 				Answer answer = new Answer();
 				answer.setId(rs.getInt("id"));
 				String time = rs.getString("time");
-				answer.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time));
+				answer.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(time));
 				answer.setButton(rs.getInt("button"));
 				answer.setUpload(rs.getInt("upload")==1); //1: true - 0: false
 				answer.setReference(rs.getString("reference"));
