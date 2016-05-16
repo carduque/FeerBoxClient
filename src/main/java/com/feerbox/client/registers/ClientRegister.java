@@ -17,6 +17,7 @@ public class ClientRegister {
 	private boolean internet = true;
 	private Date lastAnswerSaved;
 	private boolean aliveLights = false;
+	private boolean saveStatusLocally = false;
 	
 	 static
 	    {
@@ -113,6 +114,16 @@ public class ClientRegister {
 	public boolean getAliveLights() {
 		this.aliveLights = Boolean.parseBoolean(getProperty("alive_lights"));
 		return aliveLights;
+	}
+	
+	public boolean isSaveStatusLocally() {
+		this.saveStatusLocally = Boolean.parseBoolean(getProperty("save_status_locally"));
+		return saveStatusLocally;
+	}
+	
+	public boolean getSaveStatusLocally() {
+		this.saveStatusLocally = Boolean.parseBoolean(getProperty("save_status_locally"));
+		return saveStatusLocally;
 	}
 
 	public void setAliveLights(boolean aliveLights) {

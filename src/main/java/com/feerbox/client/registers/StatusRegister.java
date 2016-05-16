@@ -33,23 +33,25 @@ public class StatusRegister implements Runnable {
 			System.out.println("Going to update status for "+ClientRegister.getInstance().getReference());
 			Status status = new Status();
 			status.setReference(ClientRegister.getInstance().getReference());
-			System.out.println("Status1");
+			//System.out.println("Status1");
 			HashMap<String, String> info = new HashMap<String, String>();
 			info.put(Status.infoKeys.INTERNET.name(), getInternetStatus());
-			System.out.println("Status2");
+			//System.out.println("Status2");
 			info.put(Status.infoKeys.IP.name(), getIp());
-			System.out.println("Status3");
+			//System.out.println("Status3");
 			info.put(Status.infoKeys.SW_VERSION.name(), getSoftwareVersion());
-			System.out.println("Status4");
+			//System.out.println("Status4");
 			info.put(Status.infoKeys.LAST_ANSWER.name(), getLastAnswerTime());
-			System.out.println("Status5");
+			//System.out.println("Status5");
 			info.put(Status.infoKeys.TIME_UP.name(), getTimeSystemUp());
-			System.out.println("Status6");
+			//System.out.println("Status6");
 			info.put(Status.infoKeys.SYSTEM_TIME.name(), getSystemTime());
-			System.out.println("Status7");
+			//System.out.println("Status7");
 			status.setInfo(info);
 			//Save locally
-			StatusService.save(status);
+			if(ClientRegister.getInstance().getSaveStatusLocally()){
+				StatusService.save(status);
+			}
 			
 			//Save to Internet
 			URL myURL = new URL(FEERBOX_SERVER_URL+"/status/add");
@@ -135,7 +137,7 @@ public class StatusRegister implements Runnable {
 	}
 
 	private String getInternetStatus() throws SocketException, InterruptedException {
-		System.out.println("going to check wifi conection");
+		//System.out.println("going to check wifi conection");
 		String out = "false";
 		Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 		while (interfaces.hasMoreElements()) {
