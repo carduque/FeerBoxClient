@@ -16,7 +16,13 @@ public class AliveRegister implements Runnable {
 	final static Logger logger = Logger.getLogger(AliveRegister.class);
 
 	public void run() {
+		boolean before = InternetAccess.getInstance().getAccess();
 		checkInternetAccess();
+		boolean after = InternetAccess.getInstance().getAccess();
+		if(before!=after && after == true){
+			// 
+			new StatusRegister().run();
+		}
 		aliveLights();
 		checkWifiDetection();
 		
