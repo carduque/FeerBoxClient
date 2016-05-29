@@ -18,6 +18,7 @@ import com.google.gson.JsonObject;
 
 public class SaveAnswerService extends FeerboxDB{
 	private static final String FEERBOX_SERVER_URL = ClientRegister.getInstance().getEnvironment();
+	
 
 	public static Integer saveAnswer(int buttonNumber) {
 		int id = 0;
@@ -29,7 +30,7 @@ public class SaveAnswerService extends FeerboxDB{
 		answer.setReference(ClientRegister.getInstance().getReference());
 		/*
 		if(InternetAccess.getInstance().getAccess()){
-			System.out.println("Answer internet: "+buttonNumber);
+			logger.debug("Answer internet: "+buttonNumber);
 			boolean ok = saveAnswerInternet(answer);
 			if(!ok){
 				id = SaveAnswer.save(answer);
@@ -59,7 +60,7 @@ public class SaveAnswerService extends FeerboxDB{
 			os.flush();
 
 			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
-				System.out.println("Failed : HTTP error code : "+ conn.getResponseCode());
+				logger.info("Failed : HTTP error code : "+ conn.getResponseCode());
 				ok = false;
 				//SaveAnswer.save(answer);
 			}
@@ -67,10 +68,10 @@ public class SaveAnswerService extends FeerboxDB{
 			conn.disconnect();
 			
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.debug("MalformedURLException", e);
 			ok = false;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.debug("IOException", e);
 			ok = false;
 		}
 		return ok;
@@ -102,17 +103,15 @@ public class SaveAnswerService extends FeerboxDB{
 
 	public static void saveIP(String iface, String ip) {
 		try {
-			//System.out.println(FEERBOX_SERVER_URL+"iface/"+iface+"/ip/"+ip);
+			//logger.debug(FEERBOX_SERVER_URL+"iface/"+iface+"/ip/"+ip);
 			URL myURL = new URL(FEERBOX_SERVER_URL+"iface/"+iface+"/ip/"+ip);
 			URLConnection myURLConnection = myURL.openConnection();
 			myURLConnection.setRequestProperty("Content-Length", "1000");
 			myURLConnection.getInputStream();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.debug("MalformedURLException", e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.debug("IOException", e);
 		}
 		
 	}

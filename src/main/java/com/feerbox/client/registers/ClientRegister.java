@@ -7,6 +7,9 @@ import java.util.Properties;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.apache.log4j.Logger;
+
+import com.feerbox.client.StartFeerBoxClient;
 
 public class ClientRegister {
 	private static ClientRegister instance= null;
@@ -18,6 +21,7 @@ public class ClientRegister {
 	private Date lastAnswerSaved;
 	private boolean aliveLights = false;
 	private boolean saveStatusLocally = false;
+	final static Logger logger = Logger.getLogger(ClientRegister.class);
 	
 	 static
 	    {
@@ -25,7 +29,7 @@ public class ClientRegister {
 	            configuration = new PropertiesConfiguration("config.properties");
 	            configuration.setReloadingStrategy(new FileChangedReloadingStrategy());
 	        } catch (ConfigurationException e) {
-	            e.printStackTrace();
+	        	logger.debug("ConfigurationException", e);
 	        }
 	    }
 	 
@@ -40,7 +44,7 @@ public class ClientRegister {
 	
 	private void readLiveConfiguration() {
 	    //get the property value and print it out
-	    System.out.println("FeerBox configured as :"+getProperty("reference"));
+	    logger.debug("FeerBox configured as :"+getProperty("reference"));
 	    /*this.reference = getProperty("reference");
 	    this.environment = getProperty("environment");
 	    this.email = getProperty("email");
@@ -56,7 +60,7 @@ public class ClientRegister {
 		    prop.load(this.getClass().getClassLoader().getResourceAsStream("config.properties"));
 
 		    //get the property value and print it out
-		    System.out.println(prop.getProperty("reference"));
+		    logger.debug(prop.getProperty("reference"));
 		    this.reference = prop.getProperty("reference");
 		    this.environment = prop.getProperty("environment");
 		    this.email = prop.getProperty("email");
@@ -64,8 +68,8 @@ public class ClientRegister {
 		    this.setAliveLights(Boolean.parseBoolean(prop.getProperty("alive_lights")));
 
 		} 
-		catch (IOException ex) {
-		    ex.printStackTrace();
+		catch (IOException e) {
+			logger.debug("IOException", e);
 		}
 	}
 

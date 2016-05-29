@@ -7,10 +7,13 @@ import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 import com.feerbox.client.StartFeerBoxClient;
 import com.feerbox.client.services.LedService;
 
 public class AliveRegister implements Runnable {
+	final static Logger logger = Logger.getLogger(AliveRegister.class);
 
 	public void run() {
 		checkInternetAccess();
@@ -39,23 +42,20 @@ public class AliveRegister implements Runnable {
             urlConnect.setReadTimeout(5000);
             Object objData = urlConnect.getContent();
             if(ClientRegister.getInstance().getInternet()){
-    			//System.out.println("YES Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+    			//logger.debug("YES Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
     			InternetAccess.getInstance().setAccess(true);
     		}
     		else{
-    			System.out.println("FORCED No Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+    			logger.debug("FORCED No Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
     			InternetAccess.getInstance().setAccess(false);
     		}
 
         } catch (UnknownHostException e) {
-            // TODO Auto-generated catch block
-            System.out.println("No Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            logger.error("No Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             InternetAccess.getInstance().setAccess(false);
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
-            //e.printStackTrace();
-            System.out.println("No Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            logger.error("No Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             InternetAccess.getInstance().setAccess(false);
         }
 	}

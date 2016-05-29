@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import com.feerbox.client.StartFeerBoxClient;
 import com.feerbox.client.model.Status;
 import com.feerbox.client.services.StatusService;
@@ -27,26 +29,27 @@ import com.google.gson.JsonPrimitive;
 public class StatusRegister implements Runnable {
 	private static final String FEERBOX_SERVER_URL = ClientRegister.getInstance().getEnvironment();
 	private String ip = "";
+	final static Logger logger = Logger.getLogger(StatusRegister.class);
 
 	public void run() {
 		try {
-			System.out.println("Going to update status for "+ClientRegister.getInstance().getReference());
+			logger.debug("Going to update status for "+ClientRegister.getInstance().getReference());
 			Status status = new Status();
 			status.setReference(ClientRegister.getInstance().getReference());
-			//System.out.println("Status1");
+			//logger.debug("Status1");
 			HashMap<String, String> info = new HashMap<String, String>();
 			info.put(Status.infoKeys.INTERNET.name(), getInternetStatus());
-			//System.out.println("Status2");
+			//logger.debug("Status2");
 			info.put(Status.infoKeys.IP.name(), getIp());
-			//System.out.println("Status3");
+			//logger.debug("Status3");
 			info.put(Status.infoKeys.SW_VERSION.name(), getSoftwareVersion());
-			//System.out.println("Status4");
+			//logger.debug("Status4");
 			info.put(Status.infoKeys.LAST_ANSWER.name(), getLastAnswerTime());
-			//System.out.println("Status5");
+			//logger.debug("Status5");
 			info.put(Status.infoKeys.TIME_UP.name(), getTimeSystemUp());
-			//System.out.println("Status6");
+			//logger.debug("Status6");
 			info.put(Status.infoKeys.SYSTEM_TIME.name(), getSystemTime());
-			//System.out.println("Status7");
+			//logger.debug("Status7");
 			status.setInfo(info);
 			//Save locally
 			if(ClientRegister.getInstance().getSaveStatusLocally()){
@@ -68,20 +71,17 @@ public class StatusRegister implements Runnable {
 			os.flush();
 
 			if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-				System.out.println("Failed to send status: HTTP error code : "+ conn.getResponseCode());
+				logger.info("Failed to send status: HTTP error code : "+ conn.getResponseCode());
 			}
 
 			conn.disconnect();
 			
 		} catch (SocketException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			logger.error( "SocketException", e );
 		} catch (IOException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			logger.error( "IOException", e );
 		} catch (InterruptedException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			logger.error( "InterruptedException", e );
 		}
 	}
 
@@ -105,7 +105,7 @@ public class StatusRegister implements Runnable {
         //07:33:54 up 11 min,  1 user,  load average: 1.14, 0.96, 0.55
         //16:30:34 up  6:40,  1 user,  load average: 0.01, 0.01, 0.00
         if (line != null) {
-        	System.out.println(line);
+        	logger.debug(line);
             Pattern parse = Pattern.compile("((\\d+) days,)? (\\d+):(\\d+)");
             Matcher matcher = parse.matcher(line);
             if (matcher.find()) {
@@ -137,7 +137,7 @@ public class StatusRegister implements Runnable {
 	}
 
 	private String getInternetStatus() throws SocketException, InterruptedException {
-		//System.out.println("going to check wifi conection");
+		//logger.debug("going to check wifi conection");
 		String out = "false";
 		Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 		while (interfaces.hasMoreElements()) {
@@ -149,7 +149,7 @@ public class StatusRegister implements Runnable {
 		    Enumeration<InetAddress> addresses = iface.getInetAddresses();
 		    while(addresses.hasMoreElements()) {
 		        InetAddress addr = addresses.nextElement();
-		        System.out.println(iface.getName());
+		        logger.debug(iface.getName());
 		        if(iface.getName().toUpperCase().contains("WLAN0")){
 		        	this.ip = addr.getHostAddress();
 		        	out = "true";

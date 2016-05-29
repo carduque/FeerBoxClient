@@ -10,7 +10,7 @@ import com.feerbox.client.model.Status;
 public class SaveStatus extends FeerboxDB{
 
 	public static int save(Status status) {
-		//System.out.println("going to save status locally");
+		//logger.debug("going to save status locally");
 		int id = 0;
 		Statement statement = null;
 		try {
@@ -28,15 +28,14 @@ public class SaveStatus extends FeerboxDB{
 			while (rs.next()) {
 				id = rs.getInt("rowid");
 			}
-			//System.out.println("Status registered offline: "+id);
+			//logger.debug("Status registered offline: "+id);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.debug("SQLException", e);
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.debug("SQLException", e);
 			}
 		}
 		return id;

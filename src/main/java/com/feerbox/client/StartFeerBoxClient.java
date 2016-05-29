@@ -4,6 +4,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
+
 import com.feerbox.client.db.SaveAnswerError;
 import com.feerbox.client.registers.ClientRegister;
 import com.feerbox.client.registers.AliveRegister;
@@ -24,13 +26,14 @@ import com.pi4j.io.gpio.RaspiPin;
 public class StartFeerBoxClient {
 	public static final String version = "1.2.9";
 	public static KismetClient kismet;
+	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
 	
 	
 	private static final GpioController gpio = GpioFactory.getInstance();
 	private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
 	
 	public static void main(String args[]) throws InterruptedException {
-        System.out.println("FeerBoxClient Started");
+        logger.debug("FeerBoxClient Started");
         // create gpio controller
         
         InitGPIO();
@@ -109,8 +112,7 @@ public class StartFeerBoxClient {
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.debug("InterruptedException", e);
 		}
 		LedService.getLed2().pulse(2000, false);
 		LedService.getLed3().pulse(2000, false);

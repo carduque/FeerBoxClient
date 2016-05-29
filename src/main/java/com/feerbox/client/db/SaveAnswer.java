@@ -9,8 +9,9 @@ import com.feerbox.client.model.Answer;
 
 public class SaveAnswer extends FeerboxDB{
 	
+	
 	public static int save(Answer answer) {
-		System.out.println("going to save answer locally: "+answer.getButton());
+		logger.debug("going to save answer locally: "+answer.getButton());
 		int id = 0;
 		Statement statement = null;
 		try {
@@ -28,22 +29,21 @@ public class SaveAnswer extends FeerboxDB{
 			while (rs.next()) {
 				id = rs.getInt("rowid");
 			}
-			System.out.println("Answered registered offline: "+id);
+			logger.debug("Answered registered offline: "+id);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.debug("SQLException", e);
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.debug("SQLException", e);
 			}
 		}
 		return id;
 	}
 
 	public static void upload(Answer answer) {
-		System.out.println("Upload "+answer.getId());
+		logger.debug("Upload "+answer.getId());
 		Statement statement = null;
 		try {
 			// create a database connection
@@ -57,13 +57,12 @@ public class SaveAnswer extends FeerboxDB{
 			statement.executeUpdate(
 					"update Answers set upload=1 where id="+answer.getId());
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.debug("SQLException", e);
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.debug("SQLException", e);
 			}
 		}
 	}

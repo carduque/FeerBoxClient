@@ -2,6 +2,8 @@ package com.feerbox.client;
 
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 import com.feerbox.client.services.SaveAnswerService;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
@@ -15,6 +17,7 @@ public class ButtonListener implements GpioPinListenerDigital {
 	private GpioPinDigitalOutput Led = null;
 	private int buttonNumber = 0;
 	private Date exactTime = null;
+	final static Logger logger = Logger.getLogger(ButtonListener.class);
 
 	public ButtonListener(GpioPinDigitalInput button, GpioPinDigitalOutput led, int number) {
 		Button = button;
@@ -24,7 +27,7 @@ public class ButtonListener implements GpioPinListenerDigital {
 
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 		// display pin state on console
-        //System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
+        //logger.debug(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
         if(event.getState().equals(PinState.LOW)){
         	Led.pulse(1000, true); // set second argument to 'true' use a blocking call
             SaveAnswerService.saveAnswer(buttonNumber);

@@ -36,16 +36,16 @@ public class ReadAnswer extends FeerboxDB{
 				answers.add(answer);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.debug("SQLException", e);
 			answers = null;
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.debug("ParseException", e);
 			answers = null;
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.debug("SQLException", e);
 				answers = null;
 			}
 		}
@@ -72,16 +72,14 @@ public class ReadAnswer extends FeerboxDB{
 				answer.setReference("reference");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.debug("SQLException", e);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.debug("ParseException", e);
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.debug("SQLException", e);
 			}
 		}
 		return answer;

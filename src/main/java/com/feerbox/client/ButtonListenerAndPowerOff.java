@@ -3,6 +3,8 @@ package com.feerbox.client;
 import java.io.IOException;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 import com.feerbox.client.services.SaveAnswerService;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
@@ -16,6 +18,7 @@ public class ButtonListenerAndPowerOff implements GpioPinListenerDigital {
 	private GpioPinDigitalOutput Led = null;
 	private int buttonNumber = 0;
 	private Date exactTime = null;
+	final static Logger logger = Logger.getLogger(ButtonListenerAndPowerOff.class);
 
 	public ButtonListenerAndPowerOff(GpioPinDigitalInput button, GpioPinDigitalOutput led, int number) {
 		Button = button;
@@ -25,18 +28,17 @@ public class ButtonListenerAndPowerOff implements GpioPinListenerDigital {
 
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 		// display pin state on console
-        //System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
+        //logger.debug(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
         if(event.getState().equals(PinState.LOW)){
         	if(exactTime!=null){
         		long seconds = (new Date().getTime()-exactTime.getTime())/1000;
         		if(seconds>10){
-        			System.out.println("Going to poweroff");
+        			logger.debug("Going to poweroff");
         			Led.blink(500, 10000); // continuously blink the led every 1/2 second for 10 seconds
         			try {
 						Runtime.getRuntime().exec("shutdown -h now");
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.debug("IOException", e);
 					}
         		}
         		else{

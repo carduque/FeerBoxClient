@@ -3,6 +3,8 @@ package com.feerbox.client;
 import java.io.IOException;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 import com.feerbox.client.services.SaveAnswerService;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
@@ -17,6 +19,7 @@ public class ButtonListenerAndReboot implements GpioPinListenerDigital {
 	private int buttonNumber = 0;
 	private Date exactTime = null;
 	private PinState lastState = PinState.HIGH;
+	final static Logger logger = Logger.getLogger(ButtonListenerAndReboot.class);
 
 	public ButtonListenerAndReboot(GpioPinDigitalInput button, GpioPinDigitalOutput led, int number) {
 		Button = button;
@@ -26,20 +29,19 @@ public class ButtonListenerAndReboot implements GpioPinListenerDigital {
 
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 		// display pin state on console
-        //System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
+        //logger.debug(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
         if(event.getState().equals(PinState.LOW) && lastState==PinState.HIGH){
         	this.lastState = PinState.LOW;
-        	System.out.println("LOW");
+        	//logger.debug("LOW");
         	if(exactTime!=null){
         		long seconds = (new Date().getTime()-exactTime.getTime())/1000;
         		if(seconds>10){
-        			System.out.println("Going to reboot");
+        			logger.debug("Going to reboot");
         			Led.blink(500, 10000); // continuously blink the led every 1/2 second for 10 seconds
         			try {
 						Runtime.getRuntime().exec("reboot");
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.debug("IOException", e);
 					}
         		}
         		else{

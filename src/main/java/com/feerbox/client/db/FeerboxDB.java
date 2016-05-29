@@ -5,10 +5,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.log4j.Logger;
+
+import com.feerbox.client.ButtonListener;
+
 public class FeerboxDB {
 	private static boolean answersTableCreated = false;
 	private static boolean statusTableCreated = false;
 	private static Connection connection;
+	protected final static Logger logger = Logger.getLogger(FeerboxDB.class);
 
 	
 	public static Connection getConnection() {
@@ -17,8 +22,7 @@ public class FeerboxDB {
 				createConnection();
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error( "SQLException", e );
 		}
 		return connection;
 	}
@@ -29,20 +33,18 @@ public class FeerboxDB {
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:/opt/pi4j/examples/feerbox2.db");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error( "SQLException", e );
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error( "ClassNotFoundException", e );
 		}
 	}
 
 	protected static void createAnswersTableIfNotExists(Statement statement) throws SQLException {
 		if (!answersTableCreated) {
-			//System.out.println("Creating table if not exists...");
+			//logger.debug("Creating table if not exists...");
 			//table = ClientRegister.getInstance().getCustomer();
 			String sql = "create table if not exists Answers (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, button integer, reference varchar, upload integer)";
-			//System.out.println(sql);
+			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			answersTableCreated = true;
 		}
@@ -50,10 +52,10 @@ public class FeerboxDB {
 	
 	protected static void createStatusTableIfNotExists(Statement statement) throws SQLException {
 		if (!statusTableCreated) {
-			//System.out.println("Creating table if not exists...");
+			//logger.debug("Creating table if not exists...");
 			//table = ClientRegister.getInstance().getCustomer();
 			String sql = "create table if not exists Status (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, reference varchar, internet varchar)";
-			//System.out.println(sql);
+			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			statusTableCreated = true;
 		}
