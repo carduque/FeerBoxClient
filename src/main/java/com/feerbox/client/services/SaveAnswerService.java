@@ -17,8 +17,6 @@ import com.feerbox.client.registers.InternetAccess;
 import com.google.gson.JsonObject;
 
 public class SaveAnswerService extends FeerboxDB{
-	private static final String FEERBOX_SERVER_URL = ClientRegister.getInstance().getEnvironment();
-	
 
 	public static Integer saveAnswer(int buttonNumber) {
 		int id = 0;
@@ -46,7 +44,7 @@ public class SaveAnswerService extends FeerboxDB{
 	public static boolean saveAnswerInternet(Answer answer) {
 		boolean ok = true;
 		try {
-			URL myURL = new URL(FEERBOX_SERVER_URL+"/answer/add");
+			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/answer/add");
 			HttpURLConnection conn = (HttpURLConnection) myURL.openConnection();
 			conn.setRequestProperty("Content-Length", "1000");
 			conn.setRequestProperty("Content-Type", "application/json");
@@ -87,7 +85,7 @@ public class SaveAnswerService extends FeerboxDB{
 	
 	public static void tryConnection() throws SaveAnswerError {
 		try {
-			URL myURL = new URL(FEERBOX_SERVER_URL);
+			URL myURL = new URL(ClientRegister.getInstance().getEnvironment());
 			URLConnection myURLConnection = myURL.openConnection();
 			myURLConnection.setConnectTimeout(5000);
 			myURLConnection.setReadTimeout(5000);
@@ -104,7 +102,7 @@ public class SaveAnswerService extends FeerboxDB{
 	public static void saveIP(String iface, String ip) {
 		try {
 			//logger.debug(FEERBOX_SERVER_URL+"iface/"+iface+"/ip/"+ip);
-			URL myURL = new URL(FEERBOX_SERVER_URL+"iface/"+iface+"/ip/"+ip);
+			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/iface/"+iface+"/ip/"+ip);
 			URLConnection myURLConnection = myURL.openConnection();
 			myURLConnection.setRequestProperty("Content-Length", "1000");
 			myURLConnection.getInputStream();

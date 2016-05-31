@@ -27,7 +27,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class StatusRegister implements Runnable {
-	private static final String FEERBOX_SERVER_URL = ClientRegister.getInstance().getEnvironment();
 	private String ip = "";
 	final static Logger logger = Logger.getLogger(StatusRegister.class);
 
@@ -57,7 +56,7 @@ public class StatusRegister implements Runnable {
 			}
 			
 			//Save to Internet
-			URL myURL = new URL(FEERBOX_SERVER_URL+"/status/add");
+			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/status/add");
 			HttpURLConnection conn = (HttpURLConnection) myURL.openConnection();
 			conn.setRequestProperty("Content-Length", "1000");
 			conn.setRequestProperty("Content-Type", "application/json");
