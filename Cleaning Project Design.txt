@@ -1,0 +1,51 @@
+ALARMES
+- Les alarmes es configuren en servidor
+- Afegir Alarma:
+	- Name
+	- CreationDate
+	- Button
+	- FeerBox
+	- NumRepetitions
+	- Interval
+	- emails
+	- enable
+	
+- Una alarma s'activa si es reben NumRepetecions del butó Button en l'interval de temps definit a Inteval
+
+
+CLEANER
+- Servidor:
+	- create/edit/list/remove cleaner:
+		- Id
+		- Name
+		- surname
+		- dataCreation
+		- enable
+		- WorkPlace
+		- RFID
+	- API: add/cleaningService
+		- Input:
+			- NFC cleaner
+			- FeerBox
+			- time
+		- Output:
+			- Name CLEANER
+			- Surname CLEANER
+			- Time
+	- API: get/cleaners
+		- Input:
+			- last sync time
+		- Output:
+			- List of cleaners
+- Client:
+	- add cleaningService
+		- NFC cleaner
+		- FeerBox
+		- Time
+	- Sync CleaningService
+	- Sync cleaners
+		- add cleaner
+		- update cleaner
+		- remove cleaner
+	
+	

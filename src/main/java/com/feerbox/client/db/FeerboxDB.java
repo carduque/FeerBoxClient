@@ -13,6 +13,7 @@ public class FeerboxDB {
 	private static boolean answersTableCreated = false;
 	private static boolean statusTableCreated = false;
 	private static Connection connection;
+	private static boolean cleaningServicesTableCreated = false;
 	protected final static Logger logger = Logger.getLogger(FeerboxDB.class);
 
 	
@@ -47,6 +48,17 @@ public class FeerboxDB {
 			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			answersTableCreated = true;
+		}
+	}
+	
+	protected static void createCleaningServicesTableIfNotExists(Statement statement) throws SQLException {
+		if (!cleaningServicesTableCreated) {
+			//logger.debug("Creating table if not exists...");
+			//table = ClientRegister.getInstance().getCustomer();
+			String sql = "create table if not exists CleaningServices (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, cleanerReference varchar, feerBoxReference varchar, upload integer)";
+			//logger.debug(sql);
+			statement.executeUpdate(sql);
+			cleaningServicesTableCreated = true;
 		}
 	}
 	
