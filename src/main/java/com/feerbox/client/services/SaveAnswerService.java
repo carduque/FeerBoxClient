@@ -8,16 +8,16 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
 
-import com.feerbox.client.db.FeerboxDB;
+import org.apache.log4j.Logger;
+
 import com.feerbox.client.db.SaveAnswer;
 import com.feerbox.client.db.SaveAnswerError;
 import com.feerbox.client.model.Answer;
 import com.feerbox.client.registers.ClientRegister;
-import com.feerbox.client.registers.InternetAccess;
 import com.google.gson.JsonObject;
 
-public class SaveAnswerService extends FeerboxDB{
-
+public class SaveAnswerService{
+	protected final static Logger logger = Logger.getLogger(SaveAnswerService.class);
 	public static Integer saveAnswer(int buttonNumber) {
 		int id = 0;
 		Answer answer = new Answer();

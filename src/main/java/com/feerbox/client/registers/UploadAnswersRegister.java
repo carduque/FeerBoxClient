@@ -19,6 +19,7 @@ public class UploadAnswersRegister extends Thread {
 			List<Answer> list = ReadAnswer.readAnswersNotUploaded();
 			if(list!=null){
 				for(Answer answer: list){
+					ClientRegister.getInstance().setAnswersUploaded(false);
 					boolean ok = SaveAnswerService.saveAnswerInternet(answer);
 					logger.debug("Upload to Internet? "+ok);
 					if(ok){
@@ -27,6 +28,8 @@ public class UploadAnswersRegister extends Thread {
 				}
 			}
 		}
+		//Nothing to update
+		ClientRegister.getInstance().setAnswersUploaded(true);
 	}
 
 }

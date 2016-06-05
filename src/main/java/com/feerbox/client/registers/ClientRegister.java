@@ -21,6 +21,7 @@ public class ClientRegister {
 	private Date lastAnswerSaved;
 	private boolean aliveLights = false;
 	private boolean saveStatusLocally = false;
+	private boolean answersUploaded = true;
 	final static Logger logger = Logger.getLogger(ClientRegister.class);
 	
 	 static
@@ -136,6 +137,14 @@ public class ClientRegister {
 	
 	public boolean getWifiDetection(){
 		return Boolean.parseBoolean(getProperty("wifi_detection"));
+	}
+
+	public void setAnswersUploaded(boolean upload) {
+		this.answersUploaded = upload;
+	}
+	
+	public boolean getAnswersUploaded() {
+		return this.answersUploaded;
 	}
 
 }

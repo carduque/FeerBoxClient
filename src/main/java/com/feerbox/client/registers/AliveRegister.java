@@ -1,6 +1,8 @@
 package com.feerbox.client.registers;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -14,6 +16,7 @@ import com.feerbox.client.services.LedService;
 
 public class AliveRegister implements Runnable {
 	final static Logger logger = Logger.getLogger(AliveRegister.class);
+	private static boolean firstTimeTethering = false;
 
 	public void run() {
 		boolean before = InternetAccess.getInstance().getAccess();
@@ -25,7 +28,30 @@ public class AliveRegister implements Runnable {
 		}
 		aliveLights();
 		checkWifiDetection();
-		
+		checkTetheringDetection();
+	}
+
+	private void checkTetheringDetection() {
+		try {
+			String ssid = "";
+			Process uptimeProc = Runtime.getRuntime().exec("iwgetid -r");
+			BufferedReader in = new BufferedReader(new InputStreamReader(uptimeProc.getInputStream()));
+			String line = in.readLine();
+			//07:33:54 up 11 min,  1 user,  load average: 1.14, 0.96, 0.55
+			//16:30:34 up  6:40,  1 user,  load average: 0.01, 0.01, 0.00
+			if (line != null) {
+				if((line.trim().equals("feerbox-wifi") || line.trim().equals("feerbox.com")) && firstTimeTethering==false){
+					//Tethering activated
+					LedService.animation();
+					firstTimeTethering = true;
+				}
+				else{
+					
+				}
+			}
+		} catch (IOException e) {
+			logger.error("IOException", e);
+		}
 	}
 
 	private void checkWifiDetection() {
