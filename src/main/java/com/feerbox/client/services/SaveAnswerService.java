@@ -62,7 +62,7 @@ public class SaveAnswerService{
 				ok = false;
 				//SaveAnswer.save(answer);
 			}
-
+			os.close();
 			conn.disconnect();
 			
 		} catch (MalformedURLException e) {

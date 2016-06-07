@@ -2,6 +2,7 @@ package com.feerbox.client.registers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -72,22 +73,24 @@ public class AliveRegister implements Runnable {
             //is no connection, this line will fail
             urlConnect.setConnectTimeout(5000);
             urlConnect.setReadTimeout(5000);
-            Object objData = urlConnect.getContent();
+            InputStream in = (InputStream) urlConnect.getContent();
             if(ClientRegister.getInstance().getInternet()){
     			//logger.debug("YES Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
     			InternetAccess.getInstance().setAccess(true);
     		}
     		else{
-    			logger.debug("FORCED No Internet connection ");
+    			logger.debug("FORCED No Internet connection");
     			InternetAccess.getInstance().setAccess(false);
     		}
+            in.close();
+            urlConnect.disconnect();
 
         } catch (UnknownHostException e) {
-            logger.error("No Internet connection ");
+            logger.error("No Internet connection ", e);
             InternetAccess.getInstance().setAccess(false);
         }
         catch (IOException e) {
-            logger.error("No Internet connection ");
+            logger.error("No Internet connection ", e);
             InternetAccess.getInstance().setAccess(false);
         }
 	}
