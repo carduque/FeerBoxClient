@@ -15,7 +15,7 @@ public class UploadAnswersRegister extends Thread {
 	final static Logger logger = Logger.getLogger(UploadAnswersRegister.class);
 	public void run(){
 		if(InternetAccess.getInstance().getAccess()){
-			logger.debug("Going to update answers "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+			logger.debug("Going to update answers");
 			List<Answer> list = ReadAnswer.readAnswersNotUploaded();
 			if(list!=null){
 				for(Answer answer: list){

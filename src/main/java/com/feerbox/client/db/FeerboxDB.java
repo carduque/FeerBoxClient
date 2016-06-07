@@ -62,11 +62,22 @@ public class FeerboxDB {
 		}
 	}
 	
+	protected static void createCleanersTableIfNotExists(Statement statement) throws SQLException {
+		if (!cleaningServicesTableCreated) {
+			//logger.debug("Creating table if not exists...");
+			//table = ClientRegister.getInstance().getCustomer();
+			String sql = "create table if not exists Cleaners (id INTEGER PRIMARY KEY AUTOINCREMENT, name varchar, surname varchar, reference varchar, lastupdate timestamp)";
+			//logger.debug(sql);
+			statement.executeUpdate(sql);
+			cleaningServicesTableCreated = true;
+		}
+	}
+	
 	protected static void createStatusTableIfNotExists(Statement statement) throws SQLException {
 		if (!statusTableCreated) {
 			//logger.debug("Creating table if not exists...");
 			//table = ClientRegister.getInstance().getCustomer();
-			String sql = "create table if not exists Status (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, reference varchar, internet varchar)";
+			String sql = "create table if not exists Status (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, reference varchar, internet varchar, upload integer)";
 			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			statusTableCreated = true;

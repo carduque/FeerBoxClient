@@ -50,10 +50,6 @@ public class StatusRegister implements Runnable {
 			info.put(Status.infoKeys.SYSTEM_TIME.name(), getSystemTime());
 			//logger.debug("Status7");
 			status.setInfo(info);
-			//Save locally
-			if(ClientRegister.getInstance().getSaveStatusLocally()){
-				StatusService.save(status);
-			}
 			
 			//Save to Internet
 			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/status/add");
@@ -71,9 +67,17 @@ public class StatusRegister implements Runnable {
 
 			if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
 				logger.info("Failed to send status: HTTP error code : "+ conn.getResponseCode());
+				status.setUpload(0);
+			}
+			else{
+				status.setUpload(1);
 			}
 
 			conn.disconnect();
+			//Save locally
+			if(ClientRegister.getInstance().getSaveStatusLocally()){
+				StatusService.save(status);
+			}
 			
 		} catch (SocketException e) {
 			logger.error( "SocketException", e );

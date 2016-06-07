@@ -78,16 +78,16 @@ public class AliveRegister implements Runnable {
     			InternetAccess.getInstance().setAccess(true);
     		}
     		else{
-    			logger.debug("FORCED No Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+    			logger.debug("FORCED No Internet connection ");
     			InternetAccess.getInstance().setAccess(false);
     		}
 
         } catch (UnknownHostException e) {
-            logger.error("No Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            logger.error("No Internet connection ");
             InternetAccess.getInstance().setAccess(false);
         }
         catch (IOException e) {
-            logger.error("No Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            logger.error("No Internet connection ");
             InternetAccess.getInstance().setAccess(false);
         }
 	}

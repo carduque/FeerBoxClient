@@ -146,5 +146,15 @@ public class ClientRegister {
 	public boolean getAnswersUploaded() {
 		return this.answersUploaded;
 	}
+	
+	public int getSaveStatusInterval(){
+		int interval = 60;
+		try {
+			interval = Integer.parseInt(getProperty("send_status_interval"));
+		} catch (NumberFormatException e) {
+			logger.error("NumberFormatException", e);
+		}
+		return interval;
+	}
 
 }

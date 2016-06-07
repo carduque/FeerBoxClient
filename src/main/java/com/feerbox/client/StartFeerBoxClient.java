@@ -68,7 +68,7 @@ public class StartFeerBoxClient {
 
 	private static void StartStatusThreat() {
 		StatusRegister ipRegister = new StatusRegister();
-		scheduler.scheduleAtFixedRate(ipRegister, 0, 60, TimeUnit.MINUTES);
+		scheduler.scheduleAtFixedRate(ipRegister, 0, ClientRegister.getInstance().getSaveStatusInterval(), TimeUnit.MINUTES);
 	}
 	
 	private static void StartInternetAccessThreat() {

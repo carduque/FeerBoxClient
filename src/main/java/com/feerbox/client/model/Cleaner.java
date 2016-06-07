@@ -4,21 +4,24 @@ import java.sql.Timestamp;
 
 public class Cleaner {
 	private int id;
-	private int name;
+	private String name;
 	private String surname;
 	private String reference;
 	private Timestamp lastupdate;
 	
+	public Cleaner(String cleanerReference) {
+		this.reference = cleanerReference;
+	}
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getName() {
+	public String getName() {
 		return name;
 	}
-	public void setName(int name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 	public String getSurname() {

@@ -6,6 +6,7 @@ public class Status {
 	private String reference;
 	private Map<String, String> info;
 	public enum infoKeys {INTERNET,LAST_ANSWER,TIME_UP, SYSTEM_TIME, SW_VERSION, IP};
+	private int upload;
 	
 	public Status(String reference) {
 		super();
@@ -25,6 +26,12 @@ public class Status {
 	}
 	public void setInfo(Map<String, String> info) {
 		this.info = info;
+	}
+	public int getUpload() {
+		return upload;
+	}
+	public void setUpload(int upload) {
+		this.upload = upload;
 	}
 	
 
