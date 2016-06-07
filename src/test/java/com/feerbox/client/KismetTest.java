@@ -1,7 +1,5 @@
 package com.feerbox.client;
 
-import java.net.ConnectException;
-
 import com.feerbox.client.registers.KismetClient;
 
 public class KismetTest {

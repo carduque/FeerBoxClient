@@ -1,7 +1,5 @@
 package com.feerbox.client.registers;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
