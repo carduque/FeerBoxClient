@@ -23,7 +23,7 @@ public class ReadCleaner extends FeerboxDB{
 
 			// statement.executeUpdate("drop table if exists person");
 			createCleanersTableIfNotExists(statement);
-			ResultSet rs = statement.executeQuery("select id, name, surname, lastupdate from Cleaners where reference=" + cleaner.getReference());
+			ResultSet rs = statement.executeQuery("select id, name, surname, lastupdate from Cleaners where reference='" + cleaner.getReference()+"'");
 			while (rs.next()) {
 				cleaner.setId(rs.getInt("id"));
 				cleaner.setName(rs.getString("name"));
