@@ -11,6 +11,7 @@ import com.feerbox.client.db.SaveAnswerError;
 import com.feerbox.client.registers.ClientRegister;
 import com.feerbox.client.registers.AliveRegister;
 import com.feerbox.client.registers.KismetClient;
+import com.feerbox.client.registers.NFCReader;
 import com.feerbox.client.registers.StatusRegister;
 import com.feerbox.client.registers.UploadAnswersRegister;
 import com.feerbox.client.services.ButtonService;
@@ -44,6 +45,7 @@ public class StartFeerBoxClient {
         StartStatusThreat();
         saveAnswersOnlineThreat();
         StartWifiDetectionThreat();
+        StartNFCReaderThreat();
         
         // create and register gpio pin listener
         registerButtonListeners();
@@ -57,6 +59,16 @@ public class StartFeerBoxClient {
         // (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
         // gpio.shutdown();   <--- implement this method call if you wish to terminate the Pi4J GPIO controller        
     }
+
+
+	private static void StartNFCReaderThreat() {
+		if(ClientRegister.getInstance().getNFCReaderEnabled()){
+			NFCReader reader = new NFCReader();
+			if(reader.init()){
+				reader.start();
+			}
+		}
+	}
 
 
 	private static void StartWifiDetectionThreat() {

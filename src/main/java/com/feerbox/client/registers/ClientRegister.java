@@ -157,4 +157,8 @@ public class ClientRegister {
 		return interval;
 	}
 
+	public boolean getNFCReaderEnabled() {
+		return Boolean.parseBoolean(getProperty("nfc_reader_enabled"));
+	}
+
 }

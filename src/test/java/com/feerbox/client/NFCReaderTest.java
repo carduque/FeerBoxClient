@@ -10,7 +10,7 @@ import javax.smartcardio.TerminalFactory;
 
 public class NFCReaderTest {
 	public static void main(String[] args) throws Exception {
-		NFCReader reader = new NFCReader();
+		NFCReader2 reader = new NFCReader2();
 		reader.setTerminal(init());
 		reader.start();
 	}

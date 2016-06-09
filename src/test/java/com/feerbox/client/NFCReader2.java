@@ -3,14 +3,18 @@ package com.feerbox.client;
 import javax.smartcardio.CardChannel;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardTerminal;
+import javax.smartcardio.CardTerminals;
+import javax.smartcardio.TerminalFactory;
 
 import java.awt.Toolkit;
 import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.ListIterator;
 
 import javax.smartcardio.Card;
 
-public class NFCReader extends Thread {
-	 private CardTerminal terminal;
+public class NFCReader2 extends Thread {
+	 private static CardTerminal terminal;
 	 private Card card;
 
 	public void run(){  
@@ -66,4 +70,29 @@ public class NFCReader extends Thread {
 
 		return res;
 	}
+	
+	static void init() throws Exception {
+        TerminalFactory tf = TerminalFactory.getDefault();
+       CardTerminals ct = tf.terminals();
+       List<CardTerminal> l = null;
+       Card card = null;
+
+       try {
+           l = ct.list();
+       } catch (Exception e) {
+           System.out.println("Error listing Terminals: " + e.toString());
+           throw e;
+       }
+
+       System.out.println("List of PC/SC Readers connected:");
+       ListIterator i = l.listIterator();
+       while (i.hasNext()) {
+           System.out.println("Reader: " + ((CardTerminal) i.next()).getName());
+       }
+       // Pick up the first one
+       String terminalName = l.get(0).getName();
+       terminal = ct.getTerminal(terminalName);
+       System.out.println("Terminal fetched: " + terminal.getName());
+   }
+	
 }
