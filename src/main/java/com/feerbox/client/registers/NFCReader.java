@@ -38,7 +38,7 @@ public class NFCReader extends Thread {
 					Cleaner cleaner = ReadCleaner.read(new Cleaner(uid));
 					logger.info("NFC UID: " + uid + " - "+cleaner.getName()+" "+cleaner.getSurname());
 					
-					// terminal.waitForCardAbsent(0);
+					terminal.waitForCardAbsent(0);
 					// logger.debug("Card removed");
 				} catch (Exception e) {
 					logger.error("Terminal NOT connected: " + e.toString());
