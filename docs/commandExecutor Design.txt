@@ -1,0 +1,14 @@
+Client:
+- CommandQueueRegister: One register to get commands from server and storing on db
+- CommandExecutor: One CommandExecutor every X minutes reading from DB and execution command and storing output
+- CommandQueueRegister One register to send output commands to server
+
+
+Server:
+- one page to add, remove, edit and list commands
+- list of commands availables are based on scripts folder
+- Workflow:
+	- select feerbox
+	- page of commands
+- api commmand/output?commandId=
+- api command/get?feerboxId=
