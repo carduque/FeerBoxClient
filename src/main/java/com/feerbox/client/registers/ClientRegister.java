@@ -3,6 +3,8 @@ package com.feerbox.client.registers;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -23,7 +25,7 @@ public class ClientRegister {
 	private boolean saveStatusLocally = false;
 	private boolean answersUploaded = true;
 	final static Logger logger = Logger.getLogger(ClientRegister.class);
-	
+	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
 	 static
 	    {
 	        try {
@@ -159,6 +161,18 @@ public class ClientRegister {
 
 	public boolean getNFCReaderEnabled() {
 		return Boolean.parseBoolean(getProperty("nfc_reader_enabled"));
+	}
+	
+	public boolean getTetheringLightsEnabled() {
+		return Boolean.parseBoolean(getProperty("tethering_lights"));
+	}
+
+	public ScheduledExecutorService getScheduler() {
+		return scheduler;
+	}
+
+	public void setScheduler(ScheduledExecutorService scheduler) {
+		this.scheduler = scheduler;
 	}
 
 }

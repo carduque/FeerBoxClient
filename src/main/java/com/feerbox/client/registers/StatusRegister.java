@@ -14,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +30,8 @@ import com.google.gson.JsonPrimitive;
 
 public class StatusRegister implements Runnable {
 	private String ip = "";
+	private ScheduledFuture<?> future;
+	private int interval = ClientRegister.getInstance().getSaveStatusInterval();
 	final static Logger logger = Logger.getLogger(StatusRegister.class);
 
 	public void run() {
@@ -86,6 +90,18 @@ public class StatusRegister implements Runnable {
 		} catch (InterruptedException e) {
 			logger.error( "InterruptedException", e );
 		}
+		changeDelay();
+	}
+
+	private void changeDelay() {
+		if(ClientRegister.getInstance().getSaveStatusInterval()!=this.interval){
+			boolean res = future.cancel(false);
+	        logger.info("Previous StatusRegister cancelled: " + res);
+	        StatusRegister ipRegister = new StatusRegister();
+	        future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(ipRegister, 0, ClientRegister.getInstance().getSaveStatusInterval(), TimeUnit.MINUTES);
+	        this.interval = ClientRegister.getInstance().getSaveStatusInterval();
+		}
+		
 	}
 
 	private String getIp() throws SocketException, InterruptedException {
@@ -174,6 +190,10 @@ public class StatusRegister implements Runnable {
 		}
 		json.add("info", array);
 		return json;
+	}
+
+	public void setFuture(ScheduledFuture<?> future) {
+		this.future = future;
 	}
 
 }

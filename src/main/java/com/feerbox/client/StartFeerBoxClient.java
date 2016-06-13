@@ -1,5 +1,7 @@
 package com.feerbox.client;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -8,7 +10,10 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import com.feerbox.client.db.SaveAnswerError;
+import com.feerbox.client.model.Command;
 import com.feerbox.client.registers.ClientRegister;
+import com.feerbox.client.registers.CommandExecutor;
+import com.feerbox.client.registers.CommandQueueRegister;
 import com.feerbox.client.registers.AliveRegister;
 import com.feerbox.client.registers.KismetClient;
 import com.feerbox.client.registers.NFCReader;
@@ -32,7 +37,6 @@ public class StartFeerBoxClient {
 	
 	
 	private static final GpioController gpio = GpioFactory.getInstance();
-	private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
 	
 	public static void main(String args[]) throws InterruptedException {
         logger.debug("FeerBoxClient Started");
@@ -46,6 +50,7 @@ public class StartFeerBoxClient {
         saveAnswersOnlineThreat();
         StartWifiDetectionThreat();
         StartNFCReaderThreat();
+        StartCommandServerPolling();
         
         // create and register gpio pin listener
         registerButtonListeners();
@@ -59,6 +64,15 @@ public class StartFeerBoxClient {
         // (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
         // gpio.shutdown();   <--- implement this method call if you wish to terminate the Pi4J GPIO controller        
     }
+
+
+	private static void StartCommandServerPolling() {
+        CommandQueueRegister producer = new CommandQueueRegister();
+        CommandExecutor consumer = new CommandExecutor();
+        ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(producer, 0, 1, TimeUnit.MINUTES);
+        ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(consumer, 0, 1, TimeUnit.MINUTES);
+
+	}
 
 
 	private static void StartNFCReaderThreat() {
@@ -81,18 +95,19 @@ public class StartFeerBoxClient {
 
 	private static void StartStatusThreat() {
 		StatusRegister ipRegister = new StatusRegister();
-		ScheduledFuture<?> tmp = scheduler.scheduleAtFixedRate(ipRegister, 0, ClientRegister.getInstance().getSaveStatusInterval(), TimeUnit.MINUTES);
+		ScheduledFuture<?> future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(ipRegister, 0, ClientRegister.getInstance().getSaveStatusInterval(), TimeUnit.MINUTES);
+		ipRegister.setFuture(future);
 	}
 	
 	private static void StartInternetAccessThreat() {
 		//check Internet & alivelights & KismetServer alive
 		AliveRegister internetRegister = new AliveRegister();
-		scheduler.scheduleAtFixedRate(internetRegister, 0, 1, TimeUnit.MINUTES);
+		ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(internetRegister, 0, 1, TimeUnit.MINUTES);
 	}
 	
 	private static void saveAnswersOnlineThreat() {
 		UploadAnswersRegister uploadAnswersRegister = new UploadAnswersRegister();
-		scheduler.scheduleAtFixedRate(uploadAnswersRegister, 0, 1, TimeUnit.MINUTES);
+		ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(uploadAnswersRegister, 0, 1, TimeUnit.MINUTES);
 	}
 
 
