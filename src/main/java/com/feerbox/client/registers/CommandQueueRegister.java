@@ -30,7 +30,10 @@ public class CommandQueueRegister extends Thread {
 		commands = CommandService.getCommandsToUpload();
 		if(commands!=null) {
 			for(Command command:commands){
-				CommandService.saveServer(command);
+				boolean ok = CommandService.saveServer(command);
+				if(ok){
+					CommandService.upload(command);
+				}
 			}
 		}
 	}

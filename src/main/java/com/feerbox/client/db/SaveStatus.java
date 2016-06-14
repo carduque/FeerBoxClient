@@ -24,7 +24,7 @@ public class SaveStatus extends FeerboxDB{
 			createStatusTableIfNotExists(statement);
 			statement.executeUpdate(
 					"insert into Status (time, reference, internet, upload) values(datetime('now', 'localtime'),\"" + status.getReference() + "\",  \""+status.getInfo().get(Status.infoKeys.INTERNET.name())+" - "+status.getInfo().get(Status.infoKeys.IP.name())+"\", "+status.getUpload()+")");
-			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM Answers LIMIT 1");
+			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM Status LIMIT 1");
 			while (rs.next()) {
 				id = rs.getInt("rowid");
 			}

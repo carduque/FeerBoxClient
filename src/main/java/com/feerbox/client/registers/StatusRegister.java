@@ -98,7 +98,7 @@ public class StatusRegister implements Runnable {
 			boolean res = future.cancel(false);
 	        logger.info("Previous StatusRegister cancelled: " + res);
 	        StatusRegister ipRegister = new StatusRegister();
-	        future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(ipRegister, 0, ClientRegister.getInstance().getSaveStatusInterval(), TimeUnit.MINUTES);
+	        future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(ipRegister, ClientRegister.getInstance().getSaveStatusInterval(), ClientRegister.getInstance().getSaveStatusInterval(), TimeUnit.MINUTES);
 	        this.interval = ClientRegister.getInstance().getSaveStatusInterval();
 		}
 		

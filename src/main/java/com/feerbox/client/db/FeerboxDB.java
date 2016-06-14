@@ -7,11 +7,10 @@ import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
-import com.feerbox.client.ButtonListener;
-
 public class FeerboxDB {
 	private static boolean answersTableCreated = false;
 	private static boolean statusTableCreated = false;
+	private static boolean commandsTableCreated = false;
 	private static Connection connection;
 	private static boolean cleaningServicesTableCreated = false;
 	protected final static Logger logger = Logger.getLogger(FeerboxDB.class);
@@ -81,6 +80,17 @@ public class FeerboxDB {
 			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			statusTableCreated = true;
+		}
+	}
+	
+	protected static void createCommandsTableIfNotExists(Statement statement) throws SQLException {
+		if (!commandsTableCreated) {
+			//logger.debug("Creating table if not exists...");
+			//table = ClientRegister.getInstance().getCustomer();
+			String sql = "create table if not exists Commands (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, command varchar, output varchar, startTime timestamp, finishTime timestamp, serverId integer, upload integer)";
+			//logger.debug(sql);
+			statement.executeUpdate(sql);
+			commandsTableCreated = true;
 		}
 	}
 

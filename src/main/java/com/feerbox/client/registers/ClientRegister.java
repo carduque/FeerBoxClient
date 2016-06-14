@@ -158,6 +158,26 @@ public class ClientRegister {
 		}
 		return interval;
 	}
+	
+	public int getCommandExecutorInterval(){
+		int interval = 1440;
+		try {
+			interval = Integer.parseInt(getProperty("command_executor_interval"));
+		} catch (NumberFormatException e) {
+			logger.error("NumberFormatException", e);
+		}
+		return interval;
+	}
+	
+	public int getCommandQueueRegisterInterval(){
+		int interval = 720;
+		try {
+			interval = Integer.parseInt(getProperty("commandqueue_register_interval"));
+		} catch (NumberFormatException e) {
+			logger.error("NumberFormatException", e);
+		}
+		return interval;
+	}
 
 	public boolean getNFCReaderEnabled() {
 		return Boolean.parseBoolean(getProperty("nfc_reader_enabled"));
