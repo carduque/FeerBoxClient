@@ -194,5 +194,9 @@ public class ClientRegister {
 	public void setScheduler(ScheduledExecutorService scheduler) {
 		this.scheduler = scheduler;
 	}
+	
+	public boolean getCommandExecutorEnabled() {
+		return Boolean.parseBoolean(getProperty("enable_command_executor"));
+	}
 
 }

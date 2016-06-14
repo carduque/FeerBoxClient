@@ -53,4 +53,70 @@ public class ReadCommand extends FeerboxDB {
 		}
 		return commands;
 	}
+
+	public static boolean IsAnyCommandInExecution() {
+		boolean out = false;
+		Statement statement = null;
+		try {
+			// create a database connection
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+			// statement.executeUpdate("drop table if exists person");
+			createCommandsTableIfNotExists(statement);
+			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload from Commands where finishTime is null and startingTime is not null");
+			while (rs.next()) {
+				out = true;
+			}
+		} catch (SQLException e) {
+			logger.debug("SQLException", e);
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.debug("SQLException", e);
+			}
+		}
+		return out;
+	}
+
+	public static Command startNextExecution() {
+		Command command = null;
+		Statement statement = null;
+		try {
+			// create a database connection
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+			// statement.executeUpdate("drop table if exists person");
+			createCommandsTableIfNotExists(statement);
+			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload from Commands where upload=0 and startTime is null and fnishTime is null order by time desc limit 1");
+			while (rs.next()) {
+				command = new Command();
+				command.setId(rs.getInt("id"));
+				String time = rs.getString("time");
+				command.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(time));
+				command.setCommand(rs.getString("command"));
+				String startTime = rs.getString("startTime");
+				command.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(startTime));
+				String finishTime = rs.getString("finishTime");
+				command.setFinishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(finishTime));
+				command.setUpload(rs.getInt("upload")==1); //1: true - 0: false
+			}
+		} catch (SQLException e) {
+			logger.debug("SQLException", e);
+		} catch (ParseException e) {
+			logger.debug("ParseException", e);
+			command = null;
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.debug("SQLException", e);
+			}
+		}
+		return command;
+	}
 }

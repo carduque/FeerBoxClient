@@ -67,11 +67,12 @@ public class StartFeerBoxClient {
 
 
 	private static void StartCommandServerPolling() {
-        CommandQueueRegister commandQueue = new CommandQueueRegister();
-        CommandExecutor commandExecutor = new CommandExecutor();
-        ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(commandQueue, 0, ClientRegister.getInstance().getCommandQueueRegisterInterval(), TimeUnit.MINUTES);
-        ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(commandExecutor, 0, ClientRegister.getInstance().getCommandExecutorInterval(), TimeUnit.MINUTES);
-
+		if(ClientRegister.getInstance().getCommandExecutorEnabled()){
+	        CommandQueueRegister commandQueue = new CommandQueueRegister();
+	        CommandExecutor commandExecutor = new CommandExecutor();
+	        ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(commandQueue, 0, ClientRegister.getInstance().getCommandQueueRegisterInterval(), TimeUnit.MINUTES);
+	        ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(commandExecutor, 0, ClientRegister.getInstance().getCommandExecutorInterval(), TimeUnit.MINUTES);
+		}
 	}
 
 

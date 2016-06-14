@@ -1,14 +1,13 @@
 package com.feerbox.client.services;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-import java.io.OutputStream;
-import java.io.Reader;
 
 import org.apache.log4j.Logger;
 
@@ -17,7 +16,6 @@ import com.feerbox.client.db.SaveCommand;
 import com.feerbox.client.model.Command;
 import com.feerbox.client.registers.ClientRegister;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 public class CommandService {
@@ -61,19 +59,15 @@ public class CommandService {
 		return commands;
 	}
 
-	public static Command readNext() {
-		// TODO Auto-generated method stub
-		return null;
+	public static Command startNextExecution() {
+		Command command = ReadCommand.startNextExecution();
+		SaveCommand.startExecution(command);
+		return command;
 	}
 
 	public static void startExecution(Command command) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	public static String execute(Command command) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public static void finishExecution(Command command) {
@@ -131,8 +125,7 @@ public class CommandService {
 	}
 
 	public static boolean isCommandInExecution() {
-		// TODO Auto-generated method stub
-		return false;
+		return ReadCommand.IsAnyCommandInExecution();
 	}
 
 	public static boolean forceCleanQueue() {

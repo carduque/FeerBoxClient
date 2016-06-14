@@ -49,8 +49,7 @@ public class SaveCommand extends FeerboxDB {
 
 			// statement.executeUpdate("drop table if exists person");
 			createCommandsTableIfNotExists(statement);
-			statement.executeUpdate(
-					"update Commands set upload=1 where id="+command.getId());
+			statement.executeUpdate("update Commands set upload=1 where id="+command.getId());
 		} catch (SQLException e) {
 			logger.error("SQLException", e);
 		} finally {
@@ -60,5 +59,10 @@ public class SaveCommand extends FeerboxDB {
 				logger.error("SQLException", e);
 			}
 		}
+	}
+
+	public static void startExecution(Command command) {
+		// TODO Auto-generated method stub
+		
 	}
 }
