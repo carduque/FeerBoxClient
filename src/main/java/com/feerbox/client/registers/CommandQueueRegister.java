@@ -25,6 +25,7 @@ public class CommandQueueRegister extends Thread {
 				CommandService.save(command);
 			}
 		}
+		//Update commands on server? active=false
 		
 		//Check if there are commands finished to send output
 		commands = CommandService.getCommandsToUpload();

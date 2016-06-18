@@ -27,6 +27,7 @@ public class CommandExecutor implements Runnable {
 			Command command = CommandService.startNextExecution();
 			if(command!=null){
 				logger.debug("Going to execute a command: "+command.getCommand());
+				SaveCommand.startExecution(command);
 				//List<String> commandParameters = command.getParameters();
 				//commandParameters.add(0, command.getCommand());
 				ProcessBuilder pb = new ProcessBuilder(command.getCommand());

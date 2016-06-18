@@ -19,8 +19,12 @@ public class SaveCommand extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			createCommandsTableIfNotExists(statement);
+			int restart = 0;
+			if(command.getRestart()){
+				restart=1;
+			}
 			statement.executeUpdate(
-					"insert into Commands (time, command, serverId, upload, serverCreationTime, restart) values(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),\"" + command.getCommand() + "\",  "+command.getServerId()+", "+command.getUpload()+", STRFTIME('%Y-%m-%d %H:%M:%f', '"+ command.getsetServerCreationTimeFormatted()+"'), "+(command.getRestart()?1:0)+")");
+					"insert into Commands (time, command, serverId, upload, serverCreationTime, restart) values(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),\"" + command.getCommand() + "\",  "+command.getServerId()+", "+command.getUpload()+", STRFTIME('%Y-%m-%d %H:%M:%f', '"+ command.getsetServerCreationTimeFormatted()+"'), "+restart+")");
 			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM Commands LIMIT 1");
 			while (rs.next()) {
 				id = rs.getInt("rowid");
