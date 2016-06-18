@@ -88,11 +88,11 @@ public class AliveRegister implements Runnable {
             urlConnect.disconnect();
 
         } catch (UnknownHostException e) {
-            logger.error("No Internet connection ", e);
+            logger.error("UnknownHostException - No Internet connection: "+e.getMessage());
             InternetAccess.getInstance().setAccess(false);
         }
         catch (IOException e) {
-            logger.error("No Internet connection ", e);
+        	logger.error("IOException - No Internet connection: "+e.getMessage());
             InternetAccess.getInstance().setAccess(false);
         }
 	}
