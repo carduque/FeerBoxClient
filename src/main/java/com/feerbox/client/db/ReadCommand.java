@@ -66,7 +66,7 @@ public class ReadCommand extends FeerboxDB {
 
 			// statement.executeUpdate("drop table if exists person");
 			createCommandsTableIfNotExists(statement);
-			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload from Commands where finishTime is null and startingTime is not null");
+			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload from Commands where finishTime is null and startTime is not null");
 			while (rs.next()) {
 				out = true;
 			}
