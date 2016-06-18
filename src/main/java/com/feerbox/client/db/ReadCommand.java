@@ -23,7 +23,7 @@ public class ReadCommand extends FeerboxDB {
 
 			// statement.executeUpdate("drop table if exists person");
 			createCommandsTableIfNotExists(statement);
-			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload from Commands where upload=0 and finishTime is not null");
+			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload, serverId from Commands where upload=0 and finishTime is not null");
 			while (rs.next()) {
 				Command command = new Command();
 				command.setId(rs.getInt("id"));
@@ -35,6 +35,7 @@ public class ReadCommand extends FeerboxDB {
 				String finishTime = rs.getString("finishTime");
 				command.setFinishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(finishTime));
 				command.setUpload(rs.getInt("upload")==1); //1: true - 0: false
+				command.setServerId(rs.getInt("serverId"));
 				commands.add(command);
 			}
 		} catch (SQLException e) {

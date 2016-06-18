@@ -1,20 +1,15 @@
 package com.feerbox.client;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
 import com.feerbox.client.db.SaveAnswerError;
-import com.feerbox.client.model.Command;
+import com.feerbox.client.registers.AliveRegister;
 import com.feerbox.client.registers.ClientRegister;
 import com.feerbox.client.registers.CommandExecutor;
 import com.feerbox.client.registers.CommandQueueRegister;
-import com.feerbox.client.registers.AliveRegister;
 import com.feerbox.client.registers.KismetClient;
 import com.feerbox.client.registers.NFCReader;
 import com.feerbox.client.registers.StatusRegister;
@@ -24,14 +19,12 @@ import com.feerbox.client.services.LedService;
 import com.feerbox.client.services.SaveAnswerService;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalInput;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.2.10";
+	public static final String version = "1.3.0";
 	public static KismetClient kismet;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
 	

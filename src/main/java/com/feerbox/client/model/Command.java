@@ -15,6 +15,8 @@ public class Command {
 	private Date finishTime;
 	private boolean upload;
 	private int serverId;
+	private Date serverCreationTime;
+	private boolean restart;
 	
 	public String getOutput() {
 		return output;
@@ -83,5 +85,28 @@ public class Command {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	public Date getServerCreationTime() {
+		return serverCreationTime;
+	}
+	public void setServerCreationTime(Date serverCreationTime) {
+		this.serverCreationTime = serverCreationTime;
+	}
+	public String getsetServerCreationTimeFormatted(){
+		//dd-MMM-yyyy HH:mm:ss.SSS
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		return df.format(this.serverCreationTime);
+	}
+	@Override
+	public String toString() {
+		return "Command [id=" + id + ", command=" + command + ", output=" + output + ", time=" + time + ", startTime="
+				+ startTime + ", finishTime=" + finishTime + ", upload=" + upload + ", serverId=" + serverId
+				+ ", serverCreationTime=" + serverCreationTime + "]";
+	}
+	public boolean getRestart() {
+		return restart;
+	}
+	public void setRestart(boolean restart) {
+		this.restart = restart;
+	}
+	
 }

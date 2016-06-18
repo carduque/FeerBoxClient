@@ -1,7 +1,6 @@
 package com.feerbox.client.registers;
 
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 
 import org.apache.log4j.Logger;
 

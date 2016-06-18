@@ -1,13 +1,16 @@
 package com.feerbox.client.registers;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
+import com.feerbox.client.db.SaveCommand;
 import com.feerbox.client.model.Command;
 import com.feerbox.client.services.CommandService;
 
@@ -31,7 +34,19 @@ public class CommandExecutor implements Runnable {
 			env.put("VAR2", env.get("VAR1") + "suffix");*/
 			pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts"));
 			try {
-				Process p = pb.start();
+				Process process = pb.start();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+				StringBuilder builder = new StringBuilder();
+				String line = null;
+				while ( (line = reader.readLine()) != null) {
+				   builder.append(line);
+				   builder.append(System.getProperty("line.separator"));
+				}
+				command.setOutput(builder.toString());
+				SaveCommand.saveFinishExecution(command);
+				if(command.getRestart()){
+					restart();
+				}
 			} catch (IOException e) {
 				logger.error("IOException", e);
 			}
@@ -45,9 +60,19 @@ public class CommandExecutor implements Runnable {
 			}
 			if(CommandService.forceRestart()){
 				//In case commands are hang
-				CommandService.restart();
+				try {
+					restart();
+				} catch (IOException e) {
+					logger.error("IOException", e);
+				}
 			}
 		}
+	}
+
+	private void restart() throws IOException {
+		ProcessBuilder reboot = new ProcessBuilder("( sleep 30 ; reboot ) & ");
+		logger.info("System is going to restart");
+		reboot.start();
 	}
 
 }

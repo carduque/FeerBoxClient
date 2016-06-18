@@ -20,7 +20,7 @@ public class SaveCommand extends FeerboxDB {
 
 			createCommandsTableIfNotExists(statement);
 			statement.executeUpdate(
-					"insert into Commands (time, command, serverId, upload) values(datetime('now', 'localtime'),\"" + command.getCommand() + "\",  "+command.getServerId()+", "+command.getUpload()+")");
+					"insert into Commands (time, command, serverId, upload, serverCreationTime, restart) values(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),\"" + command.getCommand() + "\",  "+command.getServerId()+", "+command.getUpload()+", STRFTIME('%Y-%m-%d %H:%M:%f', '"+ command.getsetServerCreationTimeFormatted()+"'), "+(command.getRestart()?1:0)+")");
 			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM Commands LIMIT 1");
 			while (rs.next()) {
 				id = rs.getInt("rowid");
@@ -64,5 +64,28 @@ public class SaveCommand extends FeerboxDB {
 	public static void startExecution(Command command) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public static void saveFinishExecution(Command command) {
+		Statement statement = null;
+		try {
+			// create a database connection
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+
+			// statement.executeUpdate("drop table if exists person");
+			createCommandsTableIfNotExists(statement);
+			statement.executeUpdate("update Commands set output='"+command.getOutput()+"',finishTime=STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime') where id="+command.getId());
+		} catch (SQLException e) {
+			logger.error("SQLException", e);
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.error("SQLException", e);
+			}
+		}
 	}
 }
