@@ -15,6 +15,7 @@ public class CommandQueueRegister extends Thread {
 
 	@Override
 	public void run() {
+		logger.debug("Going to check remote commands active");
 		//Check if there is commands on queue from server
 		List<Command> commands = CommandService.getServerCommands(ClientRegister.getInstance().getReference());
 		

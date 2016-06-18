@@ -25,34 +25,35 @@ public class CommandExecutor implements Runnable {
 		if(!CommandService.isCommandInExecution()){
 			//Execute commands enqueued
 			Command command = CommandService.startNextExecution();
-			List<String> commandParameters = command.getParameters();
-			commandParameters.add(0, command.getCommand());
-			ProcessBuilder pb = new ProcessBuilder(commandParameters);
-			/*Map<String, String> env = pb.environment();
-			env.put("VAR1", "myValue");
-			env.remove("OTHERVAR");
-			env.put("VAR2", env.get("VAR1") + "suffix");*/
-			pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts"));
-			try {
-				Process process = pb.start();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-				StringBuilder builder = new StringBuilder();
-				String line = null;
-				while ( (line = reader.readLine()) != null) {
-				   builder.append(line);
-				   builder.append(System.getProperty("line.separator"));
+			if(command!=null){
+				logger.debug("Going to execute a command: "+command.getCommand());
+				//List<String> commandParameters = command.getParameters();
+				//commandParameters.add(0, command.getCommand());
+				ProcessBuilder pb = new ProcessBuilder(command.getCommand());
+				/*Map<String, String> env = pb.environment();
+				env.put("VAR1", "myValue");
+				env.remove("OTHERVAR");
+				env.put("VAR2", env.get("VAR1") + "suffix");*/
+				pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts"));
+				try {
+					Process process = pb.start();
+					BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+					StringBuilder builder = new StringBuilder();
+					String line = null;
+					while ( (line = reader.readLine()) != null) {
+					   builder.append(line);
+					   builder.append(System.getProperty("line.separator"));
+					}
+					command.setOutput(builder.toString());
+					SaveCommand.saveFinishExecution(command);
+					if(command.getRestart()){
+						restart();
+					}
+				} catch (IOException e) {
+					logger.error("IOException", e);
 				}
-				command.setOutput(builder.toString());
-				SaveCommand.saveFinishExecution(command);
-				if(command.getRestart()){
-					restart();
-				}
-			} catch (IOException e) {
-				logger.error("IOException", e);
 			}
 			
-			//CommandService.finishExecution(command);
-			//CommandService.saveOutput(command, output);
 		} else{
 			if(CommandService.forceCleanQueue()){
 				//In case commands are hang

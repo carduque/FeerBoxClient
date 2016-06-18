@@ -62,8 +62,26 @@ public class SaveCommand extends FeerboxDB {
 	}
 
 	public static void startExecution(Command command) {
-		// TODO Auto-generated method stub
-		
+		Statement statement = null;
+		try {
+			// create a database connection
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+
+			// statement.executeUpdate("drop table if exists person");
+			createCommandsTableIfNotExists(statement);
+			statement.executeUpdate("update Commands set startTime=STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime') where id="+command.getId());
+		} catch (SQLException e) {
+			logger.error("SQLException", e);
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.error("SQLException", e);
+			}
+		}
 	}
 
 	public static void saveFinishExecution(Command command) {

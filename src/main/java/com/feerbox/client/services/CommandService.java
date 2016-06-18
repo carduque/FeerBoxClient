@@ -90,7 +90,6 @@ public class CommandService {
 
 	public static Command startNextExecution() {
 		Command command = ReadCommand.startNextExecution();
-		SaveCommand.startExecution(command);
 		return command;
 	}
 
