@@ -110,7 +110,6 @@ public class ReadCommand extends FeerboxDB {
 			logger.debug("SQLException", e);
 		} catch (ParseException e) {
 			logger.debug("ParseException", e);
-			command = null;
 		} finally {
 			try {
 				statement.close();
