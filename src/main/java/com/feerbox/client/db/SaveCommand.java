@@ -23,9 +23,13 @@ public class SaveCommand extends FeerboxDB {
 			if(command.getRestart()){
 				restart=1;
 			}
+			int upload = 0;
+			if(command.getUpload()){
+				upload=1;
+			}
 			String sql = "insert into Commands (time, command, serverId, upload, serverCreationTime, restart) "
-					+ "values(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),'" + command.getCommand() + "',  "+command.getServerId()+", "
-							+command.getUpload()+", STRFTIME('%Y-%m-%d %H:%M:%f', '"+ command.getsetServerCreationTimeFormatted()+"'), "
+					+ "values(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),'" + command.getCommand() + "',  "+command.getServerId()+", "+upload
+							+", STRFTIME('%Y-%m-%d %H:%M:%f', '"+ command.getsetServerCreationTimeFormatted()+"'), "
 									+restart+")";
 			logger.debug(sql);
 			statement.executeUpdate(sql);
