@@ -83,6 +83,7 @@ public class ReadCommand extends FeerboxDB {
 	}
 
 	public static Command startNextExecution() {
+		logger.debug("startNextExecution");
 		Command command = null;
 		Statement statement = null;
 		try {
@@ -90,11 +91,12 @@ public class ReadCommand extends FeerboxDB {
 			Connection con = getConnection();
 			statement = con.createStatement();
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
-
+			logger.debug("startNextExecution2");
 			// statement.executeUpdate("drop table if exists person");
 			createCommandsTableIfNotExists(statement);
 			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload from Commands where upload=0 and startTime is null and finishTime is null order by time desc limit 1");
 			while (rs.next()) {
+				logger.debug("startNextExecution3");
 				command = new Command();
 				command.setId(rs.getInt("id"));
 				String time = rs.getString("time");
@@ -106,15 +108,16 @@ public class ReadCommand extends FeerboxDB {
 				command.setFinishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(finishTime));
 				command.setUpload(rs.getInt("upload")==1); //1: true - 0: false
 			}
+			logger.debug("startNextExecution4");
 		} catch (SQLException e) {
-			logger.debug("SQLException", e);
+			logger.error("SQLException", e);
 		} catch (ParseException e) {
-			logger.debug("ParseException", e);
+			logger.error("ParseException", e);
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				logger.debug("SQLException", e);
+				logger.error("SQLException", e);
 			}
 		}
 		return command;

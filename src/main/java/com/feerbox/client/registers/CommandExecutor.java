@@ -24,7 +24,7 @@ public class CommandExecutor implements Runnable {
 	public void run() {
 		logger.debug("Command Executor");
 		if(!CommandService.isCommandInExecution()){
-			logger.debug("No command under execution");
+			logger.debug("No commands under execution");
 			//Execute commands enqueued
 			Command command = CommandService.startNextExecution();
 			logger.debug("Command: "+command);

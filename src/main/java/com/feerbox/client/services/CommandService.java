@@ -89,8 +89,7 @@ public class CommandService {
 	}
 
 	public static Command startNextExecution() {
-		Command command = ReadCommand.startNextExecution();
-		return command;
+		return ReadCommand.startNextExecution();
 	}
 
 
