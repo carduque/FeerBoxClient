@@ -22,7 +22,9 @@ public class CommandExecutor implements Runnable {
 
 	@Override
 	public void run() {
+		logger.debug("Command Executor");
 		if(!CommandService.isCommandInExecution()){
+			logger.debug("No command under execution");
 			//Execute commands enqueued
 			Command command = CommandService.startNextExecution();
 			if(command!=null){
