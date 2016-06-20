@@ -37,7 +37,7 @@ public class SaveCommand extends FeerboxDB {
 			while (rs.next()) {
 				id = rs.getInt("rowid");
 			}
-			//logger.debug("Command registered offline: "+id);
+			logger.debug("Command registered offline: "+id);
 		} catch (SQLException e) {
 			logger.debug("SQLException", e);
 		} finally {
