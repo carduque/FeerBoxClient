@@ -32,6 +32,7 @@ public class FeerboxDB {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:/opt/pi4j/examples/feerbox2.db");
+			connection.setAutoCommit(true);
 		} catch (SQLException e) {
 			logger.error( "SQLException", e );
 		} catch (ClassNotFoundException e) {
