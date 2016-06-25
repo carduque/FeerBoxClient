@@ -71,6 +71,9 @@ public class StartFeerBoxClient {
 
 	private static void StartNFCReaderThreat() {
 		if(ClientRegister.getInstance().getNFCReaderEnabled()){
+			if(ClientRegister.getInstance().getLCDActive()){
+				LCDWrapper.init("NFC Reader Starter...");
+			}
 			NFCReader reader = new NFCReader();
 			if(reader.init()){
 				reader.start();

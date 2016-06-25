@@ -198,5 +198,9 @@ public class ClientRegister {
 	public boolean getCommandExecutorEnabled() {
 		return Boolean.parseBoolean(getProperty("enable_command_executor"));
 	}
+	
+	public boolean getLCDActive() {
+		return Boolean.parseBoolean(getProperty("lcd_active"));
+	}
 
 }

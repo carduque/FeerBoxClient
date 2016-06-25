@@ -13,6 +13,7 @@ import javax.smartcardio.TerminalFactory;
 
 import org.apache.log4j.Logger;
 
+import com.feerbox.client.LCDWrapper;
 import com.feerbox.client.db.ReadCleaner;
 import com.feerbox.client.model.Cleaner;
 
@@ -37,7 +38,10 @@ public class NFCReader extends Thread {
 					// Toolkit.getDefaultToolkit().beep();
 					Cleaner cleaner = ReadCleaner.read(new Cleaner(uid));
 					logger.info("NFC UID: " + uid + " - "+cleaner.getName()+" "+cleaner.getSurname());
-					
+					if(ClientRegister.getInstance().getLCDActive()){
+						LCDWrapper.setTextRow0(cleaner.getName()+" "+cleaner.getSurname());
+						LCDWrapper.setCurrentTimeRow1();
+					}
 					terminal.waitForCardAbsent(0);
 					// logger.debug("Card removed");
 				} catch (Exception e) {
