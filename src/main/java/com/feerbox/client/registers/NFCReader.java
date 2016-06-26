@@ -39,6 +39,7 @@ public class NFCReader extends Thread {
 					Cleaner cleaner = ReadCleaner.read(new Cleaner(uid));
 					logger.info("NFC UID: " + uid + " - "+cleaner.getName()+" "+cleaner.getSurname());
 					if(ClientRegister.getInstance().getLCDActive()){
+						LCDWrapper.clear();
 						LCDWrapper.setTextRow0(cleaner.getName()+" "+cleaner.getSurname());
 						LCDWrapper.setCurrentTimeRow1();
 					}

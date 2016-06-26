@@ -28,6 +28,10 @@ public class LCDWrapper {
 		SleepUtil.sleepSeconds(10);
 		instance.clear();
 	}
+	
+	public static void clear(){
+		instance.clear();
+	}
 
 	public static void setCurrentTimeRow1() {
 		String now = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
