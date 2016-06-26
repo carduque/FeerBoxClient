@@ -2,6 +2,7 @@ package com.feerbox.client;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import com.diozero.I2CLcd;
 import com.diozero.util.SleepUtil;
@@ -34,7 +35,27 @@ public class LCDWrapper {
 	}
 
 	public static void setCurrentTimeRow1() {
-		String now = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
+		String now = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(convertTimeZone(new Date(), TimeZone.getDefault(),TimeZone.getTimeZone("Europe/Madrid")));
 		setTextRow1(now);
+	}
+	
+	protected static java.util.Date convertTimeZone(java.util.Date date, TimeZone fromTZ , TimeZone toTZ)
+	{
+	    long fromTZDst = 0;
+	    if(fromTZ.inDaylightTime(date))
+	    {
+	        fromTZDst = fromTZ.getDSTSavings();
+	    }
+	 
+	    long fromTZOffset = fromTZ.getRawOffset() + fromTZDst;
+	 
+	    long toTZDst = 0;
+	    if(toTZ.inDaylightTime(date))
+	    {
+	        toTZDst = toTZ.getDSTSavings();
+	    }
+	    long toTZOffset = toTZ.getRawOffset() + toTZDst;
+	 
+	    return new java.util.Date(date.getTime() + (toTZOffset - fromTZOffset));
 	}
 }
