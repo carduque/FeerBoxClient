@@ -37,11 +37,21 @@ public class NFCReader extends Thread {
 					//logger.info("NFC UID: " + uid);
 					// Toolkit.getDefaultToolkit().beep();
 					Cleaner cleaner = ReadCleaner.read(new Cleaner(uid));
-					logger.info("NFC UID: " + uid + " - "+cleaner.getName()+" "+cleaner.getSurname());
-					if(ClientRegister.getInstance().getLCDActive()){
-						LCDWrapper.clear();
-						LCDWrapper.setTextRow0(cleaner.getName()+" "+cleaner.getSurname());
-						LCDWrapper.setCurrentTimeRow1();
+					if(cleaner!=null){
+						logger.info("NFC UID: " + uid + " - "+cleaner.getName()+" "+cleaner.getSurname());
+						if(ClientRegister.getInstance().getLCDActive()){
+							LCDWrapper.clear();
+							LCDWrapper.setTextRow0(cleaner.getName()+" "+cleaner.getSurname());
+							LCDWrapper.setCurrentTimeRow1();
+						}
+					}
+					else{
+						logger.info("NFC UID: " + uid + " not found on DB ");
+						if(ClientRegister.getInstance().getLCDActive()){
+							LCDWrapper.clear();
+							LCDWrapper.setTextRow0("UID:"+uid);
+							LCDWrapper.setCurrentTimeRow1();
+						}
 					}
 					terminal.waitForCardAbsent(0);
 					// logger.debug("Card removed");
