@@ -33,12 +33,12 @@ public class CommandExecutor implements Runnable {
 				SaveCommand.startExecution(command);
 				//List<String> commandParameters = command.getParameters();
 				//commandParameters.add(0, command.getCommand());
-				ProcessBuilder pb = new ProcessBuilder(command.getCommand());
+				ProcessBuilder pb = new ProcessBuilder("/bin/bash", command.getCommand());
 				/*Map<String, String> env = pb.environment();
 				env.put("VAR1", "myValue");
 				env.remove("OTHERVAR");
 				env.put("VAR2", env.get("VAR1") + "suffix");*/
-				pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts/"));
+				pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts"));
 				try {
 					Process process = pb.start();
 					BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
