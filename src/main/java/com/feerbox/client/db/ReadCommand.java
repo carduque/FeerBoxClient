@@ -109,11 +109,15 @@ public class ReadCommand extends FeerboxDB {
 				logger.debug("startNextExecution35");
 				String startTime = rs.getString("startTime");
 				logger.debug("startNextExecution36: "+startTime);
-				command.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(startTime));
+				if(startTime!=null){
+					command.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(startTime));
+				}
 				logger.debug("startNextExecution37");
 				String finishTime = rs.getString("finishTime");
-				logger.debug("startNextExecution38");
-				command.setFinishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(finishTime));
+				logger.debug("startNextExecution38: "+finishTime);
+				if(finishTime!=null){
+					command.setFinishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(finishTime));
+				}
 				logger.debug("startNextExecution39");
 				command.setUpload(rs.getInt("upload")==1); //1: true - 0: false
 				logger.debug("startNextExecution310");
