@@ -108,7 +108,7 @@ public class ReadCommand extends FeerboxDB {
 				command.setCommand(rs.getString("command"));
 				logger.debug("startNextExecution35");
 				String startTime = rs.getString("startTime");
-				logger.debug("startNextExecution36");
+				logger.debug("startNextExecution36: "+startTime);
 				command.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(startTime));
 				logger.debug("startNextExecution37");
 				String finishTime = rs.getString("finishTime");
