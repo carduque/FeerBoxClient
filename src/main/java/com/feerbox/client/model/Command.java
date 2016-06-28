@@ -66,12 +66,12 @@ public class Command {
 		return df.format(time);
 	}
 	public String getStartTimeFormatted() {
-		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		df.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
 		return df.format(startTime);
 	}
 	public String getFinishTimeFormatted() {
-		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		df.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
 		return df.format(finishTime);
 	}
