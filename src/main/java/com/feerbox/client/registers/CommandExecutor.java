@@ -38,7 +38,7 @@ public class CommandExecutor implements Runnable {
 				env.put("VAR1", "myValue");
 				env.remove("OTHERVAR");
 				env.put("VAR2", env.get("VAR1") + "suffix");*/
-				pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts"));
+				pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts/"));
 				try {
 					Process process = pb.start();
 					BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
