@@ -24,7 +24,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.3.0";
+	public static final String version = "1.3.0.1";
 	public static KismetClient kismet;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
 	

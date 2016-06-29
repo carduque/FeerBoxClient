@@ -31,7 +31,7 @@ public class SaveCommand extends FeerboxDB {
 					+ "values(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),'" + command.getCommand() + "',  "+command.getServerId()+", "+upload
 							+", STRFTIME('%Y-%m-%d %H:%M:%f', '"+ command.getsetServerCreationTimeFormatted()+"'), "
 									+restart+")";
-			logger.debug(sql);
+			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM Commands LIMIT 1");
 			while (rs.next()) {
@@ -57,7 +57,6 @@ public class SaveCommand extends FeerboxDB {
 			Connection con = getConnection();
 			statement = con.createStatement();
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
-
 
 			// statement.executeUpdate("drop table if exists person");
 			createCommandsTableIfNotExists(statement);
@@ -117,5 +116,6 @@ public class SaveCommand extends FeerboxDB {
 				logger.error("SQLException", e);
 			}
 		}
+		logger.debug("Execution saved in DB for: "+command.getCommand());
 	}
 }

@@ -92,38 +92,26 @@ public class ReadCommand extends FeerboxDB {
 			Connection con = getConnection();
 			statement = con.createStatement();
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
-			logger.debug("startNextExecution2");
 			// statement.executeUpdate("drop table if exists person");
 			//createCommandsTableIfNotExists(statement);
-			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload from Commands where upload=0 and startTime is null and finishTime is null order by time desc limit 1");
+			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload, restart from Commands where upload=0 and startTime is null and finishTime is null order by time desc limit 1");
 			while (rs.next()) {
-				logger.debug("startNextExecution3");
 				command = new Command();
-				logger.debug("startNextExecution31");
 				command.setId(rs.getInt("id"));
-				logger.debug("startNextExecution32");
 				String time = rs.getString("time");
-				logger.debug("startNextExecution33");
 				command.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(time));
-				logger.debug("startNextExecution34");
 				command.setCommand(rs.getString("command"));
-				logger.debug("startNextExecution35");
 				String startTime = rs.getString("startTime");
-				logger.debug("startNextExecution36: "+startTime);
 				if(startTime!=null){
 					command.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(startTime));
 				}
-				logger.debug("startNextExecution37");
 				String finishTime = rs.getString("finishTime");
-				logger.debug("startNextExecution38: "+finishTime);
 				if(finishTime!=null){
 					command.setFinishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(finishTime));
 				}
-				logger.debug("startNextExecution39");
 				command.setUpload(rs.getInt("upload")==1); //1: true - 0: false
-				logger.debug("startNextExecution310");
+				command.setRestart(rs.getInt("restart")==1); //1: true - 0: false
 			}
-			logger.debug("startNextExecution4");
 		} catch (SQLException e) {
 			logger.error("SQLException", e);
 		} catch (ParseException e) {

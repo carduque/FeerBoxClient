@@ -4,10 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
 import com.feerbox.client.db.SaveCommand;
@@ -24,10 +21,10 @@ public class CommandExecutor implements Runnable {
 	public void run() {
 		logger.debug("Command Executor");
 		if(!CommandService.isCommandInExecution()){
-			logger.debug("No commands under execution");
+			//logger.debug("No commands under execution");
 			//Execute commands enqueued
 			Command command = CommandService.startNextExecution();
-			logger.debug("Command: "+command);
+			//logger.debug("Command: "+command);
 			if(command!=null){
 				logger.debug("Going to execute a command: "+command.getCommand());
 				SaveCommand.startExecution(command);
@@ -49,15 +46,19 @@ public class CommandExecutor implements Runnable {
 					   builder.append(System.getProperty("line.separator"));
 					}
 					command.setOutput(builder.toString());
+					logger.debug("Command executed succesfully: "+command.getCommand());
 					SaveCommand.saveFinishExecution(command);
 					if(command.getRestart()){
+						logger.debug("Going to restart");
 						restart();
 					}
 				} catch (IOException e) {
 					logger.error("IOException", e);
 				}
 			}
-			
+			else{
+				logger.debug("There is no command to be executed");
+			}
 		} else{
 			if(CommandService.forceCleanQueue()){
 				//In case commands are hang

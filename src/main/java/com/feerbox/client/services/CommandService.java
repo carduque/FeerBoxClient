@@ -63,6 +63,7 @@ public class CommandService {
 				    command.setServerId(jsonObject.get("id").getAsInt());
 				    command.setCommand(jsonObject.get("command").getAsString());
 				    command.setRestart(jsonObject.get("id").getAsBoolean());
+				    command.setRestart(jsonObject.get("restart").getAsBoolean());
 				    String creationDate = jsonObject.get("creationDate").getAsString();
 				    SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss.SSS");
 				    try {
@@ -122,7 +123,7 @@ public class CommandService {
 			os.flush();
 
 			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
-				logger.error("Failed : HTTP error code : "+ conn.getResponseCode());
+				logger.error("Failed saving command to server: HTTP error code : "+ conn.getResponseCode());
 				out = false;
 			}
 			os.close();
