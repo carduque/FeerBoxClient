@@ -40,7 +40,7 @@ public class StartFeerBoxClient {
         
         StartInternetAccessThreat();
         StartStatusThreat();
-        saveAnswersOnlineThreat();
+        saveInformationServerThreat();
         StartWifiDetectionThreat();
         StartNFCReaderThreat();
         StartCommandServerPolling();
@@ -102,7 +102,7 @@ public class StartFeerBoxClient {
 		ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(internetRegister, 0, 1, TimeUnit.MINUTES);
 	}
 	
-	private static void saveAnswersOnlineThreat() {
+	private static void saveInformationServerThreat() {
 		UploadAnswersRegister uploadAnswersRegister = new UploadAnswersRegister();
 		ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(uploadAnswersRegister, 0, 1, TimeUnit.MINUTES);
 	}

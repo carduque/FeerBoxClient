@@ -203,4 +203,8 @@ public class ClientRegister {
 		return Boolean.parseBoolean(getProperty("lcd_active"));
 	}
 
+	public boolean getCleaningServiceEnable() {
+		return Boolean.parseBoolean(getProperty("cleaning_service_enable"));
+	}
+
 }

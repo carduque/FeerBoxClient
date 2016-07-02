@@ -76,7 +76,8 @@ public class CommandExecutor implements Runnable {
 	}
 
 	private void restart() throws IOException {
-		ProcessBuilder reboot = new ProcessBuilder("( sleep 30 ; reboot ) & ");
+		ProcessBuilder reboot = new ProcessBuilder("/bin/bash", "restart.sh");
+		reboot.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts"));
 		logger.info("System is going to restart");
 		reboot.start();
 	}

@@ -1,11 +1,16 @@
 package com.feerbox.client.model;
 
-import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class CleaningService {
+	private int id;
 	private String cleanerReference;
-	private Timestamp time;
+	private Date time;
 	private String feerboxReference;
+	private boolean upload;
 	
 	public String getCleanerReference() {
 		return cleanerReference;
@@ -13,10 +18,10 @@ public class CleaningService {
 	public void setCleanerReference(String cleanerReference) {
 		this.cleanerReference = cleanerReference;
 	}
-	public Timestamp getTime() {
+	public Date getTime() {
 		return time;
 	}
-	public void setTime(Timestamp time) {
+	public void setTime(Date time) {
 		this.time = time;
 	}
 	public String getFeerboxReference() {
@@ -24,6 +29,23 @@ public class CleaningService {
 	}
 	public void setFeerboxReference(String feerboxReference) {
 		this.feerboxReference = feerboxReference;
+	}
+	public boolean getUpload() {
+		return upload;
+	}
+	public void setUpload(boolean upload) {
+		this.upload = upload;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getTimeFormatted() {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		df.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
+		return df.format(time);
 	}
 	
 }

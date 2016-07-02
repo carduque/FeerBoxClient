@@ -1,6 +1,7 @@
 package com.feerbox.client.registers;
 
 import java.nio.ByteBuffer;
+import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -15,7 +16,9 @@ import org.apache.log4j.Logger;
 
 import com.feerbox.client.LCDWrapper;
 import com.feerbox.client.db.ReadCleaner;
+import com.feerbox.client.db.SaveCleaningService;
 import com.feerbox.client.model.Cleaner;
+import com.feerbox.client.model.CleaningService;
 
 public class NFCReader extends Thread {
 	private CardTerminal terminal;
@@ -37,6 +40,7 @@ public class NFCReader extends Thread {
 					//logger.info("NFC UID: " + uid);
 					// Toolkit.getDefaultToolkit().beep();
 					Cleaner cleaner = ReadCleaner.read(new Cleaner(uid));
+					CleaningService cleaningService = new CleaningService();
 					if(cleaner!=null){
 						logger.info("NFC UID: " + uid + " - "+cleaner.getName()+" "+cleaner.getSurname());
 						if(ClientRegister.getInstance().getLCDActive()){
@@ -44,6 +48,7 @@ public class NFCReader extends Thread {
 							LCDWrapper.setTextRow0(cleaner.getName()+" "+cleaner.getSurname());
 							LCDWrapper.setCurrentTimeRow1();
 						}
+						cleaningService.setCleanerReference(cleaner.getName()+" "+cleaner.getSurname()); //TO DO change by real identifier
 					}
 					else{
 						logger.info("NFC UID: " + uid + " not found on DB ");
@@ -52,8 +57,14 @@ public class NFCReader extends Thread {
 							LCDWrapper.setTextRow0("UID:"+uid);
 							LCDWrapper.setCurrentTimeRow1();
 						}
+						cleaningService.setCleanerReference(uid);
 					}
 					terminal.waitForCardAbsent(0);
+					cleaningService.setFeerboxReference(ClientRegister.getInstance().getReference());
+					long now = System.currentTimeMillis();
+					Date date = new Date(now);
+					cleaningService.setTime(date);
+					SaveCleaningService.save(cleaningService);
 					// logger.debug("Card removed");
 				} catch (Exception e) {
 					logger.error("Terminal NOT connected: " + e.toString());
