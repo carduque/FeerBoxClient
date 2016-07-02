@@ -23,7 +23,7 @@ public class SaveCleaningService extends FeerboxDB{
 			// statement.executeUpdate("drop table if exists person");
 			createCleaningServicesTableIfNotExists(statement);
 			statement.executeUpdate(
-					"insert into CleaningServices (time, cleanerReference, feerBoxReference, upload) values(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime')," + cleaningService.getCleanerReference() + ", \""+cleaningService.getFeerboxReference()+"\", 0)");
+					"insert into CleaningServices (time, cleanerReference, feerBoxReference, upload) values(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),\"" + cleaningService.getCleanerReference() + "\", \""+cleaningService.getFeerboxReference()+"\", 0)");
 			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM CleaningServices LIMIT 1");
 			while (rs.next()) {
 				id = rs.getInt("rowid");

@@ -5,4 +5,4 @@ echo "Going to kill FeerBoxClient process"
 sudo kill -9 $(ps aux | grep 'com.feerbox.client.StartFeerBoxClient' | awk '{print $2}')
 echo "Going to start FeerBoxClient"
 cd /opt/FeerBoxClient/FeerBoxClient/target/classes/
-sudo java -classpath .:classes:/opt/pi4j/lib/'*' com.feerbox.client.StartFeerBoxClient &
+sudo java -Dsun.security.smartcardio.library=/usr/lib/arm-linux-gnueabihf/libpcsclite.so.1 -classpath .:classes:/opt/pi4j/lib/'*' com.feerbox.client.StartFeerBoxClient &
