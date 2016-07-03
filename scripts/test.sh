@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "This is the first command remotly executed"
+echo "This is testing command remotly executed"
