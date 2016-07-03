@@ -17,9 +17,9 @@ public class UploadAnswersRegister extends Thread {
 	final static Logger logger = Logger.getLogger(UploadAnswersRegister.class);
 	public void run(){
 		if(InternetAccess.getInstance().getAccess()){
-			logger.debug("Going to update answers");
 			List<Answer> list = ReadAnswer.readAnswersNotUploaded();
 			if(list!=null){
+				logger.debug("Going to update answers");
 				for(Answer answer: list){
 					ClientRegister.getInstance().setAnswersUploaded(false);
 					boolean ok = SaveAnswerService.saveAnswerInternet(answer);
@@ -30,9 +30,9 @@ public class UploadAnswersRegister extends Thread {
 				}
 			}
 			if(ClientRegister.getInstance().getCleaningServiceEnable()){
-				logger.debug("Going to update cleaningServices");
 				List<CleaningService> list2 = ReadCleaningService.notUploaded();
 				if(list2!=null){
+					logger.debug("Going to update cleaningServices");
 					for(CleaningService cleaningService: list2){
 						boolean ok = CleaningServiceService.saveServer(cleaningService);
 						logger.debug("Upload to Internet? "+ok);

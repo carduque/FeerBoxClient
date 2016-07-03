@@ -30,6 +30,7 @@ public class CommandQueueRegister extends Thread {
 		//Check if there are commands finished to send output
 		commands = CommandService.getCommandsToUpload();
 		if(commands!=null) {
+			logger.debug("Going to upload commands output");
 			for(Command command:commands){
 				boolean ok = CommandService.saveServer(command);
 				if(ok){
