@@ -23,7 +23,7 @@ public class ReadCommand extends FeerboxDB {
 
 			// statement.executeUpdate("drop table if exists person");
 			createCommandsTableIfNotExists(statement);
-			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload, serverId, output from Commands where upload=0 and finishTime is not null");
+			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload, serverId, output, parameter from Commands where upload=0 and finishTime is not null");
 			while (rs.next()) {
 				Command command = new Command();
 				command.setId(rs.getInt("id"));
@@ -37,6 +37,7 @@ public class ReadCommand extends FeerboxDB {
 				command.setUpload(rs.getInt("upload")==1); //1: true - 0: false
 				command.setServerId(rs.getInt("serverId"));
 				command.setOutput(rs.getString("output"));
+				command.setParameter(rs.getString("parameter"));
 				commands.add(command);
 			}
 		} catch (SQLException e) {
@@ -84,7 +85,7 @@ public class ReadCommand extends FeerboxDB {
 	}
 
 	public static Command startNextExecution() {
-		logger.debug("startNextExecution");
+		//logger.debug("startNextExecution");
 		Command command = null;
 		Statement statement = null;
 		try {
@@ -94,13 +95,14 @@ public class ReadCommand extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 			// statement.executeUpdate("drop table if exists person");
 			//createCommandsTableIfNotExists(statement);
-			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload, restart from Commands where upload=0 and startTime is null and finishTime is null order by time desc limit 1");
+			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload, restart, parameter from Commands where upload=0 and startTime is null and finishTime is null order by time desc limit 1");
 			while (rs.next()) {
 				command = new Command();
 				command.setId(rs.getInt("id"));
 				String time = rs.getString("time");
 				command.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(time));
 				command.setCommand(rs.getString("command"));
+				command.setParameter(rs.getString("parameter"));
 				String startTime = rs.getString("startTime");
 				if(startTime!=null){
 					command.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(startTime));

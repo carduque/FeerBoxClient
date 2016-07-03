@@ -30,7 +30,7 @@ public class CommandExecutor implements Runnable {
 				SaveCommand.startExecution(command);
 				//List<String> commandParameters = command.getParameters();
 				//commandParameters.add(0, command.getCommand());
-				ProcessBuilder pb = new ProcessBuilder("/bin/bash", command.getCommand());
+				ProcessBuilder pb = new ProcessBuilder("/bin/bash", command.getCommand(), command.getParameter());
 				/*Map<String, String> env = pb.environment();
 				env.put("VAR1", "myValue");
 				env.remove("OTHERVAR");

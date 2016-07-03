@@ -3,7 +3,6 @@ package com.feerbox.client.model;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 public class Command {
@@ -17,6 +16,7 @@ public class Command {
 	private int serverId;
 	private Date serverCreationTime;
 	private boolean restart;
+	private String parameter;
 	
 	public String getOutput() {
 		return output;
@@ -81,10 +81,6 @@ public class Command {
 	public void setServerId(int serverId) {
 		this.serverId = serverId;
 	}
-	public List<String> getParameters() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	public Date getServerCreationTime() {
 		return serverCreationTime;
 	}
@@ -107,6 +103,12 @@ public class Command {
 	}
 	public void setRestart(boolean restart) {
 		this.restart = restart;
+	}
+	public String getParameter() {
+		return parameter;
+	}
+	public void setParameter(String parameter) {
+		this.parameter = parameter;
 	}
 	
 }

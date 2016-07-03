@@ -88,7 +88,7 @@ public class FeerboxDB {
 		if (!commandsTableCreated) {
 			//logger.debug("Creating table if not exists...");
 			//table = ClientRegister.getInstance().getCustomer();
-			String sql = "create table if not exists Commands (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, command varchar, output varchar, startTime timestamp, finishTime timestamp, serverId integer, upload integer, serverCreationTime timestamp, restart integer)";
+			String sql = "create table if not exists Commands (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, command varchar, output varchar, startTime timestamp, finishTime timestamp, serverId integer, upload integer, serverCreationTime timestamp, restart integer, parameter varchar)";
 			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			commandsTableCreated = true;
