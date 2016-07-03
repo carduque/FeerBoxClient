@@ -18,7 +18,7 @@ public class UploadAnswersRegister extends Thread {
 	public void run(){
 		if(InternetAccess.getInstance().getAccess()){
 			List<Answer> list = ReadAnswer.readAnswersNotUploaded();
-			if(list!=null){
+			if(list!=null && list.size()!=0){
 				logger.debug("Going to update answers");
 				for(Answer answer: list){
 					ClientRegister.getInstance().setAnswersUploaded(false);
@@ -31,7 +31,7 @@ public class UploadAnswersRegister extends Thread {
 			}
 			if(ClientRegister.getInstance().getCleaningServiceEnable()){
 				List<CleaningService> list2 = ReadCleaningService.notUploaded();
-				if(list2!=null){
+				if(list2!=null && list2.size()!=0){
 					logger.debug("Going to update cleaningServices");
 					for(CleaningService cleaningService: list2){
 						boolean ok = CleaningServiceService.saveServer(cleaningService);
