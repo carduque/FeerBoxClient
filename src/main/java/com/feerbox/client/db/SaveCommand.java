@@ -29,7 +29,7 @@ public class SaveCommand extends FeerboxDB {
 			}
 			String parameter = null;
 			if(command.getParameter()!=null){
-				parameter = command.getParameter().replaceAll("'","\'");
+				parameter = command.getParameter().replaceAll("'","''");
 			}
 			String sql = "insert into Commands (time, command, serverId, upload, serverCreationTime, restart, parameter) "
 					+ "values(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),'" + command.getCommand() + "',  "+command.getServerId()+", "+upload
