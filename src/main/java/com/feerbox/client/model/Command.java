@@ -92,12 +92,6 @@ public class Command {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		return df.format(this.serverCreationTime);
 	}
-	@Override
-	public String toString() {
-		return "Command [id=" + id + ", command=" + command + ", output=" + output + ", time=" + time + ", startTime="
-				+ startTime + ", finishTime=" + finishTime + ", upload=" + upload + ", serverId=" + serverId
-				+ ", serverCreationTime=" + serverCreationTime + "]";
-	}
 	public boolean getRestart() {
 		return restart;
 	}
@@ -109,6 +103,13 @@ public class Command {
 	}
 	public void setParameter(String parameter) {
 		this.parameter = parameter;
+	}
+	@Override
+	public String toString() {
+		return "Command [id=" + id + ", command=" + command + ", output=" + output + ", time=" + time + ", startTime="
+				+ startTime + ", finishTime=" + finishTime + ", upload=" + upload + ", serverId=" + serverId
+				+ ", serverCreationTime=" + serverCreationTime + ", restart=" + restart + ", parameter=" + parameter
+				+ "]";
 	}
 	
 }
