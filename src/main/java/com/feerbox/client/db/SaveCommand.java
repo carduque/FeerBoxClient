@@ -27,10 +27,14 @@ public class SaveCommand extends FeerboxDB {
 			if(command.getUpload()){
 				upload=1;
 			}
+			String parameter = null;
+			if(command.getParameter()!=null){
+				parameter = command.getParameter().replaceAll("'","\'");
+			}
 			String sql = "insert into Commands (time, command, serverId, upload, serverCreationTime, restart, parameter) "
 					+ "values(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),'" + command.getCommand() + "',  "+command.getServerId()+", "+upload
 							+", STRFTIME('%Y-%m-%d %H:%M:%f', '"+ command.getsetServerCreationTimeFormatted()+"'), "
-									+restart+",'"+command.getParameter()+"')";
+									+restart+",'"+parameter+"')";
 			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM Commands LIMIT 1");
