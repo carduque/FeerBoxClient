@@ -124,7 +124,7 @@ public class StatusRegister implements Runnable {
         //07:33:54 up 11 min,  1 user,  load average: 1.14, 0.96, 0.55
         //16:30:34 up  6:40,  1 user,  load average: 0.01, 0.01, 0.00
         if (line != null) {
-        	logger.debug(line);
+        	//logger.debug(line);
             Pattern parse = Pattern.compile("((\\d+) days,)? (\\d+):(\\d+)");
             Matcher matcher = parse.matcher(line);
             if (matcher.find()) {
@@ -168,7 +168,7 @@ public class StatusRegister implements Runnable {
 		    Enumeration<InetAddress> addresses = iface.getInetAddresses();
 		    while(addresses.hasMoreElements()) {
 		        InetAddress addr = addresses.nextElement();
-		        logger.debug(iface.getName());
+		        //logger.debug(iface.getName());
 		        if(iface.getName().toUpperCase().contains("WLAN0")){
 		        	this.ip = addr.getHostAddress();
 		        	out = "true";

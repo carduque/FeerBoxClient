@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 public class CommandExecutorTest {
 	public static void main(String[] args) {
 		System.out.println("going to execute...");
-		ProcessBuilder pb = new ProcessBuilder("/bin/bash", "test.sh");
+		ProcessBuilder pb = new ProcessBuilder("/bin/bash", "grep.sh", "\"^$(date -d -1hour +'%Y-%m-%d %H')\"");
 		pb.directory(new File("/home/vagrant/commandExecutor"));
 		try {
 			Process process = pb.start();
