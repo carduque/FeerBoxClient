@@ -24,8 +24,14 @@ public class AliveRegister implements Runnable {
 		checkInternetAccess();
 		boolean after = InternetAccess.getInstance().getAccess();
 		if(before!=after && after == true){
-			// 
 			new StatusRegister().run();
+			if(ClientRegister.getInstance().getLastGetCommands()!=null){
+				long diff = System.currentTimeMillis() - ClientRegister.getInstance().getLastGetCommands().getTime();
+				long diffMinutes = diff / (60 * 1000) % 60;
+				if(diffMinutes>ClientRegister.getInstance().getCommandQueueRegisterInterval()){
+					new CommandQueueRegister().run();
+				}
+			}
 		}
 		aliveLights();
 		checkWifiDetection();

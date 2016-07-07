@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -46,6 +47,7 @@ public class CommandService {
 			os.flush();
 
 			if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				ClientRegister.getInstance().setLastGetCommands(new Date());
 				//{"commands":[{"id":5,"command":"deploy.sh","reference":"2015001","creationDate":"16-Jun-2016 23:09:33.813","active":true,"restart":true}]}
 				InputStream in = conn.getInputStream();
 				BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8")); 

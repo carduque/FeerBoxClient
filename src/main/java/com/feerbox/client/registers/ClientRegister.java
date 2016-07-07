@@ -26,6 +26,7 @@ public class ClientRegister {
 	private boolean answersUploaded = true;
 	final static Logger logger = Logger.getLogger(ClientRegister.class);
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
+	private Date lastGetCommands;
 	 static
 	    {
 	        try {
@@ -207,4 +208,11 @@ public class ClientRegister {
 		return Boolean.parseBoolean(getProperty("cleaning_service_enable"));
 	}
 
+	public void setLastGetCommands(Date date) {
+		this.lastGetCommands= date;
+	}
+	
+	public Date getLastGetCommands() {
+		return lastGetCommands;
+	}
 }
