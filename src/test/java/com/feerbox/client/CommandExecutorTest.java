@@ -8,8 +8,8 @@ import java.io.InputStreamReader;
 public class CommandExecutorTest {
 	public static void main(String[] args) {
 		System.out.println("going to execute...");
-		ProcessBuilder pb = new ProcessBuilder("/bin/bash", "grep.sh", "\"^$(date -d -1hour +'%Y-%m-%d %H')\"");
-		pb.directory(new File("/home/vagrant/commandExecutor"));
+		ProcessBuilder pb = new ProcessBuilder("/bin/bash", "grep-logs.sh", "\"^$(date -d -1hour +'%Y-%m-%d %H')\"");
+		pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts"));
 		try {
 			Process process = pb.start();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
