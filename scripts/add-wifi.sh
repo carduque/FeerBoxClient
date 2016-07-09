@@ -1,6 +1,9 @@
 #!/bin/bash
 cp /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.old
 
+echo "BEFORE..."
+cat /etc/wpa_supplicant/wpa_supplicant.conf
+
 echo "">>/etc/wpa_supplicant/wpa_supplicant.conf
 echo "network={">>/etc/wpa_supplicant/wpa_supplicant.conf
         echo "ssid=\"$1\"">>/etc/wpa_supplicant/wpa_supplicant.conf
@@ -12,4 +15,5 @@ echo "network={">>/etc/wpa_supplicant/wpa_supplicant.conf
 echo "}">>/etc/wpa_supplicant/wpa_supplicant.conf
 echo "">>/etc/wpa_supplicant/wpa_supplicant.conf
 
+echo "AFTER..."
 cat /etc/wpa_supplicant/wpa_supplicant.conf
