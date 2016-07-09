@@ -11,3 +11,5 @@ echo "network={">>/etc/wpa_supplicant/wpa_supplicant.conf
         echo "auth_alg=OPEN">>/etc/wpa_supplicant/wpa_supplicant.conf
 echo "}">>/etc/wpa_supplicant/wpa_supplicant.conf
 echo "">>/etc/wpa_supplicant/wpa_supplicant.conf
+
+cat /etc/wpa_supplicant/wpa_supplicant.conf
