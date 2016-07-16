@@ -79,8 +79,8 @@ public class AliveRegister implements Runnable {
 
             //trying to retrieve data from the source. If there
             //is no connection, this line will fail
-            urlConnect.setConnectTimeout(5000);
-            urlConnect.setReadTimeout(5000);
+            urlConnect.setConnectTimeout(10000);
+            urlConnect.setReadTimeout(10000);
             InputStream in = (InputStream) urlConnect.getContent();
             if(ClientRegister.getInstance().getInternet()){
     			//logger.debug("YES Internet connection "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
