@@ -27,6 +27,7 @@ public class ClientRegister {
 	final static Logger logger = Logger.getLogger(ClientRegister.class);
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
 	private Date lastGetCommands;
+	private Date lastGetCleaners;
 	 static
 	    {
 	        try {
@@ -214,5 +215,23 @@ public class ClientRegister {
 	
 	public Date getLastGetCommands() {
 		return lastGetCommands;
+	}
+
+	public void setLastGetCleaners(Date date) {
+		this.lastGetCleaners = date;
+	}
+
+	public boolean getCleanerExecutorEnabled() {
+		return Boolean.parseBoolean(getProperty("enable_cleaner_register"));
+	}
+
+	public long getCleanerRegisterInterval() {
+		int interval = 1440;
+		try {
+			interval = Integer.parseInt(getProperty("cleaner_register_interval"));
+		} catch (NumberFormatException e) {
+			logger.error("NumberFormatException", e);
+		}
+		return interval;
 	}
 }

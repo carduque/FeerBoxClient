@@ -1,14 +1,22 @@
 package com.feerbox.client.model;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Cleaner {
 	private int id;
 	private String name;
 	private String surname;
 	private String reference;
-	private Timestamp lastupdate;
+	private Date serverLastUpdate;
+	private int serverId;
+	private int Company;
+	private Date serverCreationDate;
 	
+	
+	public Cleaner() {
+	}
 	public Cleaner(String cleanerReference) {
 		this.reference = cleanerReference;
 	}
@@ -36,11 +44,38 @@ public class Cleaner {
 	public void setReference(String reference) {
 		this.reference = reference;
 	}
-	public Timestamp getLastupdate() {
-		return lastupdate;
+	public Date getServerLastUpdate() {
+		return serverLastUpdate;
 	}
-	public void setLastupdate(Timestamp lastupdate) {
-		this.lastupdate = lastupdate;
+	public void setServerLastUpdate(Date lastupdate) {
+		this.serverLastUpdate = lastupdate;
+	}
+	public int getServerId() {
+		return serverId;
+	}
+	public void setServerId(int serverId) {
+		this.serverId = serverId;
+	}
+	public int getCompany() {
+		return Company;
+	}
+	public void setCompany(int company) {
+		Company = company;
+	}
+	public Date getServerCreationDate() {
+		return serverCreationDate;
+	}
+	public void setServerCreationDate(Date serverCreationDate) {
+		this.serverCreationDate = serverCreationDate;
+	}
+	public String getServerCreationDateFormatted() {
+		//dd-MMM-yyyy HH:mm:ss.SSS
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		return df.format(this.serverCreationDate);
+	}
+	public String getServerLastUpdateDateFormatted() {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		return df.format(this.serverLastUpdate);
 	}
 	
 	

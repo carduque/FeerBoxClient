@@ -66,7 +66,7 @@ public class FeerboxDB {
 		if (!cleaningServicesTableCreated) {
 			//logger.debug("Creating table if not exists...");
 			//table = ClientRegister.getInstance().getCustomer();
-			String sql = "create table if not exists Cleaners (id INTEGER PRIMARY KEY AUTOINCREMENT, name varchar, surname varchar, reference varchar, lastupdate timestamp)";
+			String sql = "create table if not exists Cleaners (id INTEGER PRIMARY KEY AUTOINCREMENT, name varchar, surname varchar, reference varchar, serverlastupdate timestamp, company integer, servercreationdate timestamp, serverid integer)";
 			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			cleaningServicesTableCreated = true;

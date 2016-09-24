@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.feerbox.client.db.SaveAnswerError;
 import com.feerbox.client.registers.AliveRegister;
+import com.feerbox.client.registers.CleanerRegister;
 import com.feerbox.client.registers.ClientRegister;
 import com.feerbox.client.registers.CommandExecutor;
 import com.feerbox.client.registers.CommandQueueRegister;
@@ -24,7 +25,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.3.0.2";
+	public static final String version = "1.3.1";
 	public static KismetClient kismet;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
 	
@@ -44,6 +45,7 @@ public class StartFeerBoxClient {
         StartWifiDetectionThreat();
         StartNFCReaderThreat();
         StartCommandServerPolling();
+        StartCleanerServerPolling();
         
         // create and register gpio pin listener
         registerButtonListeners();
@@ -65,6 +67,13 @@ public class StartFeerBoxClient {
 	        CommandExecutor commandExecutor = new CommandExecutor();
 	        ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(commandQueue, 0, ClientRegister.getInstance().getCommandQueueRegisterInterval(), TimeUnit.MINUTES);
 	        ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(commandExecutor, 0, ClientRegister.getInstance().getCommandExecutorInterval(), TimeUnit.MINUTES);
+		}
+	}
+	
+	private static void StartCleanerServerPolling() {
+		if(ClientRegister.getInstance().getCleanerExecutorEnabled()){
+	        CleanerRegister cleanerRegister = new CleanerRegister();
+	        ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(cleanerRegister, 0, ClientRegister.getInstance().getCleanerRegisterInterval(), TimeUnit.MINUTES);
 		}
 	}
 
