@@ -42,6 +42,9 @@ public class CleanerService {
 			conn.setRequestMethod("POST");
 			//String json = "{\"button\":\""+answer.getButton()+"\",\"reference\":\""+answer.getReference()+"\", \"time\":\""+answer.getTimeText()+"\"}";
 			Date lastUpdate = ReadCleaner.getLastUpdate();
+			if(lastUpdate==null){
+				lastUpdate = new Date(0);
+			}
 			JsonObject json_out = new JsonObject();
 			json_out.addProperty("feerboxReference", reference);
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");

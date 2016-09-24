@@ -56,9 +56,9 @@ public class ReadCleaner extends FeerboxDB{
 
 			// statement.executeUpdate("drop table if exists person");
 			createCleanersTableIfNotExists(statement);
-			ResultSet rs = statement.executeQuery("select max(serverlastupdate) from Cleaners");
+			ResultSet rs = statement.executeQuery("select max(serverlastupdate) as max_lastupdate from Cleaners");
 			while (rs.next()) {
-				out = rs.getTimestamp("serverlastupdate");
+				out = rs.getTimestamp("max_lastupdate");
 			}
 		} catch (SQLException e) {
 			logger.debug("SQLException", e);
