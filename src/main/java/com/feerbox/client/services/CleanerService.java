@@ -47,7 +47,7 @@ public class CleanerService {
 			}
 			JsonObject json_out = new JsonObject();
 			json_out.addProperty("feerboxReference", reference);
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
 			df.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
 			json_out.addProperty("lastupdate", df.format(lastUpdate));
 			
