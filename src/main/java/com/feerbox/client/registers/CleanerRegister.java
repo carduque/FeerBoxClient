@@ -25,6 +25,9 @@ public class CleanerRegister extends Thread {
 				CleanerService.saveOrUpdate(cleaner);
 			}
 		}
+		else{
+			logger.debug("No cleaners to update");
+		}
 		
 	}
 

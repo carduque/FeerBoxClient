@@ -25,6 +25,9 @@ public class CommandQueueRegister extends Thread {
 				CommandService.save(command);
 			}
 		}
+		else{
+			logger.debug("No commands on server");
+		}
 		//Update commands on server? active=false
 		
 		//Check if there are commands finished to send output
