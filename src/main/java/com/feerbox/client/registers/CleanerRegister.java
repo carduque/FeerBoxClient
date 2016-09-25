@@ -21,6 +21,7 @@ public class CleanerRegister extends Thread {
 		
 		//store commands locally
 		if(cleaners!=null) {
+			logger.debug("Cleaners recieved: "+cleaners.size());
 			for(Cleaner cleaner:cleaners){
 				CleanerService.saveOrUpdate(cleaner);
 			}
