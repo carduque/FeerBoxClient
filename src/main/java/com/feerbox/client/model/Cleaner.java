@@ -78,5 +78,13 @@ public class Cleaner {
 		return df.format(this.serverLastUpdate);
 	}
 	
+	@Override
+	public String toString() {
+		return "Cleaner [id=" + id + ", name=" + name + ", surname=" + surname + ", reference=" + reference
+				+ ", serverLastUpdate=" + serverLastUpdate + ", serverId=" + serverId + ", Company=" + Company
+				+ ", serverCreationDate=" + serverCreationDate + "]";
+	}
+	
+	
 	
 }

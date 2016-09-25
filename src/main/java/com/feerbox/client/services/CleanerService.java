@@ -74,6 +74,7 @@ public class CleanerService {
 					Cleaner cleaner = new Cleaner();
 					cleaner.setServerId(jsonObject.get("id").getAsInt());
 				    cleaner.setName(jsonObject.get("name").getAsString());
+				    cleaner.setReference(jsonObject.get("reference").getAsString());
 				    cleaner.setSurname(jsonObject.get("surname").getAsString());
 				    JsonObject jsonCompany = jsonObject.get("Company").getAsJsonObject();
 				    cleaner.setCompany(jsonCompany.get("id").getAsInt());
