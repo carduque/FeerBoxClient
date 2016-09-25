@@ -33,7 +33,7 @@ public class SaveCleaner extends FeerboxDB {
 			while (rs.next()) {
 				id = rs.getInt("rowid");
 			}
-			logger.debug("Cleaner saved or updated: "+id);
+			logger.debug("Cleaner saved or updated - id: "+id);
 		} catch (SQLException e) {
 			logger.debug("SQLException", e);
 		} finally {

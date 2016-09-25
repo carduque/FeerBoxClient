@@ -38,7 +38,7 @@ public class CleanerServiceTest {
 		    cleaner.setCompany(jsonCompany.get("id").getAsInt());
 		    String creationDate = jsonObject.get("creationDate").getAsString();
 		    String lastUpdateDate = jsonObject.get("lastUpdate").getAsString();
-		    SimpleDateFormat df2 = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss.SSSSSS");
+		    SimpleDateFormat df2 = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss.SSS");
 		    try {
 				cleaner.setServerCreationDate(df2.parse(creationDate));
 				cleaner.setServerLastUpdate(df2.parse(lastUpdateDate));
