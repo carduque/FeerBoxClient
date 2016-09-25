@@ -65,7 +65,7 @@ public class CleanerService {
 				while ((inputStr = streamReader.readLine()) != null){
 				    responseStrBuilder.append(inputStr);
 				}
-				logger.debug("UpdateCleaners "+responseStrBuilder.toString());
+				//logger.debug("UpdateCleaners "+responseStrBuilder.toString());
 				JsonParser parser = new JsonParser();
 				JsonObject json = parser.parse(responseStrBuilder.toString()).getAsJsonObject();
 				JsonArray  cleaners = json.getAsJsonArray("cleaners");
@@ -75,7 +75,8 @@ public class CleanerService {
 					cleaner.setServerId(jsonObject.get("id").getAsInt());
 				    cleaner.setName(jsonObject.get("name").getAsString());
 				    cleaner.setSurname(jsonObject.get("surname").getAsString());
-				    cleaner.setCompany(jsonObject.get("companyId").getAsInt());
+				    JsonObject jsonCompany = jsonObject.get("Company").getAsJsonObject();
+				    cleaner.setCompany(jsonCompany.get("id").getAsInt());
 				    String creationDate = jsonObject.get("creationDate").getAsString();
 				    String lastUpdateDate = jsonObject.get("lastUpdate").getAsString();
 				    SimpleDateFormat df2 = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss.SSS");
