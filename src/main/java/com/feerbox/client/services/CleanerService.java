@@ -65,6 +65,7 @@ public class CleanerService {
 				while ((inputStr = streamReader.readLine()) != null){
 				    responseStrBuilder.append(inputStr);
 				}
+				logger.debug("UpdateCleaners "+responseStrBuilder.toString());
 				JsonParser parser = new JsonParser();
 				JsonObject json = parser.parse(responseStrBuilder.toString()).getAsJsonObject();
 				JsonArray  cleaners = json.getAsJsonArray("cleaners");
