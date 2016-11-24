@@ -4,12 +4,13 @@
 from __future__ import print_function
 import subprocess
 import traceback
+import sys
 
 ########################################################################
 ## PARAMS
 verbose = True #True for stdout output, False for logfile output
 logFile = '/var/log/prepareIface.log'
-wlanIface = "" #If not set, script will prompt for one
+wlanIface = sys.argv[1:] #If not set, script will prompt for one
 ########################################################################
 
 def showMessage(messageStr):
