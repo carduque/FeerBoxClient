@@ -36,7 +36,6 @@ public class AliveRegister implements Runnable {
 			}
 		}
 		aliveLights();
-		checkWifiDetection();
 		checkTetheringDetection();
 	}
 
@@ -62,12 +61,6 @@ public class AliveRegister implements Runnable {
 			} catch (IOException e) {
 				logger.error("IOException", e);
 			}
-		}
-	}
-
-	private void checkWifiDetection() {
-		if (!ClientRegister.getInstance().getWifiDetection() && StartFeerBoxClient.kismet != null) {
-			StartFeerBoxClient.kismet.disconnectFromServer();
 		}
 	}
 

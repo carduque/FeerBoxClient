@@ -142,6 +142,10 @@ public class ClientRegister {
 	public boolean getWifiDetection(){
 		return Boolean.parseBoolean(getProperty("wifi_detection"));
 	}
+	
+	public String getWifiInterface(){
+		return getProperty("wifi_interface");
+	}
 
 	public void setAnswersUploaded(boolean upload) {
 		this.answersUploaded = upload;

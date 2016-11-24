@@ -12,6 +12,7 @@ import com.feerbox.client.registers.ClientRegister;
 import com.feerbox.client.registers.CommandExecutor;
 import com.feerbox.client.registers.CommandQueueRegister;
 import com.feerbox.client.registers.KismetClient;
+import com.feerbox.client.registers.MACDetection;
 import com.feerbox.client.registers.NFCReader;
 import com.feerbox.client.registers.StatusRegister;
 import com.feerbox.client.registers.UploadAnswersRegister;
@@ -26,7 +27,7 @@ import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
 	public static final String version = "1.3.1";
-	public static KismetClient kismet;
+	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
 	
 	
@@ -93,8 +94,8 @@ public class StartFeerBoxClient {
 
 	private static void StartWifiDetectionThreat() {
 		if(ClientRegister.getInstance().getWifiDetection()){
-			kismet = new KismetClient();
-			kismet.connectToServer();
+			sniffer = new MACDetection();
+			sniffer.execute();
 		}
 	}
 
