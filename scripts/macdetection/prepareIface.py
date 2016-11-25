@@ -10,7 +10,7 @@ import sys
 ## PARAMS
 verbose = True #True for stdout output, False for logfile output
 logFile = '/var/log/prepareIface.log'
-wlanIface = sys.argv[1:] #If not set, script will prompt for one
+wlanIface = sys.argv[1] #If not set, script will prompt for one
 ########################################################################
 
 def showMessage(messageStr):
