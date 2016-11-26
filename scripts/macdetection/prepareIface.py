@@ -10,7 +10,7 @@ import sys
 ## PARAMS
 verbose = True #True for stdout output, False for logfile output
 logFile = '/var/log/prepareIface.log'
-wlanIface = sys.argv[1] #If not set, script will prompt for one
+wlanIface = "wlan1" #If not set, script will prompt for one
 ########################################################################
 
 def showMessage(messageStr):
@@ -28,7 +28,7 @@ def enableMonitorMode(wlanIface):
     #Enable monitor mode in given wlan interface
     try:
         wlanIndex = wlanIface[-1]
-        phyIface = "phy" + wlanIndex
+        phyIface = "phy0" #+ wlanIndex
         monIface="mon" + wlanIndex
         
         #1. Take wlan interface down 

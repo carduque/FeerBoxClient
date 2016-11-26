@@ -7,7 +7,7 @@ from scapy.all import *
 ########################################################################
 ## PARAMS
 verbose = False #True for stdout output, False for logfile output
-monIface = "" #If not set, script will prompt for one
+monIface = "mon1" #If not set, script will prompt for one
 logFile = "/opt/FeerBoxClient/FeerBoxClient/logs/macs.log"
 ########################################################################
 
