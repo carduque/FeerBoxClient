@@ -28,6 +28,7 @@ public class MACDetection {
 				logger.debug(output);
 				ProcessBuilder pb2 = new ProcessBuilder("/bin/bash", "sniffMacs.sh", "mon"+wifiInterface.substring(wifiInterface.length() - 1)+" &");
 				pb2.directory(new File("/opt/FeerBoxClient/FeerBoxClient/macdetection"));
+				pb2.start();
 				logger.debug("mac detection enabled in background. Check /opt/FeerBoxClient/FeerBoxClient/logs/macs.log");
 			}
 			else{
