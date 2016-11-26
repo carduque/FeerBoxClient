@@ -3,6 +3,7 @@
 
 from __future__ import print_function
 from scapy.all import *
+import datetime
 
 ########################################################################
 ## PARAMS
@@ -34,7 +35,7 @@ def PacketHandler(packet) :
         if packet.type == 0 and packet.subtype in managementRequests :
             if packet.addr2 not in macAddrList :
                 macAddrList.append(packet.addr2)
-                showMessage("Device MAC: " + packet.addr2)
+                showMessage(str(datetime.datetime.now()) + "- MAC: " + packet.addr2)
 
 if monIface is "" :
     #If the wlan interface is not added as a parameter, it prompts for one

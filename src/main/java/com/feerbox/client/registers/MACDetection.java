@@ -12,7 +12,7 @@ public class MACDetection {
 
 	public void execute() {
 		String wifiInterface = ClientRegister.getInstance().getWifiInterface();
-		ProcessBuilder pb = new ProcessBuilder("/bin/bash", "sudo python prepareIface.py", wifiInterface);
+		ProcessBuilder pb = new ProcessBuilder("/usr/bin/python", "prepareIface.py", wifiInterface);
 		pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts/macdetection"));
 		try {
 			Process process = pb.start();
@@ -26,7 +26,7 @@ public class MACDetection {
 			String output = builder.toString();
 			if(output!=null && output.startsWith("New monitor interface")){
 				logger.debug(output);
-				ProcessBuilder pb2 = new ProcessBuilder("/bin/bash", "sudo python sniffMacs.py", "mon"+wifiInterface.substring(wifiInterface.length() - 1)+" &");
+				ProcessBuilder pb2 = new ProcessBuilder("/bin/bash", "sniffMacs.sh", "mon"+wifiInterface.substring(wifiInterface.length() - 1)+" &");
 				pb2.directory(new File("/opt/FeerBoxClient/FeerBoxClient/macdetection"));
 				logger.debug("mac detection enabled in background. Check /opt/FeerBoxClient/FeerBoxClient/logs/macs.log");
 			}

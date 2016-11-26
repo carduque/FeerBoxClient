@@ -32,23 +32,23 @@ def enableMonitorMode(wlanIface):
         monIface="mon" + wlanIndex
         
         #1. Take wlan interface down 
-        ifdownOut = subprocess.call("ifconfig " + wlanIface + " down", shell=True)
+        ifdownOut = subprocess.call("sudo ifconfig " + wlanIface + " down", shell=True)
         if ifdownOut != 0 :
             showMessage("Could not take " + wlanIface + " interface down.")
         
         #2. Add monitoring interface
-        addMonCmd = "iw phy " + phyIface + " interface add " + monIface +  " type monitor" 
+        addMonCmd = "sudo iw phy " + phyIface + " interface add " + monIface +  " type monitor" 
         addMonOut = subprocess.call(addMonCmd, shell=True)
         if addMonOut != 0 :
             showMessage("Could not add " + phyIface + " monitor interface.")
 
         #3. (OPTIONAL) Delete managed wlan interface  
-        delWlanOut = subprocess.call("iw dev " + wlanIface + " del", shell=True)
+        delWlanOut = subprocess.call("sudo iw dev " + wlanIface + " del", shell=True)
         if delWlanOut != 0 :
             showMessage("Could not delete " + wlanIface + " interface.")
 
         #4. Take monitor interface up 
-        ifupOut = subprocess.call("ifconfig " + monIface + " up", shell=True)
+        ifupOut = subprocess.call("sudo ifconfig " + monIface + " up", shell=True)
         if ifupOut != 0 :
             showMessage("Could not take " + wlanIface + " interface down.")
 
