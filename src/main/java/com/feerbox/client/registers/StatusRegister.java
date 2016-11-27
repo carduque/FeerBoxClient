@@ -33,11 +33,12 @@ public class StatusRegister implements Runnable {
 	private ScheduledFuture<?> future;
 	private int interval = ClientRegister.getInstance().getSaveStatusInterval();
 	final static Logger logger = Logger.getLogger(StatusRegister.class);
-
+	private static Date lastStatusTime = null;
+	
 	public void run() {
+		Status status = new Status();
 		try {
 			logger.debug("Going to update status for "+ClientRegister.getInstance().getReference());
-			Status status = new Status();
 			status.setReference(ClientRegister.getInstance().getReference());
 			//logger.debug("Status1");
 			HashMap<String, String> info = new HashMap<String, String>();
@@ -79,10 +80,6 @@ public class StatusRegister implements Runnable {
 			}
 
 			conn.disconnect();
-			//Save locally
-			if(ClientRegister.getInstance().getSaveStatusLocally()){
-				StatusService.save(status);
-			}
 			
 		} catch (SocketException e) {
 			logger.error( "SocketException", e );
@@ -92,6 +89,29 @@ public class StatusRegister implements Runnable {
 			logger.error( "InterruptedException", e );
 		}
 		changeDelay();
+		//Save locally
+		if(ClientRegister.getInstance().getSaveStatusLocally()){
+			StatusService.save(status);
+		}
+		checkStatusTime();
+	}
+
+	private void checkStatusTime() {
+		if(lastStatusTime==null){
+			lastStatusTime = new Date();
+		}
+		else{
+			Date now = new Date();
+			long interval = now.getTime() - lastStatusTime.getTime();
+			int buffer = 10 * 60 * 1000; //10 minutes
+			int statusInterval = ClientRegister.getInstance().getSaveStatusInterval() * 60 * 1000;
+			if(interval>statusInterval+buffer){
+				logger.error("Time ERROR - Time moved forward");
+			}
+			else if(interval<statusInterval-buffer){
+				logger.error("Time ERROR - Time moved backward");
+			}
+		}
 	}
 
 	private void changeDelay() {

@@ -68,7 +68,7 @@ public class FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 			//logger.debug("Creating table if not exists...");
 			//table = ClientRegister.getInstance().getCustomer();
-			String sql = "create table if not exists MACS (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, mac varchar, reference varchar, upload integer)";
+			String sql = "create table if not exists MACS (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, mac varchar, request integer, reference varchar, upload integer)";
 			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			macTableCreated = true;
