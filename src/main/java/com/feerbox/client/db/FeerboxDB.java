@@ -13,6 +13,7 @@ public class FeerboxDB {
 	private static boolean commandsTableCreated = false;
 	private static Connection connection;
 	private static boolean cleaningServicesTableCreated = false;
+	private static boolean macTableCreated;
 	protected final static Logger logger = Logger.getLogger(FeerboxDB.class);
 
 	
@@ -20,11 +21,21 @@ public class FeerboxDB {
 		try {
 			if(connection==null || connection.isClosed()){
 				createConnection();
+				createTables();
 			}
 		} catch (SQLException e) {
 			logger.error( "SQLException", e );
 		}
 		return connection;
+	}
+
+	private static void createTables() {
+		try {
+			createMACTableIfNotExists();
+		} catch (SQLException e) {
+			logger.debug("SQLException", e);
+		}
+		
 	}
 
 	private static void createConnection() {
@@ -48,6 +59,19 @@ public class FeerboxDB {
 			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			answersTableCreated = true;
+		}
+	}
+	
+	protected static void createMACTableIfNotExists() throws SQLException {
+		if (!macTableCreated) {
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+			//logger.debug("Creating table if not exists...");
+			//table = ClientRegister.getInstance().getCustomer();
+			String sql = "create table if not exists MAC (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, mac varchar, reference varchar, upload integer)";
+			//logger.debug(sql);
+			statement.executeUpdate(sql);
+			macTableCreated = true;
 		}
 	}
 	
