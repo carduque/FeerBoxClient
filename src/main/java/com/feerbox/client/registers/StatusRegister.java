@@ -110,7 +110,7 @@ public class StatusRegister implements Runnable {
 				logger.error("Time ERROR - Time moved forward. Now: "+ df.format(now)+" - LastStatus: "+ df.format(lastStatusTime));
 			}
 			else if(interval<statusInterval-buffer){
-				logger.error("Time ERROR - Time moved backward");
+				logger.error("Time ERROR - Time moved backward. Now: "+ df.format(now)+" - LastStatus: "+ df.format(lastStatusTime));
 			}
 			lastStatusTime = now;
 		}
