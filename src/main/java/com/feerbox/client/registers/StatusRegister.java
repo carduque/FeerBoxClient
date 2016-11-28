@@ -112,6 +112,7 @@ public class StatusRegister implements Runnable {
 			else if(interval<statusInterval-buffer){
 				logger.error("Time ERROR - Time moved backward");
 			}
+			lastStatusTime = now;
 		}
 	}
 
