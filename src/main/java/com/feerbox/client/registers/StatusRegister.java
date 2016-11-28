@@ -101,12 +101,13 @@ public class StatusRegister implements Runnable {
 			lastStatusTime = new Date();
 		}
 		else{
+			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 			Date now = new Date();
 			long interval = now.getTime() - lastStatusTime.getTime();
 			int buffer = 10 * 60 * 1000; //10 minutes
 			int statusInterval = ClientRegister.getInstance().getSaveStatusInterval() * 60 * 1000;
 			if(interval>statusInterval+buffer){
-				logger.error("Time ERROR - Time moved forward");
+				logger.error("Time ERROR - Time moved forward. Now: "+ df.format(now)+" - LastStatus: "+ df.format(lastStatusTime));
 			}
 			else if(interval<statusInterval-buffer){
 				logger.error("Time ERROR - Time moved backward");
