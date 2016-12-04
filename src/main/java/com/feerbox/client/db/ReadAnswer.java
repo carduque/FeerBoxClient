@@ -24,7 +24,7 @@ public class ReadAnswer extends FeerboxDB{
 
 			// statement.executeUpdate("drop table if exists person");
 			createAnswersTableIfNotExists(statement);
-			ResultSet rs = statement.executeQuery("select id, time, button, reference, upload from Answers where upload=0");
+			ResultSet rs = statement.executeQuery("select id, time, button, reference, upload from Answers where upload=0 order by id asc");
 			while (rs.next()) {
 				Answer answer = new Answer();
 				answer.setId(rs.getInt("id"));
