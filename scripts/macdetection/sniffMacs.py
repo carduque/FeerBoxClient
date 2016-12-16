@@ -35,7 +35,7 @@ def PacketHandler(packet) :
         managementRequests = (0, 2, 4)
     
         if packet.type == 0 and packet.subtype in managementRequests :
-            cursor.execute('''INSERT INTO MACS(mac, time, request, reference, upload) VALUES(?,?,?,?)''', (packet.addr2, str(datetime.datetime.now()), packet.subtype,sys.argv[2], 0))
+            cursor.execute('''INSERT INTO MACS(mac, time, request, reference, upload) VALUES(?,?,?,?,?)''', (packet.addr2, str(datetime.datetime.now()), packet.subtype,sys.argv[2], 0))
             db.commit()
             
 if monIface is "" :
