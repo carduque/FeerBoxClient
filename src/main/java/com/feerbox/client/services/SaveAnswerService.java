@@ -1,6 +1,7 @@
 package com.feerbox.client.services;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -86,11 +87,13 @@ public class SaveAnswerService{
 	public static void tryConnection() throws SaveAnswerError {
 		try {
 			URL myURL = new URL(ClientRegister.getInstance().getEnvironment());
-			URLConnection myURLConnection = myURL.openConnection();
+			HttpURLConnection myURLConnection = (HttpURLConnection) myURL.openConnection();
 			myURLConnection.setConnectTimeout(5000);
 			myURLConnection.setReadTimeout(5000);
 			myURLConnection.setRequestProperty("Content-Length", "1000");
-			myURLConnection.getInputStream();
+			InputStream stream = myURLConnection.getInputStream();
+			stream.close();
+			myURLConnection.disconnect();
 		} catch (MalformedURLException e) {
 			throw new SaveAnswerError(e);
 		} catch (IOException e) {
