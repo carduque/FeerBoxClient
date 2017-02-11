@@ -20,15 +20,16 @@ public class SaveCleaner extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			createCleanersTableIfNotExists(statement);
-			
+			logger.debug("going to execute");
 			String sql = "insert or replace into Cleaners (id, name, surname, reference, serverid, company, servercreationdate, serverlastupdate) "
 					+ " values("
 					+ " (select id from Cleaners where serverid="+cleaner.getServerId()+"),"
 					+ " '"+cleaner.getName()+"', '"+cleaner.getSurname()+"',"+"'"+cleaner.getReference()+"',"
 					+" "+cleaner.getServerId()+", "+cleaner.getCompany()+", STRFTIME('%Y-%m-%d %H:%M:%f', '"+ cleaner.getServerCreationDateFormatted()+"'), "
 					+ " STRFTIME('%Y-%m-%d %H:%M:%f', '"+ cleaner.getServerLastUpdateDateFormatted()+"'))";
-			//logger.debug(sql);
+			logger.debug(sql);
 			statement.executeUpdate(sql);
+			logger.debug("executed");
 			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM Cleaners LIMIT 1");
 			while (rs.next()) {
 				id = rs.getInt("rowid");
