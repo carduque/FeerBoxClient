@@ -15,19 +15,24 @@ public class CleanerRegister extends Thread {
 
 	@Override
 	public void run() {
-		logger.debug("Going to check remote cleaner updates");
-		//Check if there is commands on queue from server
-		List<Cleaner> cleaners = CleanerService.getPendingUpdates(ClientRegister.getInstance().getReference());
-		
-		//store commands locally
-		if(cleaners!=null) {
-			logger.debug("Cleaners recieved: "+cleaners.size());
-			for(Cleaner cleaner:cleaners){
-				CleanerService.saveOrUpdate(cleaner);
+		try {
+			logger.debug("Going to check remote cleaner updates");
+			//Check if there is commands on queue from server
+			List<Cleaner> cleaners = CleanerService.getPendingUpdates(ClientRegister.getInstance().getReference());
+			
+			//store commands locally
+			if(cleaners!=null) {
+				logger.debug("Cleaners recieved: "+cleaners.size());
+				for(Cleaner cleaner:cleaners){
+					CleanerService.saveOrUpdate(cleaner);
+				}
 			}
-		}
-		else{
-			logger.debug("No cleaners to update");
+			else{
+				logger.debug("No cleaners to update");
+			}
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+			logger.error(e.getMessage());
 		}
 		
 	}
