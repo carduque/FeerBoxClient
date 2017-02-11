@@ -41,16 +41,16 @@ public class ReadCommand extends FeerboxDB {
 				commands.add(command);
 			}
 		} catch (SQLException e) {
-			logger.debug("SQLException", e);
+			logger.error("SQLException", e);
 			commands = null;
 		} catch (ParseException e) {
-			logger.debug("ParseException", e);
+			logger.error("ParseException", e);
 			commands = null;
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				logger.debug("SQLException", e);
+				logger.error("SQLException", e);
 				commands = null;
 			}
 		}
@@ -73,12 +73,12 @@ public class ReadCommand extends FeerboxDB {
 				out = true;
 			}
 		} catch (SQLException e) {
-			logger.debug("SQLException", e);
+			logger.error("SQLException", e);
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				logger.debug("SQLException", e);
+				logger.error("SQLException", e);
 			}
 		}
 		return out;

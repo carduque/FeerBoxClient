@@ -79,6 +79,8 @@ public class NFCReader extends Thread {
 			}
 		} catch (CardException e) {
 			logger.error("CardException", e);
+		} catch (Exception e){
+			logger.error(e.getMessage());
 		}
 	}
 

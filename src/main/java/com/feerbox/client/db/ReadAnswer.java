@@ -36,16 +36,16 @@ public class ReadAnswer extends FeerboxDB{
 				answers.add(answer);
 			}
 		} catch (SQLException e) {
-			logger.debug("SQLException", e);
+			logger.error("SQLException", e);
 			answers = null;
 		} catch (ParseException e) {
-			logger.debug("ParseException", e);
+			logger.error("ParseException", e);
 			answers = null;
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				logger.debug("SQLException", e);
+				logger.error("SQLException", e);
 				answers = null;
 			}
 		}

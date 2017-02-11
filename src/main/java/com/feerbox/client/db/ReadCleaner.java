@@ -33,12 +33,12 @@ public class ReadCleaner extends FeerboxDB{
 				cleaner.setServerLastUpdate(rs.getTimestamp("serverlastupdate"));
 			}
 		} catch (SQLException e) {
-			logger.debug("SQLException", e);
+			logger.error("SQLException", e);
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				logger.debug("SQLException", e);
+				logger.error("SQLException", e);
 			}
 		}
 		return cleaner;
@@ -61,12 +61,12 @@ public class ReadCleaner extends FeerboxDB{
 				out = rs.getTimestamp("max_lastupdate");
 			}
 		} catch (SQLException e) {
-			logger.debug("SQLException", e);
+			logger.error("SQLException", e);
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				logger.debug("SQLException", e);
+				logger.error("SQLException", e);
 			}
 		}
 		return out;

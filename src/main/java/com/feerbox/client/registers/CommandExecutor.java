@@ -19,59 +19,63 @@ public class CommandExecutor implements Runnable {
 
 	@Override
 	public void run() {
-		logger.debug("Command Executor");
-		if(!CommandService.isCommandInExecution()){
-			//logger.debug("No commands under execution");
-			//Execute commands enqueued
-			Command command = CommandService.startNextExecution();
-			//logger.debug("Command: "+command);
-			if(command!=null){
-				logger.debug("Going to execute a command: "+command.getCommand()+" "+command.getParameter());
-				SaveCommand.startExecution(command);
-				//List<String> commandParameters = command.getParameters();
-				//commandParameters.add(0, command.getCommand());
-				ProcessBuilder pb = new ProcessBuilder("/bin/bash", command.getCommand(), command.getParameter());
-				/*Map<String, String> env = pb.environment();
-				env.put("VAR1", "myValue");
-				env.remove("OTHERVAR");
-				env.put("VAR2", env.get("VAR1") + "suffix");*/
-				pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts"));
-				try {
-					Process process = pb.start();
-					BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-					StringBuilder builder = new StringBuilder();
-					String line = null;
-					while ( (line = reader.readLine()) != null) {
-					   builder.append(line);
-					   builder.append(System.getProperty("line.separator"));
+		try {
+			logger.debug("Command Executor");
+			if(!CommandService.isCommandInExecution()){
+				//logger.debug("No commands under execution");
+				//Execute commands enqueued
+				Command command = CommandService.startNextExecution();
+				//logger.debug("Command: "+command);
+				if(command!=null){
+					logger.debug("Going to execute a command: "+command.getCommand()+" "+command.getParameter());
+					SaveCommand.startExecution(command);
+					//List<String> commandParameters = command.getParameters();
+					//commandParameters.add(0, command.getCommand());
+					ProcessBuilder pb = new ProcessBuilder("/bin/bash", command.getCommand(), command.getParameter());
+					/*Map<String, String> env = pb.environment();
+					env.put("VAR1", "myValue");
+					env.remove("OTHERVAR");
+					env.put("VAR2", env.get("VAR1") + "suffix");*/
+					pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts"));
+					try {
+						Process process = pb.start();
+						BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+						StringBuilder builder = new StringBuilder();
+						String line = null;
+						while ( (line = reader.readLine()) != null) {
+						   builder.append(line);
+						   builder.append(System.getProperty("line.separator"));
+						}
+						command.setOutput(builder.toString());
+						logger.debug("Command executed succesfully: "+command.getCommand());
+						SaveCommand.saveFinishExecution(command);
+						if(command.getRestart()){
+							logger.debug("Going to restart");
+							restart();
+						}
+					} catch (IOException e) {
+						logger.error("IOException", e);
 					}
-					command.setOutput(builder.toString());
-					logger.debug("Command executed succesfully: "+command.getCommand());
-					SaveCommand.saveFinishExecution(command);
-					if(command.getRestart()){
-						logger.debug("Going to restart");
+				}
+				else{
+					logger.debug("There is no command to be executed");
+				}
+			} else{
+				if(CommandService.forceCleanQueue()){
+					//In case commands are hang
+					CommandService.cleanQueue();
+				}
+				if(CommandService.forceRestart()){
+					//In case commands are hang
+					try {
 						restart();
+					} catch (IOException e) {
+						logger.error("IOException", e);
 					}
-				} catch (IOException e) {
-					logger.error("IOException", e);
 				}
 			}
-			else{
-				logger.debug("There is no command to be executed");
-			}
-		} else{
-			if(CommandService.forceCleanQueue()){
-				//In case commands are hang
-				CommandService.cleanQueue();
-			}
-			if(CommandService.forceRestart()){
-				//In case commands are hang
-				try {
-					restart();
-				} catch (IOException e) {
-					logger.error("IOException", e);
-				}
-			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 	}
 

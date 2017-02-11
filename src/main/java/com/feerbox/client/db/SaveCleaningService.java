@@ -30,12 +30,12 @@ public class SaveCleaningService extends FeerboxDB{
 			}
 			logger.debug("CleaningService registered offline: "+id);
 		} catch (SQLException e) {
-			logger.debug("SQLException", e);
+			logger.error("SQLException", e);
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				logger.debug("SQLException", e);
+				logger.error("SQLException", e);
 			}
 		}
 		return id;
@@ -54,12 +54,12 @@ public class SaveCleaningService extends FeerboxDB{
 			createCleaningServicesTableIfNotExists(statement);
 			statement.executeUpdate("update CleaningServices set upload=1 where id="+cleaningService.getId());
 		} catch (SQLException e) {
-			logger.debug("SQLException", e);
+			logger.error("SQLException", e);
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				logger.debug("SQLException", e);
+				logger.error("SQLException", e);
 			}
 		}
 	}

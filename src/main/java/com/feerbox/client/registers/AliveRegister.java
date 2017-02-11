@@ -22,21 +22,25 @@ public class AliveRegister implements Runnable {
 	private static boolean firstTimeTethering = false;
 
 	public void run() {
-		boolean before = InternetAccess.getInstance().getAccess();
-		checkInternetAccess();
-		boolean after = InternetAccess.getInstance().getAccess();
-		if (before != after && after == true) {
-			new StatusRegister().run();
-			if (ClientRegister.getInstance().getLastGetCommands() != null) {
-				long diff = System.currentTimeMillis() - ClientRegister.getInstance().getLastGetCommands().getTime();
-				long diffMinutes = diff / (60 * 1000) % 60;
-				if (diffMinutes > ClientRegister.getInstance().getCommandQueueRegisterInterval()) {
-					new CommandQueueRegister().run();
+		try {
+			boolean before = InternetAccess.getInstance().getAccess();
+			checkInternetAccess();
+			boolean after = InternetAccess.getInstance().getAccess();
+			if (before != after && after == true) {
+				new StatusRegister().run();
+				if (ClientRegister.getInstance().getLastGetCommands() != null) {
+					long diff = System.currentTimeMillis() - ClientRegister.getInstance().getLastGetCommands().getTime();
+					long diffMinutes = diff / (60 * 1000) % 60;
+					if (diffMinutes > ClientRegister.getInstance().getCommandQueueRegisterInterval()) {
+						new CommandQueueRegister().run();
+					}
 				}
 			}
+			aliveLights();
+			checkTetheringDetection();
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-		aliveLights();
-		checkTetheringDetection();
 	}
 
 	private void checkTetheringDetection() {

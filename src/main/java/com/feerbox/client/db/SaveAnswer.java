@@ -31,12 +31,12 @@ public class SaveAnswer extends FeerboxDB{
 			}
 			logger.debug("Answered registered offline: "+id);
 		} catch (SQLException e) {
-			logger.debug("SQLException", e);
+			logger.error("SQLException", e);
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				logger.debug("SQLException", e);
+				logger.error("SQLException", e);
 			}
 		}
 		return id;
@@ -57,12 +57,12 @@ public class SaveAnswer extends FeerboxDB{
 			statement.executeUpdate(
 					"update Answers set upload=1 where id="+answer.getId());
 		} catch (SQLException e) {
-			logger.debug("SQLException", e);
+			logger.error("SQLException", e);
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				logger.debug("SQLException", e);
+				logger.error("SQLException", e);
 			}
 		}
 	}

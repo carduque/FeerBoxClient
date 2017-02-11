@@ -33,7 +33,7 @@ public class FeerboxDB {
 		try {
 			createMACTableIfNotExists();
 		} catch (SQLException e) {
-			logger.debug("SQLException", e);
+			logger.error("SQLException", e);
 		}
 		
 	}

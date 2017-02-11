@@ -37,16 +37,16 @@ public class ReadCleaningService extends FeerboxDB {
 				cleaningServices.add(cleaningService);
 			}
 		} catch (SQLException e) {
-			logger.debug("SQLException", e);
+			logger.error("SQLException", e);
 			cleaningServices = null;
 		} catch (ParseException e) {
-			logger.debug("ParseException", e);
+			logger.error("ParseException", e);
 			cleaningServices = null;
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				logger.debug("SQLException", e);
+				logger.error("SQLException", e);
 				cleaningServices = null;
 			}
 		}

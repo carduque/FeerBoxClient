@@ -70,7 +70,7 @@ public class Cleaner {
 	}
 	public String getServerCreationDateFormatted() {
 		//dd-MMM-yyyy HH:mm:ss.SSS
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:c");
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		return df.format(this.serverCreationDate);
 	}
 	public String getServerLastUpdateDateFormatted() {

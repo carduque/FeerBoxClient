@@ -36,12 +36,12 @@ public class SaveCleaner extends FeerboxDB {
 			}
 			logger.debug("Cleaner saved or updated - id: "+id);
 		} catch (SQLException e) {
-			logger.debug("SQLException", e);
+			logger.error("SQLException", e);
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				logger.debug("SQLException", e);
+				logger.error("SQLException", e);
 			}
 		}
 		return id;

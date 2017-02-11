@@ -30,12 +30,12 @@ public class SaveStatus extends FeerboxDB{
 			}
 			//logger.debug("Status registered offline: "+id);
 		} catch (SQLException e) {
-			logger.debug("SQLException", e);
+			logger.error("SQLException", e);
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				logger.debug("SQLException", e);
+				logger.error("SQLException", e);
 			}
 		}
 		return id;
