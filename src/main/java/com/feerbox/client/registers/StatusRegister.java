@@ -78,7 +78,7 @@ public class StatusRegister implements Runnable {
 				status.setUpload(1);
 				logger.debug("Status updated on server succesfully");
 			}
-
+			os.close();
 			conn.disconnect();
 			
 		} catch (SocketException e) {

@@ -1,6 +1,7 @@
 package com.feerbox.client.registers;
 
 import java.nio.ByteBuffer;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
@@ -24,6 +25,7 @@ public class NFCReader extends Thread {
 	private CardTerminal terminal;
 	private Card card;
 	final static Logger logger = Logger.getLogger(NFCReader.class);
+	private static Timestamp lastNFC = null;
 
 	public void run() {
 		// logger.debug("My thread is in running state.");
@@ -37,35 +39,40 @@ public class NFCReader extends Thread {
 					baReadUID = new byte[] { (byte) 0xFF, (byte) 0xCA, (byte) 0x00, (byte) 0x00, (byte) 0x00 };
 					CardChannel channel = card.getBasicChannel();
 					String uid = send(baReadUID, channel);
-					//logger.info("NFC UID: " + uid);
-					// Toolkit.getDefaultToolkit().beep();
-					Cleaner cleaner = ReadCleaner.read(new Cleaner(uid));
-					CleaningService cleaningService = new CleaningService();
-					if(cleaner!=null){
-						logger.info("NFC UID: " + uid + " - "+cleaner.getName()+" "+cleaner.getSurname());
-						if(ClientRegister.getInstance().getLCDActive()){
-							LCDWrapper.clear();
-							LCDWrapper.setTextRow0(cleaner.getName()+" "+cleaner.getSurname());
-							LCDWrapper.setCurrentTimeRow1();
-						}
-						cleaningService.setCleanerReference(cleaner.getName()+" "+cleaner.getSurname()); //TO DO change by real identifier
-					}
-					else{
-						logger.info("NFC UID: " + uid + " not found on DB ");
-						if(ClientRegister.getInstance().getLCDActive()){
-							LCDWrapper.clear();
-							LCDWrapper.setTextRow0("UID:"+uid);
-							LCDWrapper.setCurrentTimeRow1();
-						}
-						cleaningService.setCleanerReference(uid);
-					}
-					terminal.waitForCardAbsent(0);
-					cleaningService.setFeerboxReference(ClientRegister.getInstance().getReference());
 					long now = System.currentTimeMillis();
-					Date date = new Date(now);
-					cleaningService.setTime(date);
-					SaveCleaningService.save(cleaningService);
-					// logger.debug("Card removed");
+					if(lastNFC==null || (now - lastNFC.getTime())>60*1000){ //Skip card less than a minute
+						//logger.info("NFC UID: " + uid);
+						// Toolkit.getDefaultToolkit().beep();
+						Cleaner cleaner = ReadCleaner.read(new Cleaner(uid));
+						CleaningService cleaningService = new CleaningService();
+						if(cleaner!=null || cleaner.getName()!=null){
+							logger.info("NFC UID: " + uid + " - "+cleaner.getName()+" "+cleaner.getSurname());
+							if(ClientRegister.getInstance().getLCDActive()){
+								LCDWrapper.clear();
+								LCDWrapper.setTextRow0(cleaner.getName()+" "+cleaner.getSurname());
+								LCDWrapper.setCurrentTimeRow1();
+							}
+							cleaningService.setCleanerReference(cleaner.getName()+" "+cleaner.getSurname()); //TO DO change by real identifier
+							terminal.waitForCardAbsent(0);
+							cleaningService.setFeerboxReference(ClientRegister.getInstance().getReference());
+							
+							Date date = new Date(now);
+							cleaningService.setTime(date);
+							SaveCleaningService.save(cleaningService);
+							lastNFC = new Timestamp(now);
+						}
+						else{
+							logger.info("NFC UID: " + uid + " not found on DB ");
+							//If NFC is not in DB, discard this card
+							/*if(ClientRegister.getInstance().getLCDActive()){
+								LCDWrapper.clear();
+								LCDWrapper.setTextRow0("UID:"+uid);
+								LCDWrapper.setCurrentTimeRow1();
+							}
+							cleaningService.setCleanerReference(uid);*/
+						}
+						// logger.debug("Card removed");
+					}
 				} catch (Exception e) {
 					logger.error("Terminal NOT connected: " + e.toString());
 				}
