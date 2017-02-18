@@ -22,10 +22,14 @@ public class CleanerRegister extends Thread {
 			
 			//store commands locally
 			if(cleaners!=null) {
+				int companyId = 0;
 				logger.debug("Cleaners recieved: "+cleaners.size());
 				for(Cleaner cleaner:cleaners){
 					CleanerService.saveOrUpdate(cleaner);
+					companyId = cleaner.getCompany();
 				}
+				int removed = CleanerService.removeOtherCompanies(companyId);
+				logger.debug(removed+" cleaners removed from other companies than "+companyId);
 			}
 			else{
 				logger.debug("No cleaners to update");

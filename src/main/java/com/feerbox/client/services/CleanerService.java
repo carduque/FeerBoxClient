@@ -19,6 +19,7 @@ import java.util.TimeZone;
 import org.apache.log4j.Logger;
 
 import com.feerbox.client.db.ReadCleaner;
+import com.feerbox.client.db.RemoveCleaner;
 import com.feerbox.client.db.SaveCleaner;
 import com.feerbox.client.db.SaveCommand;
 import com.feerbox.client.model.Cleaner;
@@ -107,5 +108,9 @@ public class CleanerService {
 
 	public static void saveOrUpdate(Cleaner cleaner) {
 		SaveCleaner.save(cleaner);
+	}
+
+	public static int removeOtherCompanies(int companyId) {
+		return RemoveCleaner.removeOthersCompanies(companyId);
 	}
 }
