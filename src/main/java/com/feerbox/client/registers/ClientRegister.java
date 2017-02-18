@@ -238,4 +238,8 @@ public class ClientRegister {
 		}
 		return interval;
 	}
+
+	public boolean getShowUnknownNFCs() {
+		return Boolean.parseBoolean(getProperty("show_unkown_nfcs"));
+	}
 }

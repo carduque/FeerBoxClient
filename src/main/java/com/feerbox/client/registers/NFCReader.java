@@ -52,7 +52,8 @@ public class NFCReader extends Thread {
 								LCDWrapper.setTextRow0(cleaner.getName()+" "+cleaner.getSurname());
 								LCDWrapper.setCurrentTimeRow1();
 							}
-							cleaningService.setCleanerReference(cleaner.getName()+" "+cleaner.getSurname()); //TO DO change by real identifier
+							//cleaningService.setCleanerReference(cleaner.getName()+" "+cleaner.getSurname()); //TO DO change by real identifier
+							cleaningService.setCleanerReference(cleaner.getReference());
 							terminal.waitForCardAbsent(0);
 							cleaningService.setFeerboxReference(ClientRegister.getInstance().getReference());
 							
@@ -63,13 +64,14 @@ public class NFCReader extends Thread {
 						}
 						else{
 							logger.info("NFC UID: " + uid + " not found on DB ");
-							//If NFC is not in DB, discard this card
-							/*if(ClientRegister.getInstance().getLCDActive()){
-								LCDWrapper.clear();
-								LCDWrapper.setTextRow0("UID:"+uid);
-								LCDWrapper.setCurrentTimeRow1();
+							if(ClientRegister.getInstance().getShowUnknownNFCs()){
+								if(ClientRegister.getInstance().getLCDActive()){
+									LCDWrapper.clear();
+									LCDWrapper.setTextRow0("UID:"+uid);
+									LCDWrapper.setCurrentTimeRow1();
+								}
 							}
-							cleaningService.setCleanerReference(uid);*/
+							//If NFC is not in DB, it won't send that cleaningService to server
 						}
 						// logger.debug("Card removed");
 					}
