@@ -45,7 +45,7 @@ public class NFCReader extends Thread {
 						// Toolkit.getDefaultToolkit().beep();
 						Cleaner cleaner = ReadCleaner.read(new Cleaner(uid));
 						CleaningService cleaningService = new CleaningService();
-						if(cleaner!=null || cleaner.getName()!=null){
+						if(cleaner!=null && cleaner.getName()!=null ){
 							logger.info("NFC UID: " + uid + " - "+cleaner.getName()+" "+cleaner.getSurname());
 							if(ClientRegister.getInstance().getLCDActive()){
 								LCDWrapper.clear();
