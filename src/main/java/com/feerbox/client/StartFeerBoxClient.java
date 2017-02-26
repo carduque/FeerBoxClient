@@ -159,18 +159,28 @@ public class StartFeerBoxClient {
 
 	private static void InitGPIO() {
 		ButtonService.setButton1(gpio.provisionDigitalInputPin(RaspiPin.GPIO_00, PinPullResistance.PULL_DOWN)); //17 
+		ButtonService.getButton1().setDebounce(1000);
+		ButtonService.getButton1().setShutdownOptions(true);
 		LedService.setLed1(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, "LED1", PinState.LOW)); //27
 		LedService.getLed1().setShutdownOptions(true, PinState.LOW);
 		ButtonService.setButton2(gpio.provisionDigitalInputPin(RaspiPin.GPIO_21, PinPullResistance.PULL_DOWN)); //5
+		ButtonService.getButton2().setDebounce(1000);
+		ButtonService.getButton2().setShutdownOptions(true);
 		LedService.setLed2(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_22, "LED2", PinState.LOW)); //6
 		LedService.getLed2().setShutdownOptions(true, PinState.LOW);
 		ButtonService.setButton3(gpio.provisionDigitalInputPin(RaspiPin.GPIO_24, PinPullResistance.PULL_DOWN)); //19
+		ButtonService.getButton3().setDebounce(1000);
+		ButtonService.getButton3().setShutdownOptions(true);
 		LedService.setLed3(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_25, "LED3", PinState.LOW)); //26
 		LedService.getLed3().setShutdownOptions(true, PinState.LOW);
 		ButtonService.setButton4(gpio.provisionDigitalInputPin(RaspiPin.GPIO_01, PinPullResistance.PULL_DOWN)); //18
+		ButtonService.getButton4().setDebounce(1000);
+		ButtonService.getButton4().setShutdownOptions(true);
 		LedService.setLed4(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, "LED4", PinState.LOW)); //23
 		LedService.getLed4().setShutdownOptions(true, PinState.LOW);
 		ButtonService.setButton5(gpio.provisionDigitalInputPin(RaspiPin.GPIO_27, PinPullResistance.PULL_DOWN)); //16
+		ButtonService.getButton5().setDebounce(1000);
+		ButtonService.getButton5().setShutdownOptions(true);
 		LedService.setLed5(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "LED5", PinState.LOW)); //20
 		LedService.getLed5().setShutdownOptions(true, PinState.LOW);
 	}
