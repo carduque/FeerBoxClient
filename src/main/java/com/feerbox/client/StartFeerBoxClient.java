@@ -26,7 +26,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.3.2";
+	public static final String version = "1.4";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
 	
