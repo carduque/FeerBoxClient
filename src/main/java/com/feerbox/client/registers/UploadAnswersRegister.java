@@ -47,7 +47,10 @@ public class UploadAnswersRegister extends Thread {
 			//Nothing to update
 			ClientRegister.getInstance().setAnswersUploaded(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			if(e.getMessage()==null || "".equals(e.getMessage().trim())){
+				e.printStackTrace();
+			}
+			logger.error(e.getMessage());
 		}
 	}
 
