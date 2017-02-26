@@ -1,13 +1,16 @@
 package com.feerbox.client;
 
-import com.diozero.I2CLcd;
+import com.diozero.HD44780Lcd;
+import com.diozero.HD44780Lcd.LcdConnection;
+import com.diozero.api.I2CConstants;
 import com.diozero.util.RuntimeIOException;
 import com.diozero.util.SleepUtil;
 
 public class LCDTest2 {
+	private static LcdConnection lcd_connection = new HD44780Lcd.PCF8574LcdConnection(I2CConstants.BUS_1, HD44780Lcd.PCF8574LcdConnection.DEFAULT_DEVICE_ADDRESS);
 	public static void main(String[] args) {
 		// Initialise display
-		try (I2CLcd lcd = new I2CLcd(16, 2)) {
+		try (HD44780Lcd  lcd = new HD44780Lcd(lcd_connection, 16, 2)) {
 			
 			byte[] space_invader = new byte[] { 0x00, 0x0e, 0x15, 0x1f, 0x0a, 0x04, 0x0a, 0x11 };
 			byte[] smilie = new byte[] { 0x00, 0x00, 0x0a, 0x00, 0x00, 0x11, 0x0e, 0x00 };

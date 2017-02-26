@@ -4,15 +4,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import com.diozero.I2CLcd;
+import com.diozero.HD44780Lcd;
+import com.diozero.HD44780Lcd.LcdConnection;
+import com.diozero.api.I2CConstants;
 import com.diozero.util.SleepUtil;
 
 public class LCDWrapper {
 	static{
 		System.setProperty("com.diozero.devicefactory", "com.diozero.internal.provider.pi4j.Pi4jDeviceFactory");
 	}
-	private static I2CLcd instance = new I2CLcd(16, 2);
-
+	private static LcdConnection lcd_connection = new HD44780Lcd.PCF8574LcdConnection(I2CConstants.BUS_1, HD44780Lcd.PCF8574LcdConnection.DEFAULT_DEVICE_ADDRESS);
+	private static HD44780Lcd  instance = new HD44780Lcd(lcd_connection, 16, 2);
+	//I2CLcd instance = new I2CLcd(16, 2)
 
 	public static void setTextRow0(String text){
 		instance.displayControl(true, false, false);
