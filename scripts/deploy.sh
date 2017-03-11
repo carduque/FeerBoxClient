@@ -1,6 +1,6 @@
 #!/bin/bash
 now=$(date +"%m_%d_%Y")
-test -d "/opt/FeerBoxClient/FeerBoxClient/config" || mkdir -p "/opt/FeerBoxClient/FeerBoxClient/config" && cp -rf /opt/FeerBoxClient/FeerBoxClient/target/classes/config.properties /opt/FeerBoxClient/FeerBoxClient/config/config_$now.properties
+test -d "/opt/FeerBoxClient/FeerBoxClient/config" || sudo mkdir -p "/opt/FeerBoxClient/FeerBoxClient/config" && cp -rf /opt/FeerBoxClient/FeerBoxClient/target/classes/config.properties /opt/FeerBoxClient/FeerBoxClient/config/config_$now.properties
 cd /opt/FeerBoxClient/FeerBoxClient
 sudo git fetch origin
 sudo git reset --hard origin/master
