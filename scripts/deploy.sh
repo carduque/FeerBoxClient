@@ -1,4 +1,6 @@
 #!/bin/bash
+now=$(date +"%m_%d_%Y")
+test -d "/opt/FeerBoxClient/FeerBoxClient/config" || mkdir -p "/opt/FeerBoxClient/FeerBoxClient/config" && cp -rf /opt/FeerBoxClient/FeerBoxClient/target/classes/config.properties /opt/FeerBoxClient/FeerBoxClient/config/config_$now.properties
 cd /opt/FeerBoxClient/FeerBoxClient
 sudo git fetch origin
 sudo git reset --hard origin/master
@@ -8,3 +10,5 @@ if [ -z "$1" ]
 	else
 		sudo mvn clean install -Dmaven.test.skip=true -Dparam=$1
 fi
+sudo chmod -R 777 /opt/FeerBoxClient/FeerBoxClient/scripts
+sudo cp -rf /opt/FeerBoxClient/FeerBoxClient/config/config_$now.properties /opt/FeerBoxClient/FeerBoxClient/target/classes/config.properties
