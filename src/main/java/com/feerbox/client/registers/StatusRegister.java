@@ -53,6 +53,7 @@ public class StatusRegister implements Runnable {
 			info.put(Status.infoKeys.TIME_UP.name(), getTimeSystemUp());
 			//logger.debug("Status6");
 			info.put(Status.infoKeys.SYSTEM_TIME.name(), getSystemTime());
+			info.put(Status.infoKeys.CommandExecutorEnabled.name(), ClientRegister.getInstance().getCommandExecutorEnabled()+"");
 			//logger.debug("Status7");
 			status.setInfo(info);
 			
