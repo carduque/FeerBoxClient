@@ -26,7 +26,7 @@ public class AliveRegister implements Runnable {
 			boolean before = InternetAccess.getInstance().getAccess();
 			checkInternetAccess();
 			boolean after = InternetAccess.getInstance().getAccess();
-			if (before != after && after == true) {
+			/*if (before != after && after == true) {
 				new StatusRegister().run();
 				if (ClientRegister.getInstance().getLastGetCommands() != null) {
 					long diff = System.currentTimeMillis() - ClientRegister.getInstance().getLastGetCommands().getTime();
@@ -35,7 +35,7 @@ public class AliveRegister implements Runnable {
 						new CommandQueueRegister().run();
 					}
 				}
-			}
+			}*/
 			aliveLights();
 			checkTetheringDetection();
 		} catch (Exception e) {
