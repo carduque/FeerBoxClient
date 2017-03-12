@@ -70,6 +70,7 @@ public class StartFeerBoxClient {
 	        ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(commandExecutor, 0, ClientRegister.getInstance().getCommandExecutorInterval(), TimeUnit.MINUTES);
 		}
 		else{
+			logger.debug("Command executor not enabled - Request commmands and execute once");
 			//Poll for any command at start time even it is disabled, so in case of update software it could be just at starting point
 			CommandQueueRegister commandQueue = new CommandQueueRegister();
 			commandQueue.run();
