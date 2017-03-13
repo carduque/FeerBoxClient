@@ -108,7 +108,7 @@ public class CommandService {
 	public static boolean saveServer(Command command) {
 		boolean out = true;
 		try {
-			URL myURL = new URL("http://feerbox-dev.herokuapp.com/command/updateExecutions");
+			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/command/updateExecutions");
 			HttpURLConnection conn = (HttpURLConnection) myURL.openConnection();
 			//conn.setRequestProperty("Content-Length", "1000");
 			conn.setRequestProperty("Content-Type", "application/json");

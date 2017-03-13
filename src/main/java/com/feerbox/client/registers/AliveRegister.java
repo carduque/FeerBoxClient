@@ -93,7 +93,7 @@ public class AliveRegister implements Runnable {
 			urlConnect.disconnect();
 
 		} catch (UnknownHostException e) {
-			logger.error("UnknownHostException - No Internet connection: " + e.getMessage());
+			logger.debug("UnknownHostException - No Internet connection: " + e.getMessage());
 			InternetAccess.getInstance().setAccess(false);
 		} catch (IOException e) {
 			logger.error("IOException - No Internet connection: " + e.getMessage());
