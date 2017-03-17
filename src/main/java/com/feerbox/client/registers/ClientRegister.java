@@ -40,8 +40,28 @@ public class ClientRegister {
 	 
 	    public static synchronized String getProperty(final String key)
 	    {
-	        return (String)configuration.getProperty(key);
+	    	 String property = (String)configuration.getProperty(key);
+	    	 if(property==null){
+	    		 logger.error("Property "+key+" not found on configuration file");
+	    		 property = addPropertiesAtRunTime(key);
+	    	 }
+	        return property;
 	    }
+
+	private static String addPropertiesAtRunTime(String key) {
+		String value = null;
+		if(key.equals("show_internet_connection_error")){
+			value = "false";
+			configuration.setProperty(key, value);
+			try {
+				configuration.save();
+			} catch (ConfigurationException e) {
+				logger.error("Storing config file: "+e.getMessage());
+			}
+			logger.info("Property "+key+" added with value "+value);
+		}
+		return value;
+	}
 
 	public ClientRegister() {
 		readLiveConfiguration();
@@ -241,5 +261,15 @@ public class ClientRegister {
 
 	public boolean getShowUnknownNFCs() {
 		return Boolean.parseBoolean(getProperty("show_unkown_nfcs"));
+	}
+
+	public boolean getShowInternetConnectionError() {
+		boolean out = false;
+		try {
+			out = Boolean.parseBoolean(getProperty("show_internet_connection_error"));
+		} catch (Exception e) {
+			logger.error("ShowInternetConnectionError: "+e.getMessage());
+		}
+		return out;
 	}
 }
