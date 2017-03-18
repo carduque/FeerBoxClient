@@ -167,6 +167,7 @@ public class StatusRegister implements Runnable {
 
 	private String getSystemTime() {
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+		logger.debug("Timezone: "+df.getTimeZone());
 		return df.format(new Date(System.currentTimeMillis()));
 	}
 
