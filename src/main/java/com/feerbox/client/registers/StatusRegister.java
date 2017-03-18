@@ -115,6 +115,9 @@ public class StatusRegister implements Runnable {
 			}
 			checkStatusTime();
 		}catch(Exception e){
+			if(e.getMessage()==null || "".equals(e.getMessage().trim())){
+				e.printStackTrace();
+			}
 			logger.error(e.getMessage());
 		}
 	}
