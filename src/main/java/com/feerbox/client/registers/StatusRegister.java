@@ -116,9 +116,10 @@ public class StatusRegister implements Runnable {
 			checkStatusTime();
 		}catch(Exception e){
 			if(e.getMessage()==null || "".equals(e.getMessage().trim())){
+				logger.error("Exception!");
 				e.printStackTrace();
 			}
-			logger.error(e.getMessage());
+			logger.error("Exception: "+e.getMessage());
 		}
 	}
 
