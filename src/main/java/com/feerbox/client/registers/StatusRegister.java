@@ -38,81 +38,85 @@ public class StatusRegister implements Runnable {
 	private static Date lastStatusTime = null;
 	
 	public void run() {
-		Status status = new Status();
-		OutputStream os = null;
-		HttpURLConnection conn = null;
-		try {
-			logger.debug("Going to update status for "+ClientRegister.getInstance().getReference());
-			status.setReference(ClientRegister.getInstance().getReference());
-			//logger.debug("Status1");
-			HashMap<String, String> info = new HashMap<String, String>();
-			info.put(Status.infoKeys.INTERNET.name(), getInternetStatus());
-			//logger.debug("Status2");
-			info.put(Status.infoKeys.IP.name(), getIp());
-			//logger.debug("Status3");
-			info.put(Status.infoKeys.SW_VERSION.name(), getSoftwareVersion());
-			//logger.debug("Status4");
-			info.put(Status.infoKeys.LAST_ANSWER.name(), getLastAnswerTime());
-			//logger.debug("Status5");
-			info.put(Status.infoKeys.TIME_UP.name(), getTimeSystemUp());
-			//logger.debug("Status6");
-			info.put(Status.infoKeys.SYSTEM_TIME.name(), getSystemTime());
-			info.put(Status.infoKeys.CommandExecutorEnabled.name(), getLastGetCommands());
-			//logger.debug("Status7");
-			status.setInfo(info);
-			
-			//Save to Internet
-			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/status/add");
-			conn = (HttpURLConnection) myURL.openConnection();
-			conn.setRequestProperty("Content-Length", "1000");
-			conn.setRequestProperty("Content-Type", "application/json");
-			conn.setDoOutput(true);
-			conn.setRequestMethod("POST");
-			//String json = "{\"button\":\""+answer.getButton()+"\",\"reference\":\""+answer.getReference()+"\", \"time\":\""+answer.getTimeText()+"\"}";
-			JsonObject json = statusToJson(status);
-			
-			os = conn.getOutputStream();
-			os.write(json.toString().getBytes());
-			os.flush();
-
-			if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-				logger.info("Failed to send status: HTTP error code : "+ conn.getResponseCode());
-				status.setUpload(0);
-			}
-			else{
-				status.setUpload(1);
-				logger.debug("Status updated on server succesfully");
-			}
-			
-		} 
-		catch (UnknownHostException e) {
-			if(ClientRegister.getInstance().getShowInternetConnectionError()){
-				logger.error("UnknownHostException - No Internet connection: " + e.getMessage());
-			}
-		}
-		catch (SocketException e) {
-			logger.error( "SocketException", e );
-		} catch (IOException e) {
-			logger.error( "IOException", e );
-		} catch (InterruptedException e) {
-			logger.error( "InterruptedException", e );
-		}
-		finally {
+		try{
+			Status status = new Status();
+			OutputStream os = null;
+			HttpURLConnection conn = null;
 			try {
-				if(os!=null){
-					os.close();
+				logger.debug("Going to update status for "+ClientRegister.getInstance().getReference());
+				status.setReference(ClientRegister.getInstance().getReference());
+				//logger.debug("Status1");
+				HashMap<String, String> info = new HashMap<String, String>();
+				info.put(Status.infoKeys.INTERNET.name(), getInternetStatus());
+				//logger.debug("Status2");
+				info.put(Status.infoKeys.IP.name(), getIp());
+				//logger.debug("Status3");
+				info.put(Status.infoKeys.SW_VERSION.name(), getSoftwareVersion());
+				//logger.debug("Status4");
+				info.put(Status.infoKeys.LAST_ANSWER.name(), getLastAnswerTime());
+				//logger.debug("Status5");
+				info.put(Status.infoKeys.TIME_UP.name(), getTimeSystemUp());
+				//logger.debug("Status6");
+				info.put(Status.infoKeys.SYSTEM_TIME.name(), getSystemTime());
+				info.put(Status.infoKeys.CommandExecutorEnabled.name(), getLastGetCommands());
+				//logger.debug("Status7");
+				status.setInfo(info);
+				
+				//Save to Internet
+				URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/status/add");
+				conn = (HttpURLConnection) myURL.openConnection();
+				conn.setRequestProperty("Content-Length", "1000");
+				conn.setRequestProperty("Content-Type", "application/json");
+				conn.setDoOutput(true);
+				conn.setRequestMethod("POST");
+				//String json = "{\"button\":\""+answer.getButton()+"\",\"reference\":\""+answer.getReference()+"\", \"time\":\""+answer.getTimeText()+"\"}";
+				JsonObject json = statusToJson(status);
+				
+				os = conn.getOutputStream();
+				os.write(json.toString().getBytes());
+				os.flush();
+	
+				if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+					logger.info("Failed to send status: HTTP error code : "+ conn.getResponseCode());
+					status.setUpload(0);
 				}
+				else{
+					status.setUpload(1);
+					logger.debug("Status updated on server succesfully");
+				}
+				
+			} 
+			catch (UnknownHostException e) {
+				if(ClientRegister.getInstance().getShowInternetConnectionError()){
+					logger.error("UnknownHostException - No Internet connection: " + e.getMessage());
+				}
+			}
+			catch (SocketException e) {
+				logger.error( "SocketException", e );
 			} catch (IOException e) {
 				logger.error( "IOException", e );
+			} catch (InterruptedException e) {
+				logger.error( "InterruptedException", e );
 			}
-			if(conn!=null) conn.disconnect();
+			finally {
+				try {
+					if(os!=null){
+						os.close();
+					}
+				} catch (IOException e) {
+					logger.error( "IOException", e );
+				}
+				if(conn!=null) conn.disconnect();
+			}
+			changeDelay();
+			//Save locally
+			if(ClientRegister.getInstance().getSaveStatusLocally()){
+				StatusService.save(status);
+			}
+			checkStatusTime();
+		}catch(Exception e){
+			logger.error(e.getMessage());
 		}
-		changeDelay();
-		//Save locally
-		if(ClientRegister.getInstance().getSaveStatusLocally()){
-			StatusService.save(status);
-		}
-		checkStatusTime();
 	}
 
 	private String getLastGetCommands() {
