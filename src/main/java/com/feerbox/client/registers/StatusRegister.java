@@ -9,8 +9,10 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -55,7 +57,7 @@ public class StatusRegister implements Runnable {
 			info.put(Status.infoKeys.TIME_UP.name(), getTimeSystemUp());
 			//logger.debug("Status6");
 			info.put(Status.infoKeys.SYSTEM_TIME.name(), getSystemTime());
-			info.put(Status.infoKeys.CommandExecutorEnabled.name(), ClientRegister.getInstance().getCommandExecutorEnabled()+"");
+			info.put(Status.infoKeys.CommandExecutorEnabled.name(), getLastGetCommands());
 			//logger.debug("Status7");
 			status.setInfo(info);
 			
@@ -82,7 +84,13 @@ public class StatusRegister implements Runnable {
 				logger.debug("Status updated on server succesfully");
 			}
 			
-		} catch (SocketException e) {
+		} 
+		catch (UnknownHostException e) {
+			if(ClientRegister.getInstance().getShowInternetConnectionError()){
+				logger.error("UnknownHostException - No Internet connection: " + e.getMessage());
+			}
+		}
+		catch (SocketException e) {
 			logger.error( "SocketException", e );
 		} catch (IOException e) {
 			logger.error( "IOException", e );
@@ -105,6 +113,18 @@ public class StatusRegister implements Runnable {
 			StatusService.save(status);
 		}
 		checkStatusTime();
+	}
+
+	private String getLastGetCommands() {
+		String out = "false";
+		if(ClientRegister.getInstance().getCommandExecutorEnabled()){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(ClientRegister.getInstance().getLastGetCommands());
+			cal.add(Calendar.MINUTE, ClientRegister.getInstance().getCommandExecutorInterval());
+			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+			out = df.format(cal.getTime());
+		}
+		return out;
 	}
 
 	private void checkStatusTime() {

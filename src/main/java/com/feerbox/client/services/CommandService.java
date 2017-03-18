@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,7 +48,8 @@ public class CommandService {
 			os = conn.getOutputStream();
 			os.write(json_out.toString().getBytes());
 			os.flush();
-
+			ClientRegister.getInstance().setLastGetCommands(new Date());
+			
 			if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
 				ClientRegister.getInstance().setLastGetCommands(new Date());
 				//{"commands":[{"id":5,"command":"deploy.sh","reference":"2015001","creationDate":"16-Jun-2016 23:09:33.813","active":true,"restart":true}]}
@@ -84,7 +86,12 @@ public class CommandService {
 				logger.info("Failed : HTTP error code : "+ conn.getResponseCode());
 			}
 			
-		} catch (MalformedURLException e) {
+		} catch (UnknownHostException e) {
+			if(ClientRegister.getInstance().getShowInternetConnectionError()){
+				logger.error("UnknownHostException - No Internet connection: " + e.getMessage());
+			}
+		}
+		catch (MalformedURLException e) {
 			logger.debug("MalformedURLException", e);
 		} catch (IOException e) {
 			logger.debug("IOException", e);
