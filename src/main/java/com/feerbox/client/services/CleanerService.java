@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 import com.feerbox.client.db.ReadCleaner;
 import com.feerbox.client.db.RemoveCleaner;
 import com.feerbox.client.db.SaveCleaner;
-import com.feerbox.client.db.SaveCommand;
 import com.feerbox.client.model.Cleaner;
 import com.feerbox.client.registers.ClientRegister;
 import com.google.gson.JsonArray;
@@ -34,9 +33,13 @@ public class CleanerService {
 
 	public static List<Cleaner> getPendingUpdates(String reference) {
 		List<Cleaner> out = new ArrayList<Cleaner>();
+		OutputStream os = null;
+		HttpURLConnection conn = null;
+		InputStream in = null;
+		BufferedReader streamReader = null;
 		try {
 			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/cleaner/getpendingupdates");
-			HttpURLConnection conn = (HttpURLConnection) myURL.openConnection();
+			conn = (HttpURLConnection) myURL.openConnection();
 			conn.setRequestProperty("Content-Length", "1000");
 			conn.setRequestProperty("Content-Type", "application/json");
 			conn.setDoOutput(true);
@@ -52,15 +55,15 @@ public class CleanerService {
 			df.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
 			json_out.addProperty("lastupdate", df.format(lastUpdate));
 			
-			OutputStream os = conn.getOutputStream();
+			os = conn.getOutputStream();
 			os.write(json_out.toString().getBytes());
 			os.flush();
 
 			if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
 				ClientRegister.getInstance().setLastGetCleaners(new Date());
 				//{"commands":[{"id":5,"command":"deploy.sh","reference":"2015001","creationDate":"16-Jun-2016 23:09:33.813","active":true,"restart":true}]}
-				InputStream in = conn.getInputStream();
-				BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8")); 
+				in = conn.getInputStream();
+				streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8")); 
 				StringBuilder responseStrBuilder = new StringBuilder();
 				String inputStr;
 				while ((inputStr = streamReader.readLine()) != null){
@@ -95,13 +98,35 @@ public class CleanerService {
 			else{
 				logger.info("Failed : HTTP error code : "+ conn.getResponseCode());
 			}
-			os.close();
-			conn.disconnect();
 			
 		} catch (MalformedURLException e) {
 			logger.debug("MalformedURLException", e);
 		} catch (IOException e) {
 			logger.debug("IOException", e);
+		}
+		finally {
+			if(streamReader!=null){
+				try {
+					streamReader.close();
+				} catch (IOException e) {
+					logger.error( "IOException", e );
+				}
+			}
+			if(in!=null){
+				try {
+					in.close();
+				} catch (IOException e) {
+					logger.error( "IOException", e );
+				}
+			}
+			try {
+				if(os!=null){
+					os.close();
+				}
+			} catch (IOException e) {
+				logger.error( "IOException", e );
+			}
+			if(conn!=null) conn.disconnect();
 		}
 		return out;
 	}

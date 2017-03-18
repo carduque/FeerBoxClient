@@ -44,9 +44,11 @@ public class SaveAnswerService{
 
 	public static boolean saveAnswerInternet(Answer answer) {
 		boolean ok = true;
+		HttpURLConnection conn = null;
+		OutputStream os = null;
 		try {
 			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/answer/add");
-			HttpURLConnection conn = (HttpURLConnection) myURL.openConnection();
+			conn = (HttpURLConnection) myURL.openConnection();
 			conn.setRequestProperty("Content-Length", "1000");
 			conn.setRequestProperty("Content-Type", "application/json");
 			conn.setDoOutput(true);
@@ -54,7 +56,7 @@ public class SaveAnswerService{
 			//String json = "{\"button\":\""+answer.getButton()+"\",\"reference\":\""+answer.getReference()+"\", \"time\":\""+answer.getTimeText()+"\"}";
 			JsonObject json = answerToJson(answer);
 			
-			OutputStream os = conn.getOutputStream();
+			os = conn.getOutputStream();
 			os.write(json.toString().getBytes());
 			os.flush();
 
@@ -63,8 +65,6 @@ public class SaveAnswerService{
 				ok = false;
 				//SaveAnswer.save(answer);
 			}
-			os.close();
-			conn.disconnect();
 			
 		} catch (MalformedURLException e) {
 			logger.debug("MalformedURLException", e);
@@ -72,6 +72,16 @@ public class SaveAnswerService{
 		} catch (IOException e) {
 			logger.debug("IOException", e);
 			ok = false;
+		}
+		finally {
+			try {
+				if(os!=null){
+					os.close();
+				}
+			} catch (IOException e) {
+				logger.error( "IOException", e );
+			}
+			if(conn!=null) conn.disconnect();
 		}
 		return ok;
 	}

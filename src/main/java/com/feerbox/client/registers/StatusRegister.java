@@ -37,6 +37,8 @@ public class StatusRegister implements Runnable {
 	
 	public void run() {
 		Status status = new Status();
+		OutputStream os = null;
+		HttpURLConnection conn = null;
 		try {
 			logger.debug("Going to update status for "+ClientRegister.getInstance().getReference());
 			status.setReference(ClientRegister.getInstance().getReference());
@@ -59,7 +61,7 @@ public class StatusRegister implements Runnable {
 			
 			//Save to Internet
 			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/status/add");
-			HttpURLConnection conn = (HttpURLConnection) myURL.openConnection();
+			conn = (HttpURLConnection) myURL.openConnection();
 			conn.setRequestProperty("Content-Length", "1000");
 			conn.setRequestProperty("Content-Type", "application/json");
 			conn.setDoOutput(true);
@@ -67,7 +69,7 @@ public class StatusRegister implements Runnable {
 			//String json = "{\"button\":\""+answer.getButton()+"\",\"reference\":\""+answer.getReference()+"\", \"time\":\""+answer.getTimeText()+"\"}";
 			JsonObject json = statusToJson(status);
 			
-			OutputStream os = conn.getOutputStream();
+			os = conn.getOutputStream();
 			os.write(json.toString().getBytes());
 			os.flush();
 
@@ -79,8 +81,6 @@ public class StatusRegister implements Runnable {
 				status.setUpload(1);
 				logger.debug("Status updated on server succesfully");
 			}
-			os.close();
-			conn.disconnect();
 			
 		} catch (SocketException e) {
 			logger.error( "SocketException", e );
@@ -88,6 +88,16 @@ public class StatusRegister implements Runnable {
 			logger.error( "IOException", e );
 		} catch (InterruptedException e) {
 			logger.error( "InterruptedException", e );
+		}
+		finally {
+			try {
+				if(os!=null){
+					os.close();
+				}
+			} catch (IOException e) {
+				logger.error( "IOException", e );
+			}
+			if(conn!=null) conn.disconnect();
 		}
 		changeDelay();
 		//Save locally

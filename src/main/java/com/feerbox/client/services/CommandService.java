@@ -31,9 +31,11 @@ public class CommandService {
 
 	public static List<Command> getServerCommands(String reference) {
 		List<Command> out = new ArrayList<Command>();
+		OutputStream os = null;
+		HttpURLConnection conn = null;
 		try {
 			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/command/getpending");
-			HttpURLConnection conn = (HttpURLConnection) myURL.openConnection();
+			conn = (HttpURLConnection) myURL.openConnection();
 			conn.setRequestProperty("Content-Length", "1000");
 			conn.setRequestProperty("Content-Type", "application/json");
 			conn.setDoOutput(true);
@@ -42,7 +44,7 @@ public class CommandService {
 			JsonObject json_out = new JsonObject();
 			json_out.addProperty("feerboxReference", reference);
 			
-			OutputStream os = conn.getOutputStream();
+			os = conn.getOutputStream();
 			os.write(json_out.toString().getBytes());
 			os.flush();
 
@@ -81,13 +83,21 @@ public class CommandService {
 			else{
 				logger.info("Failed : HTTP error code : "+ conn.getResponseCode());
 			}
-			os.close();
-			conn.disconnect();
 			
 		} catch (MalformedURLException e) {
 			logger.debug("MalformedURLException", e);
 		} catch (IOException e) {
 			logger.debug("IOException", e);
+		}
+		finally {
+			try {
+				if(os!=null){
+					os.close();
+				}
+			} catch (IOException e) {
+				logger.error( "IOException", e );
+			}
+			if(conn!=null) conn.disconnect();
 		}
 		return out;
 	}
@@ -107,9 +117,11 @@ public class CommandService {
 
 	public static boolean saveServer(Command command) {
 		boolean out = true;
+		HttpURLConnection conn = null;
+		OutputStream os = null;
 		try {
 			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/command/updateExecutions");
-			HttpURLConnection conn = (HttpURLConnection) myURL.openConnection();
+			conn = (HttpURLConnection) myURL.openConnection();
 			//conn.setRequestProperty("Content-Length", "1000");
 			conn.setRequestProperty("Content-Type", "application/json");
 			conn.setDoOutput(true);
@@ -121,7 +133,7 @@ public class CommandService {
 			json.addProperty("startTime", command.getStartTimeFormatted());
 			json.addProperty("finishTime", command.getFinishTimeFormatted());
 			
-			OutputStream os = conn.getOutputStream();
+			os = conn.getOutputStream();
 			os.write(json.toString().getBytes());
 			os.flush();
 
@@ -129,13 +141,21 @@ public class CommandService {
 				logger.error("Failed saving command to server: HTTP error code : "+ conn.getResponseCode());
 				out = false;
 			}
-			os.close();
-			conn.disconnect();
 			
 		} catch (MalformedURLException e) {
 			logger.error("MalformedURLException", e);
 		} catch (IOException e) {
 			logger.error("IOException", e);
+		}
+		finally {
+			try {
+				if(os!=null){
+					os.close();
+				}
+			} catch (IOException e) {
+				logger.error( "IOException", e );
+			}
+			if(conn!=null) conn.disconnect();
 		}
 		return out;
 	}

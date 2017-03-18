@@ -69,18 +69,20 @@ public class AliveRegister implements Runnable {
 	}
 
 	private void checkInternetAccess() {
+		HttpURLConnection urlConnect = null;
+		InputStream in = null;
 		try {
 			// make a URL to a known source
 			URL url = new URL("http://www.google.com");
 
 			// open a connection to that source
-			HttpURLConnection urlConnect = (HttpURLConnection) url.openConnection();
+			urlConnect = (HttpURLConnection) url.openConnection();
 
 			// trying to retrieve data from the source. If there
 			// is no connection, this line will fail
 			urlConnect.setConnectTimeout(10000);
 			urlConnect.setReadTimeout(10000);
-			InputStream in = (InputStream) urlConnect.getContent();
+			in = (InputStream) urlConnect.getContent();
 			if (ClientRegister.getInstance().getInternet()) {
 				// logger.debug("YES Internet connection "+new
 				// SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
@@ -89,8 +91,6 @@ public class AliveRegister implements Runnable {
 				logger.debug("FORCED No Internet connection");
 				InternetAccess.getInstance().setAccess(false);
 			}
-			in.close();
-			urlConnect.disconnect();
 
 		} catch (UnknownHostException e) {
 			logger.error("UnknownHostException - No Internet connection: " + e.getMessage());
@@ -100,6 +100,16 @@ public class AliveRegister implements Runnable {
 				logger.error("IOException - No Internet connection: " + e.getMessage());
 			}
 			InternetAccess.getInstance().setAccess(false);
+		}
+		finally {
+			try {
+				if(in!=null){
+					in.close();
+				}
+			} catch (IOException e) {
+				logger.error( "IOException", e );
+			}
+			if(urlConnect!=null) urlConnect.disconnect();
 		}
 	}
 

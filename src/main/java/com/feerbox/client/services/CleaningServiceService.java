@@ -33,9 +33,11 @@ public class CleaningServiceService {
 
 	public static boolean saveServer(CleaningService cleaningService) {
 		boolean ok = true;
+		OutputStream os = null;
+		HttpURLConnection conn = null;
 		try {
 			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/cleaningService/add");
-			HttpURLConnection conn = (HttpURLConnection) myURL.openConnection();
+			conn = (HttpURLConnection) myURL.openConnection();
 			conn.setRequestProperty("Content-Length", "1000");
 			conn.setRequestProperty("Content-Type", "application/json");
 			conn.setDoOutput(true);
@@ -43,7 +45,7 @@ public class CleaningServiceService {
 			//String json = "{\"button\":\""+answer.getButton()+"\",\"reference\":\""+answer.getReference()+"\", \"time\":\""+answer.getTimeText()+"\"}";
 			JsonObject json = answerToJson(cleaningService);
 			
-			OutputStream os = conn.getOutputStream();
+			os = conn.getOutputStream();
 			os.write(json.toString().getBytes());
 			os.flush();
 
@@ -51,8 +53,6 @@ public class CleaningServiceService {
 				logger.info("Failed cleaningService/add : HTTP error code : "+ conn.getResponseCode());
 				ok = false;
 			}
-			os.close();
-			conn.disconnect();
 			
 		} catch (MalformedURLException e) {
 			logger.debug("MalformedURLException", e);
@@ -60,6 +60,16 @@ public class CleaningServiceService {
 		} catch (IOException e) {
 			logger.debug("IOException", e);
 			ok = false;
+		}
+		finally {
+			try {
+				if(os!=null){
+					os.close();
+				}
+			} catch (IOException e) {
+				logger.error( "IOException", e );
+			}
+			if(conn!=null) conn.disconnect();
 		}
 		return ok;
 	}
