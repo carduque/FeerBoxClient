@@ -58,7 +58,8 @@ public class StatusRegister implements Runnable {
 				info.put(Status.infoKeys.TIME_UP.name(), getTimeSystemUp());
 				//logger.debug("Status6");
 				info.put(Status.infoKeys.SYSTEM_TIME.name(), getSystemTime());
-				info.put(Status.infoKeys.CommandExecutorEnabled.name(), getLastGetCommands());
+				info.put(Status.infoKeys.CommandExecutor.name(), getLastCommandExecutor());
+				info.put(Status.infoKeys.CommandQueue.name(), getLastGetCommands());
 				//logger.debug("Status7");
 				status.setInfo(info);
 				
@@ -123,14 +124,40 @@ public class StatusRegister implements Runnable {
 		}
 	}
 
+	private String getLastCommandExecutor() {
+		String out = "false";
+		try {
+			if(ClientRegister.getInstance().getCommandExecutorEnabled()){
+				if(ClientRegister.getInstance().getLastExecuteCommand()!=null){
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(ClientRegister.getInstance().getLastExecuteCommand());
+					cal.add(Calendar.MINUTE, ClientRegister.getInstance().getCommandExecutorInterval());
+					DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+					out = df.format(cal.getTime());
+				}
+			}
+			
+		} catch (Exception e) {
+			logger.error("getLastCommandExecutor: "+e.getMessage());
+		}
+		return out;
+	}
+
 	private String getLastGetCommands() {
 		String out = "false";
-		if(ClientRegister.getInstance().getCommandExecutorEnabled()){
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(ClientRegister.getInstance().getLastGetCommands());
-			cal.add(Calendar.MINUTE, ClientRegister.getInstance().getCommandExecutorInterval());
-			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
-			out = df.format(cal.getTime());
+		try {
+			if(ClientRegister.getInstance().getCommandExecutorEnabled()){
+				if(ClientRegister.getInstance().getLastGetCommands()!=null){
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(ClientRegister.getInstance().getLastGetCommands());
+					cal.add(Calendar.MINUTE, ClientRegister.getInstance().getCommandQueueRegisterInterval());
+					DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+					out = df.format(cal.getTime());
+				}
+			}
+			
+		} catch (Exception e) {
+			logger.error("getLastGetCommands: "+e.getMessage());
 		}
 		return out;
 	}
@@ -175,7 +202,7 @@ public class StatusRegister implements Runnable {
 
 	private String getSystemTime() {
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
-		logger.debug("getSystemTime:"+df.format(new Date(System.currentTimeMillis()))+" - Timezone: "+df.getTimeZone());
+		//logger.debug("getSystemTime:"+df.format(new Date(System.currentTimeMillis()))+" - Timezone: "+df.getTimeZone());
 		return df.format(new Date(System.currentTimeMillis()));
 	}
 

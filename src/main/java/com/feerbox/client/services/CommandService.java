@@ -48,7 +48,6 @@ public class CommandService {
 			os = conn.getOutputStream();
 			os.write(json_out.toString().getBytes());
 			os.flush();
-			ClientRegister.getInstance().setLastGetCommands(new Date());
 			
 			if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
 				ClientRegister.getInstance().setLastGetCommands(new Date());

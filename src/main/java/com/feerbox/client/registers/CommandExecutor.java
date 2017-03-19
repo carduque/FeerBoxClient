@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 
@@ -28,6 +29,7 @@ public class CommandExecutor implements Runnable {
 				//logger.debug("Command: "+command);
 				if(command!=null){
 					logger.debug("Going to execute a command: "+command.getCommand()+" "+command.getParameter());
+					ClientRegister.getInstance().setLastExecuteCommand(new Date());
 					SaveCommand.startExecution(command);
 					//List<String> commandParameters = command.getParameters();
 					//commandParameters.add(0, command.getCommand());

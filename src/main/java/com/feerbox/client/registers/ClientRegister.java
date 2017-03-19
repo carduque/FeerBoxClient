@@ -28,7 +28,9 @@ public class ClientRegister {
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
 	private Date lastGetCommands;
 	private Date lastGetCleaners;
-	 static
+	private Date lastExecuteCommand;
+
+	static
 	    {
 	        try {
 	            configuration = new PropertiesConfiguration("config.properties");
@@ -271,6 +273,14 @@ public class ClientRegister {
 			logger.error("ShowInternetConnectionError: "+e.getMessage());
 		}
 		return out;
+	}
+
+	public Date getLastExecuteCommand() {
+		return this.lastExecuteCommand;
+	}
+	
+	public void setLastExecuteCommand(Date lastExecuteCommand) {
+		this.lastExecuteCommand = lastExecuteCommand;
 	}
 
 }

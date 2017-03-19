@@ -3,6 +3,7 @@ package com.feerbox.client;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /*
  * System time:18/03/2017 11:11:33.786
@@ -17,5 +18,6 @@ public class TimeZoneTest {
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 		System.out.println("System time:"+df.format(now));
 		System.out.println("Default Timezone: "+df.getTimeZone());
+		System.out.println("Default Timezone2: "+TimeZone.getDefault());
 	}
 }
