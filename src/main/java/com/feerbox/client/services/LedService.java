@@ -8,6 +8,7 @@ public class LedService {
 	private static GpioPinDigitalOutput Led3 = null;
 	private static GpioPinDigitalOutput Led4 = null;
 	private static GpioPinDigitalOutput Led5 = null;
+	private static GpioPinDigitalOutput LedPower = null;
 	
 	
 	public static GpioPinDigitalOutput getLed1() {
@@ -53,6 +54,12 @@ public class LedService {
 		LedService.getLed3().pulse(time, true);
 		LedService.getLed2().pulse(time, true);
 		LedService.getLed1().pulse(time, true);
+	}
+	public static void setLedPower(GpioPinDigitalOutput led) {
+		LedPower = led;
+	}
+	public static GpioPinDigitalOutput getLedPower() {
+		return LedPower;
 	}
 	
 	

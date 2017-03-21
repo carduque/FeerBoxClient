@@ -98,7 +98,9 @@ public class AliveRegister implements Runnable {
 			}
 			InternetAccess.getInstance().setAccess(false);
 		} catch (IOException e) {
-			logger.error("IOException - No Internet connection: " + e.getMessage());
+			if(ClientRegister.getInstance().getShowInternetConnectionError()){
+				logger.error("IOException - No Internet connection: " + e.getMessage());
+			}
 			InternetAccess.getInstance().setAccess(false);
 		}
 		finally {

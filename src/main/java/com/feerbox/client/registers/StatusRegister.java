@@ -115,12 +115,8 @@ public class StatusRegister implements Runnable {
 				StatusService.save(status);
 			}
 			checkStatusTime();
-		}catch(Exception e){
-			if(e.getMessage()==null || "".equals(e.getMessage().trim())){
-				logger.error("Exception!");
-				e.printStackTrace();
-			}
-			logger.error("Exception: "+e.getMessage());
+		}catch(Throwable  t){
+			logger.error("Exception in StatusRegister: "+t.getStackTrace());
 		}
 	}
 
@@ -134,6 +130,9 @@ public class StatusRegister implements Runnable {
 					cal.add(Calendar.MINUTE, ClientRegister.getInstance().getCommandExecutorInterval());
 					DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 					out = df.format(cal.getTime());
+				}
+				else{
+					out="true";
 				}
 			}
 			
@@ -285,5 +284,5 @@ public class StatusRegister implements Runnable {
 	public void setFuture(ScheduledFuture<?> future) {
 		this.future = future;
 	}
-
+	
 }

@@ -25,7 +25,7 @@ public class ClientRegister {
 	private boolean saveStatusLocally = false;
 	private boolean answersUploaded = true;
 	final static Logger logger = Logger.getLogger(ClientRegister.class);
-	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
+	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(6);
 	private Date lastGetCommands;
 	private Date lastGetCleaners;
 	private Date lastExecuteCommand;
@@ -53,6 +53,16 @@ public class ClientRegister {
 	private static String addPropertiesAtRunTime(String key) {
 		String value = null;
 		if(key.equals("show_internet_connection_error")){
+			value = "false";
+			configuration.setProperty(key, value);
+			try {
+				configuration.save();
+			} catch (ConfigurationException e) {
+				logger.error("Storing config file: "+e.getMessage());
+			}
+			logger.info("Property "+key+" added with value "+value);
+		}
+		if(key.equals("led_power_on")){
 			value = "false";
 			configuration.setProperty(key, value);
 			try {
@@ -281,6 +291,16 @@ public class ClientRegister {
 	
 	public void setLastExecuteCommand(Date lastExecuteCommand) {
 		this.lastExecuteCommand = lastExecuteCommand;
+	}
+
+	public boolean getLedPowerOn() {
+		boolean out = false;
+		try {
+			out = Boolean.parseBoolean(getProperty("led_power_on"));
+		} catch (Exception e) {
+			logger.error("LedPowerOn: "+e.getMessage());
+		}
+		return out;
 	}
 
 }

@@ -26,7 +26,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.4.3";
+	public static final String version = "1.4.5";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
 	
@@ -39,7 +39,7 @@ public class StartFeerBoxClient {
         
         InitGPIO();
         lights();
-        
+        StartLedPower();
         StartInternetAccessThreat();
         StartStatusThreat();
         saveInformationServerThreat();
@@ -60,6 +60,13 @@ public class StartFeerBoxClient {
         // (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
         // gpio.shutdown();   <--- implement this method call if you wish to terminate the Pi4J GPIO controller        
     }
+
+
+	private static void StartLedPower() {
+		if(ClientRegister.getInstance().getLedPowerOn()){
+			LedService.getLedPower().high(); //Switch on forever
+		}
+	}
 
 
 	private static void StartCommandServerPolling() {
@@ -191,6 +198,8 @@ public class StartFeerBoxClient {
 		ButtonService.getButton5().setShutdownOptions(true);
 		LedService.setLed5(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_28, "LED5", PinState.LOW)); //20
 		LedService.getLed5().setShutdownOptions(true, PinState.LOW);
+		
+		LedService.setLedPower(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_23, "LEDPOWER", PinState.LOW)); //13
 	}
 	
 
