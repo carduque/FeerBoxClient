@@ -72,6 +72,16 @@ public class ClientRegister {
 			}
 			logger.info("Property "+key+" added with value "+value);
 		}
+		if(key.equals("mac_upload_enabled")){
+			value = "false";
+			configuration.setProperty(key, value);
+			try {
+				configuration.save();
+			} catch (ConfigurationException e) {
+				logger.error("Storing config file: "+e.getMessage());
+			}
+			logger.info("Property "+key+" added with value "+value);
+		}
 		return value;
 	}
 
@@ -299,6 +309,16 @@ public class ClientRegister {
 			out = Boolean.parseBoolean(getProperty("led_power_on"));
 		} catch (Exception e) {
 			logger.error("LedPowerOn: "+e.getMessage());
+		}
+		return out;
+	}
+
+	public boolean getMACUplodEnable() {
+		boolean out = false;
+		try {
+			out = Boolean.parseBoolean(getProperty("mac_upload_enabled"));
+		} catch (Exception e) {
+			logger.error("ShowInternetConnectionError: "+e.getMessage());
 		}
 		return out;
 	}

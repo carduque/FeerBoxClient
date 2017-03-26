@@ -116,7 +116,7 @@ public class StatusRegister implements Runnable {
 			}
 			checkStatusTime();
 		}catch(Throwable  t){
-			logger.error("Exception in StatusRegister: "+t.getStackTrace());
+			logger.error("Exception in StatusRegister");
 		}
 	}
 

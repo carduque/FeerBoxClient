@@ -39,7 +39,7 @@ public class AliveRegister implements Runnable {
 			aliveLights();
 			checkTetheringDetection();
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("Error at AliveRegister");
 		}
 	}
 

@@ -15,7 +15,7 @@ import com.feerbox.client.registers.KismetClient;
 import com.feerbox.client.registers.MACDetection;
 import com.feerbox.client.registers.NFCReader;
 import com.feerbox.client.registers.StatusRegister;
-import com.feerbox.client.registers.UploadAnswersRegister;
+import com.feerbox.client.registers.InformationServerRegister;
 import com.feerbox.client.services.ButtonService;
 import com.feerbox.client.services.LedService;
 import com.feerbox.client.services.SaveAnswerService;
@@ -26,7 +26,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.4.5";
+	public static final String version = "1.5.0";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
 	
@@ -128,8 +128,8 @@ public class StartFeerBoxClient {
 	}
 	
 	private static void saveInformationServerThreat() {
-		UploadAnswersRegister uploadAnswersRegister = new UploadAnswersRegister();
-		ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(uploadAnswersRegister, 0, 1, TimeUnit.MINUTES);
+		InformationServerRegister informationServerRegister = new InformationServerRegister();
+		ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(informationServerRegister, 0, 1, TimeUnit.MINUTES);
 	}
 
 

@@ -24,7 +24,7 @@ public class ReadCleaningService extends FeerboxDB {
 
 			// statement.executeUpdate("drop table if exists person");
 			createCleaningServicesTableIfNotExists(statement);
-			ResultSet rs = statement.executeQuery("select id, time, cleanerReference, feerBoxReference, upload from CleaningServices where upload=0");
+			ResultSet rs = statement.executeQuery("select id, time, cleanerReference, feerBoxReference, upload from CleaningServices where upload=0 order by id asc limit 100");
 			while (rs.next()) {
 				CleaningService cleaningService = new CleaningService();
 				cleaningService.setId(rs.getInt("id"));

@@ -35,7 +35,7 @@ public class CleanerRegister extends Thread {
 				logger.debug("No cleaners to update");
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("Exception at CleanerRegister");
 		}
 		
 	}

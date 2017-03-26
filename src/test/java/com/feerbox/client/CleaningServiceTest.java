@@ -17,7 +17,7 @@ import com.feerbox.client.db.ReadCleaningService;
 import com.feerbox.client.db.SaveCleaningService;
 import com.feerbox.client.model.CleaningService;
 import com.feerbox.client.registers.InternetAccess;
-import com.feerbox.client.registers.UploadAnswersRegister;
+import com.feerbox.client.registers.InformationServerRegister;
 import com.google.gson.JsonObject;
 
 public class CleaningServiceTest {
@@ -31,7 +31,7 @@ public class CleaningServiceTest {
 		
 		SaveCleaningService.save(cleaningService);
 		
-		UploadAnswersRegister uploadAnswersRegister = new UploadAnswersRegister();
+		InformationServerRegister uploadAnswersRegister = new InformationServerRegister();
 		uploadAnswersRegister.run();
 		List<CleaningService> list = ReadCleaningService.notUploaded();
 		assertTrue(list.size()==0);

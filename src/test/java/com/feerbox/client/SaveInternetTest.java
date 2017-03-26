@@ -10,7 +10,7 @@ import com.feerbox.client.db.ReadAnswer;
 import com.feerbox.client.db.SaveAnswer;
 import com.feerbox.client.model.Answer;
 import com.feerbox.client.registers.InternetAccess;
-import com.feerbox.client.registers.UploadAnswersRegister;
+import com.feerbox.client.registers.InformationServerRegister;
 
 public class SaveInternetTest {
 	@Test
@@ -22,7 +22,7 @@ public class SaveInternetTest {
 		Integer id = SaveAnswer.save(answer);
 		//Thread.sleep(60000);
 		InternetAccess.getInstance().setAccess(true);
-		UploadAnswersRegister uploadAnswersRegister = new UploadAnswersRegister();
+		InformationServerRegister uploadAnswersRegister = new InformationServerRegister();
 		uploadAnswersRegister.run();
 		List<Answer> list = ReadAnswer.readAnswersNotUploaded();
 		assertTrue(list.size()==0);

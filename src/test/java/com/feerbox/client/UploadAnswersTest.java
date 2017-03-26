@@ -9,7 +9,7 @@ import org.junit.Test;
 import com.feerbox.client.db.ReadAnswer;
 import com.feerbox.client.model.Answer;
 import com.feerbox.client.registers.InternetAccess;
-import com.feerbox.client.registers.UploadAnswersRegister;
+import com.feerbox.client.registers.InformationServerRegister;
 import com.feerbox.client.services.SaveAnswerService;
 
 public class UploadAnswersTest {
@@ -23,7 +23,7 @@ public class UploadAnswersTest {
 		Integer id2 = SaveAnswerService.saveAnswer(1);
 		Integer id3 = SaveAnswerService.saveAnswer(2);
 		InternetAccess.getInstance().setAccess(true);
-		UploadAnswersRegister uploadAnswersRegister = new UploadAnswersRegister();
+		InformationServerRegister uploadAnswersRegister = new InformationServerRegister();
 		uploadAnswersRegister.run();
 		List<Answer> list = ReadAnswer.readAnswersNotUploaded();
 		assertTrue(list.size()==0);

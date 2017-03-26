@@ -43,7 +43,7 @@ public class CommandQueueRegister extends Thread {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("Exception at CommandQueueRegister");
 		}
 	}
 
