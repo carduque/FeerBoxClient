@@ -52,6 +52,33 @@ public class ReadAnswer extends FeerboxDB{
 		return answers;
 	}
 	
+	public static int countAnswersNotUploaded() {
+		Statement statement = null;
+		int total = 0;
+		try {
+			// create a database connection
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+			// statement.executeUpdate("drop table if exists person");
+			createAnswersTableIfNotExists(statement);
+			ResultSet rs = statement.executeQuery("select count(*) as total from Answers where upload=0");
+			while (rs.next()) {
+				total = rs.getInt("total");
+			}
+		} catch (SQLException e) {
+			logger.error("SQLException", e);
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.error("SQLException", e);
+			}
+		}
+		return total;
+	}
+	
 	public static Answer readAnswer(Integer id) {
 		Statement statement = null;
 		Answer answer = new Answer();

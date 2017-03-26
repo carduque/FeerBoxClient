@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 import com.feerbox.client.StartFeerBoxClient;
+import com.feerbox.client.db.ReadAnswer;
 import com.feerbox.client.model.Status;
 import com.feerbox.client.services.StatusService;
 import com.google.gson.JsonArray;
@@ -31,12 +32,20 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class StatusRegister implements Runnable {
+	private boolean checkStatusTime = true;
 	private String ip = "";
 	private ScheduledFuture<?> future;
 	private int interval = ClientRegister.getInstance().getSaveStatusInterval();
 	final static Logger logger = Logger.getLogger(StatusRegister.class);
 	private static Date lastStatusTime = null;
 	
+	public StatusRegister(){
+		super();
+	}
+	public StatusRegister(boolean checkStatusTime){
+		super();
+		this.checkStatusTime = checkStatusTime;
+	}
 	public void run() {
 		try{
 			Status status = new Status();
@@ -60,6 +69,7 @@ public class StatusRegister implements Runnable {
 				info.put(Status.infoKeys.SYSTEM_TIME.name(), getSystemTime());
 				info.put(Status.infoKeys.CommandExecutor.name(), getLastCommandExecutor());
 				info.put(Status.infoKeys.CommandQueue.name(), getLastGetCommands());
+				info.put(Status.infoKeys.PendingAnswersToUpload.name(), getPendingAnswersToUpload());
 				//logger.debug("Status7");
 				status.setInfo(info);
 				
@@ -120,6 +130,15 @@ public class StatusRegister implements Runnable {
 		}
 	}
 
+	private String getPendingAnswersToUpload() {
+		int total = 0;
+		try {
+			total = ReadAnswer.countAnswersNotUploaded();
+		} catch (Exception e) {
+			logger.error("Error counting Pending Answers to upload: "+e.getMessage());
+		}
+		return ""+total;
+	}
 	private String getLastCommandExecutor() {
 		String out = "false";
 		try {
@@ -162,22 +181,24 @@ public class StatusRegister implements Runnable {
 	}
 
 	private void checkStatusTime() {
-		if(lastStatusTime==null){
-			lastStatusTime = new Date();
-		}
-		else{
-			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
-			Date now = new Date();
-			long interval = now.getTime() - lastStatusTime.getTime();
-			int buffer = 10 * 60 * 1000; //10 minutes
-			int statusInterval = ClientRegister.getInstance().getSaveStatusInterval() * 60 * 1000;
-			if(interval>statusInterval+buffer){
-				logger.error("Time ERROR - Time moved forward. Now: "+ df.format(now)+" - LastStatus: "+ df.format(lastStatusTime));
+		if(checkStatusTime){
+			if(lastStatusTime==null){
+				lastStatusTime = new Date();
 			}
-			else if(interval<statusInterval-buffer){
-				logger.error("Time ERROR - Time moved backward. Now: "+ df.format(now)+" - LastStatus: "+ df.format(lastStatusTime));
+			else{
+				DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+				Date now = new Date();
+				long interval = now.getTime() - lastStatusTime.getTime();
+				int buffer = 10 * 60 * 1000; //10 minutes
+				int statusInterval = ClientRegister.getInstance().getSaveStatusInterval() * 60 * 1000;
+				if(interval>statusInterval+buffer){
+					logger.error("Time ERROR - Time moved forward. Now: "+ df.format(now)+" - LastStatus: "+ df.format(lastStatusTime));
+				}
+				else if(interval<statusInterval-buffer){
+					logger.error("Time ERROR - Time moved backward. Now: "+ df.format(now)+" - LastStatus: "+ df.format(lastStatusTime));
+				}
+				lastStatusTime = now;
 			}
-			lastStatusTime = now;
 		}
 	}
 

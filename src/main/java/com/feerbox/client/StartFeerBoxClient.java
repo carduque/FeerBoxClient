@@ -140,7 +140,7 @@ public class StartFeerBoxClient {
 		ButtonService.getButton2().addListener(buttonListener2);
 		ButtonListenerAndPowerOff buttonListener3 = new ButtonListenerAndPowerOff(ButtonService.getButton3(), LedService.getLed3(), 3);
 		ButtonService.getButton3().addListener(buttonListener3);
-		ButtonListener buttonListener4 = new ButtonListener(ButtonService.getButton4(), LedService.getLed4(), 4);
+		ButtonListenerAndSendStatus buttonListener4 = new ButtonListenerAndSendStatus(ButtonService.getButton4(), LedService.getLed4(), 4);
 		ButtonService.getButton4().addListener(buttonListener4);
 		//ButtonListener buttonListener5 = new ButtonListener(ButtonService.getButton5(), LedService.getLed5(), 5);
 		ButtonListenerAndReboot buttonListener5 = new ButtonListenerAndReboot(ButtonService.getButton5(), LedService.getLed5(), 5);
