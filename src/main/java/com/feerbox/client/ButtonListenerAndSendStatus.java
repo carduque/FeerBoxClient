@@ -37,7 +37,7 @@ public class ButtonListenerAndSendStatus implements GpioPinListenerDigital {
         	if(exactTime!=null){
         		long seconds = (new Date().getTime()-exactTime.getTime())/500;  //5 seconds
         		if(seconds>10){
-        			logger.debug("Going to reboot");
+        			logger.debug("Going to send status");
         			Led.blink(500, 10000); // continuously blink the led every 1/2 second for 10 seconds
         			StatusRegister status = new StatusRegister(false);
 					status.run();
