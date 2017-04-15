@@ -24,8 +24,8 @@ public class SaveCounterPeople extends FeerboxDB {
 			if(counterPeople.getUpload()){
 				upload=1;
 			}
-			String sql = "insert into CounterPeople (time, distance, feerBoxReference, upload) "
-					+ "values(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),'" + counterPeople.getDistance() + "',  "+counterPeople.getFeerBoxReference()+", "+upload+")";
+			String sql = "insert into CounterPeople (time, distance, reference, upload) "
+					+ "values(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime')," + counterPeople.getDistance() + ",  '"+counterPeople.getFeerBoxReference()+"', "+upload+")";
 			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM CounterPeople LIMIT 1");
