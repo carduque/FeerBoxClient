@@ -20,12 +20,13 @@ public class CounterPeopleRegister extends Thread {
 	
 	public CounterPeopleRegister(){
 		GpioController gpio = GpioFactory.getInstance();
-		this.echoPin = gpio.provisionDigitalInputPin(  RaspiPin.GPIO_10 ); //GPIO 08
-        this.trigPin = gpio.provisionDigitalOutputPin(  RaspiPin.GPIO_11 ); //GPIO 07
+		this.echoPin = gpio.provisionDigitalInputPin(  RaspiPin.GPIO_11 ); //GPIO 08
+        this.trigPin = gpio.provisionDigitalOutputPin(  RaspiPin.GPIO_10 ); //GPIO 07
         this.trigPin.low();
 	}
 	
 	public void run() {
+		logger.debug("Starting CounterPeople");
 		int people_count=0;
 		boolean counted=false;
 		while(true){
