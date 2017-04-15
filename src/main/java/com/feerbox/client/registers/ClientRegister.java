@@ -11,8 +11,6 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.log4j.Logger;
 
-import com.feerbox.client.StartFeerBoxClient;
-
 public class ClientRegister {
 	private static ClientRegister instance= null;
 	private static PropertiesConfiguration configuration = null;
@@ -74,6 +72,56 @@ public class ClientRegister {
 		}
 		if(key.equals("mac_upload_enabled")){
 			value = "false";
+			configuration.setProperty(key, value);
+			try {
+				configuration.save();
+			} catch (ConfigurationException e) {
+				logger.error("Storing config file: "+e.getMessage());
+			}
+			logger.info("Property "+key+" added with value "+value);
+		}
+		if(key.equals("counter_people_enabled")){
+			value = "false";
+			configuration.setProperty(key, value);
+			try {
+				configuration.save();
+			} catch (ConfigurationException e) {
+				logger.error("Storing config file: "+e.getMessage());
+			}
+			logger.info("Property "+key+" added with value "+value);
+		}
+		if(key.equals("led_power_on")){
+			value = "false";
+			configuration.setProperty(key, value);
+			try {
+				configuration.save();
+			} catch (ConfigurationException e) {
+				logger.error("Storing config file: "+e.getMessage());
+			}
+			logger.info("Property "+key+" added with value "+value);
+		}
+		if(key.equals("mac_upload_enabled")){
+			value = "false";
+			configuration.setProperty(key, value);
+			try {
+				configuration.save();
+			} catch (ConfigurationException e) {
+				logger.error("Storing config file: "+e.getMessage());
+			}
+			logger.info("Property "+key+" added with value "+value);
+		}
+		if(key.equals("counter_people_min_threshold")){
+			value = "150"; //cm
+			configuration.setProperty(key, value);
+			try {
+				configuration.save();
+			} catch (ConfigurationException e) {
+				logger.error("Storing config file: "+e.getMessage());
+			}
+			logger.info("Property "+key+" added with value "+value);
+		}
+		if(key.equals("counter_people_max_threshold")){
+			value = "150"; //cm
 			configuration.setProperty(key, value);
 			try {
 				configuration.save();
@@ -321,6 +369,46 @@ public class ClientRegister {
 			logger.error("ShowInternetConnectionError: "+e.getMessage());
 		}
 		return out;
+	}
+
+	public boolean getCounterPeopleEnabled() {
+		boolean out = false;
+		try {
+			out = Boolean.parseBoolean(getProperty("counter_people_enabled"));
+		} catch (Exception e) {
+			logger.error("ShowInternetConnectionError: "+e.getMessage());
+		}
+		return out;
+	}
+
+	public double getCounterPeopleMinThreshold() {
+		int threshold = 0;
+		try {
+			threshold = Integer.parseInt(getProperty("counter_people_min_threshold"));
+		} catch (NumberFormatException e) {
+			logger.error("NumberFormatException", e);
+		}
+		return threshold;
+	}
+
+	public double getCounterPeopleMaxThreshold() {
+		int threshold = 0;
+		try {
+			threshold = Integer.parseInt(getProperty("counter_people_max_threshold"));
+		} catch (NumberFormatException e) {
+			logger.error("NumberFormatException", e);
+		}
+		return threshold;
+	}
+
+	public long getCounterPeoplePauseBetweenMesurements() {
+		int millis = 0;
+		try {
+			millis = Integer.parseInt(getProperty("counter_people_pause_between_mesurements"));
+		} catch (NumberFormatException e) {
+			logger.error("NumberFormatException", e);
+		}
+		return millis;
 	}
 
 }

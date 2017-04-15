@@ -10,8 +10,10 @@ import com.feerbox.client.db.SaveAnswer;
 import com.feerbox.client.db.SaveCleaningService;
 import com.feerbox.client.model.Answer;
 import com.feerbox.client.model.CleaningService;
+import com.feerbox.client.model.CounterPeople;
 import com.feerbox.client.model.MAC;
 import com.feerbox.client.services.CleaningServiceService;
+import com.feerbox.client.services.CounterPeopleService;
 import com.feerbox.client.services.MACService;
 import com.feerbox.client.services.SaveAnswerService;
 
@@ -23,11 +25,27 @@ public class InformationServerRegister extends Thread {
 				uploadAnswers();
 				uploadCleaningService();
 				uploadMACs();
+				//uploadCounterPeople();
 			}
 			//Nothing to update
 			ClientRegister.getInstance().setAnswersUploaded(true); //Indicate register finished
 		} catch (Exception e) {
 			logger.error("Error in InformationServerRegister");
+		}
+	}
+	private void uploadCounterPeople() {
+		if(ClientRegister.getInstance().getCounterPeopleEnabled()){
+			List<CounterPeople> list = CounterPeopleService.notUploaded();
+			if(list!=null && list.size()!=0){
+				logger.debug("Going to update CounterPeople");
+				for(CounterPeople counterPeople: list){
+					boolean ok = CounterPeopleService.saveServer(counterPeople);
+					logger.debug("Upload to Internet? "+ok);
+					if(ok){
+						CounterPeopleService.upload(counterPeople);
+					}
+				}
+			}
 		}
 	}
 	private void uploadMACs() {

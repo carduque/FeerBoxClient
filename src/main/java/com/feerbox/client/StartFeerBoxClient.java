@@ -11,11 +11,11 @@ import com.feerbox.client.registers.CleanerRegister;
 import com.feerbox.client.registers.ClientRegister;
 import com.feerbox.client.registers.CommandExecutor;
 import com.feerbox.client.registers.CommandQueueRegister;
-import com.feerbox.client.registers.KismetClient;
+import com.feerbox.client.registers.CounterPeopleRegister;
+import com.feerbox.client.registers.InformationServerRegister;
 import com.feerbox.client.registers.MACDetection;
 import com.feerbox.client.registers.NFCReader;
 import com.feerbox.client.registers.StatusRegister;
-import com.feerbox.client.registers.InformationServerRegister;
 import com.feerbox.client.services.ButtonService;
 import com.feerbox.client.services.LedService;
 import com.feerbox.client.services.SaveAnswerService;
@@ -26,7 +26,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.5.0";
+	public static final String version = "1.5.1";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
 	
@@ -40,13 +40,14 @@ public class StartFeerBoxClient {
         InitGPIO();
         lights();
         StartLedPower();
-        StartInternetAccessThreat();
+        StartInternetAccessThread();
         StartStatusThreat();
-        saveInformationServerThreat();
-        StartWifiDetectionThreat();
+        saveInformationServerThread();
+        StartWifiDetectionThread();
         StartNFCReaderThreat();
         StartCommandServerPolling();
         StartCleanerServerPolling();
+        StartCounterPeoplePolling();
         
         // create and register gpio pin listener
         registerButtonListeners();
@@ -60,6 +61,14 @@ public class StartFeerBoxClient {
         // (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
         // gpio.shutdown();   <--- implement this method call if you wish to terminate the Pi4J GPIO controller        
     }
+
+
+	private static void StartCounterPeoplePolling() {
+		if(ClientRegister.getInstance().getCounterPeopleEnabled()){
+			CounterPeopleRegister counterPeople = new CounterPeopleRegister();
+			counterPeople.start();
+		}
+	}
 
 
 	private static void StartLedPower() {
@@ -107,7 +116,7 @@ public class StartFeerBoxClient {
 	}
 
 
-	private static void StartWifiDetectionThreat() {
+	private static void StartWifiDetectionThread() {
 		if(ClientRegister.getInstance().getWifiDetection()){
 			sniffer = new MACDetection();
 			sniffer.execute();
@@ -121,13 +130,13 @@ public class StartFeerBoxClient {
 		ipRegister.setFuture(future);
 	}
 	
-	private static void StartInternetAccessThreat() {
+	private static void StartInternetAccessThread() {
 		//check Internet & alivelights & KismetServer alive
 		AliveRegister internetRegister = new AliveRegister();
 		ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(internetRegister, 0, 1, TimeUnit.MINUTES);
 	}
 	
-	private static void saveInformationServerThreat() {
+	private static void saveInformationServerThread() {
 		InformationServerRegister informationServerRegister = new InformationServerRegister();
 		ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(informationServerRegister, 0, 1, TimeUnit.MINUTES);
 	}

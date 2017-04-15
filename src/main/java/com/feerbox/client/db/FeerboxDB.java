@@ -14,6 +14,7 @@ public class FeerboxDB {
 	private static Connection connection;
 	private static boolean cleaningServicesTableCreated = false;
 	private static boolean macTableCreated;
+	private static boolean counterPeopleTableCreated;
 	protected final static Logger logger = Logger.getLogger(FeerboxDB.class);
 
 	
@@ -72,6 +73,19 @@ public class FeerboxDB {
 			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			macTableCreated = true;
+		}
+	}
+	
+	protected static void createCounterPeopleTableIfNotExists() throws SQLException {
+		if (!counterPeopleTableCreated) {
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+			//logger.debug("Creating table if not exists...");
+			//table = ClientRegister.getInstance().getCustomer();
+			String sql = "create table if not exists CounterPeople (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, distance float, reference varchar, upload integer)";
+			//logger.debug(sql);
+			statement.executeUpdate(sql);
+			counterPeopleTableCreated = true;
 		}
 	}
 	
