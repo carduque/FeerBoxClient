@@ -48,10 +48,11 @@ public class CounterPeopleRegister extends Thread {
 			 * Min and Max should be the same, but we could have some buffer for error margin
 			 */
 			if(distance<ClientRegister.getInstance().getCounterPeopleMinThreshold() && !counted){
+				counted=true;
 				people_count++;
 				logger.debug("Another Person! - Total: "+people_count);
-				saveCounterPeople(distance);
-				counted=true;
+				//saveCounterPeople(distance);
+				
 			}
 			else{
 				if(distance>ClientRegister.getInstance().getCounterPeopleMaxThreshold()){
