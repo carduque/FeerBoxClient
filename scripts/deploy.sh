@@ -12,7 +12,7 @@ if [ -z "$1" ]
 fi
 sudo chmod -R 777 /opt/FeerBoxClient/FeerBoxClient/scripts
 sudo cp -rf /opt/FeerBoxClient/FeerBoxClient/config/config_$now.properties /opt/FeerBoxClient/FeerBoxClient/target/classes/config.properties
-if [-d "/opt/FeerBoxClient/feerbox-admin-web"]; then
+if [ -d "/opt/FeerBoxClient/feerbox-admin-web" ]; then
 	#feerbox-admin-web alredy installed
 	wget -q https://raw.githubusercontent.com/carduque/raspap-webgui/master/installers/raspbian-update.sh -O /tmp/raspap && bash /tmp/raspap
 else
