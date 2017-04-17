@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
+import com.feerbox.client.LCDWrapper;
 import com.feerbox.client.db.SaveCounterPeople;
 import com.feerbox.client.model.CounterPeople;
 import com.pi4j.io.gpio.GpioController;
@@ -29,6 +30,7 @@ public class CounterPeopleRegister extends Thread {
 		logger.debug("Starting CounterPeople");
 		int people_count=0;
 		boolean counted=false;
+		LCDWrapper.clear();
 		while(true){
 			try {
 				Thread.sleep(ClientRegister.getInstance().getCounterPeoplePauseBetweenMesurements());
@@ -52,7 +54,9 @@ public class CounterPeopleRegister extends Thread {
 				people_count++;
 				logger.debug("Another Person! - Total: "+people_count);
 				//saveCounterPeople(distance);
-				
+				if(ClientRegister.getInstance().getCounterPeopleLCD()){
+					LCDWrapper.setTextRow0("DS: "+people_count);
+				}
 			}
 			else{
 				if(distance>ClientRegister.getInstance().getCounterPeopleMaxThreshold()){
