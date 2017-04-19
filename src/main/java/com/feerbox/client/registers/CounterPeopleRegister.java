@@ -49,11 +49,14 @@ public class CounterPeopleRegister extends Thread {
 			 * Max = distance from sensor to end of door in cm + some buffer. It has to always less than distance from sensor to end of wall in front.
 			 * Min and Max should be the same, but we could have some buffer for error margin
 			 */
+			if(ClientRegister.getInstance().getCounterPeopleDebugMode()){
+				LCDWrapper.setTextRow1("Distance: "+distance);
+			}
 			if(distance<ClientRegister.getInstance().getCounterPeopleMinThreshold() && !counted){
 				counted=true;
 				people_count++;
 				logger.debug("Another Person! - Total: "+people_count);
-				//saveCounterPeople(distance);
+				saveCounterPeople(distance);
 				if(ClientRegister.getInstance().getCounterPeopleLCD()){
 					LCDWrapper.setTextRow0("DS: "+people_count);
 				}
@@ -63,7 +66,6 @@ public class CounterPeopleRegister extends Thread {
 					counted=false;
 				}
 			}
-			
 		}
 	}
 
