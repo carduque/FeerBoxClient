@@ -82,7 +82,7 @@ public class FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 			//logger.debug("Creating table if not exists...");
 			//table = ClientRegister.getInstance().getCustomer();
-			String sql = "create table if not exists CounterPeople (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, distance float, reference varchar, upload integer)";
+			String sql = "create table if not exists CounterPeople (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, distance float, reference varchar, type varchar, upload integer)";
 			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			counterPeopleTableCreated = true;

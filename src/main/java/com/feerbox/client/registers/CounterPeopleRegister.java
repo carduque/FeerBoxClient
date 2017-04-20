@@ -7,11 +7,15 @@ import org.apache.log4j.Logger;
 import com.feerbox.client.LCDWrapper;
 import com.feerbox.client.db.SaveCounterPeople;
 import com.feerbox.client.model.CounterPeople;
+import com.feerbox.client.model.CounterPeople.Type;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 public class CounterPeopleRegister extends Thread {
 	final static Logger logger = Logger.getLogger(CounterPeopleRegister.class);
@@ -19,12 +23,14 @@ public class CounterPeopleRegister extends Thread {
 	private static final int TIMEOUT = 10000;
 	private final GpioPinDigitalInput echoPin;
     private final GpioPinDigitalOutput trigPin;
+    private final GpioPinDigitalInput pirPin;
 	
 	public CounterPeopleRegister(){
 		GpioController gpio = GpioFactory.getInstance();
 		this.echoPin = gpio.provisionDigitalInputPin(  RaspiPin.GPIO_11 ); //GPIO 08
         this.trigPin = gpio.provisionDigitalOutputPin(  RaspiPin.GPIO_10 ); //GPIO 07
         this.trigPin.low();
+        this.pirPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29, PinPullResistance.PULL_DOWN);
 	}
 	
 	public void run() {
@@ -32,6 +38,7 @@ public class CounterPeopleRegister extends Thread {
 		int people_count=0;
 		boolean counted=false;
 		LCDWrapper.clear();
+		RegisterPIRListener();
 		while(true){
 			try {
 				Thread.sleep(ClientRegister.getInstance().getCounterPeoplePauseBetweenMesurements());
@@ -68,8 +75,8 @@ public class CounterPeopleRegister extends Thread {
 			if(distance<ClientRegister.getInstance().getCounterPeopleMinThreshold() && !counted){
 				counted=true;
 				people_count++;
-				logger.debug("Another Person! - Total: "+people_count);
-				saveCounterPeople(distance);
+				//logger.debug("Another Person! - Total: "+people_count);
+				saveCounterPeople(distance, CounterPeople.Type.DISTANCE_SENSOR);
 				if(ClientRegister.getInstance().getCounterPeopleLCD()){
 					LCDWrapper.setTextRow0("DS: "+people_count);
 				}
@@ -82,12 +89,38 @@ public class CounterPeopleRegister extends Thread {
 		}
 	}
 
-	private void saveCounterPeople(double distance) {
+	private void RegisterPIRListener() {
+		// create and register gpio pin listener            
+		this.pirPin.addListener(new GpioPinListenerDigital() {           
+		    private int people_count_pir = 0;
+
+			@Override       
+		    public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {        
+
+		        if(event.getState().isHigh()){
+		        	saveCounterPeople(0, CounterPeople.Type.PIR);
+					if(ClientRegister.getInstance().getCounterPeopleLCD()){
+						people_count_pir++;
+						LCDWrapper.setTextRow1("PIR: "+people_count_pir);
+					}
+		        }   
+
+		        if(event.getState().isLow()){
+		        }   
+
+		    }       
+
+		});    
+	}
+
+	private void saveCounterPeople(double distance, Type type) {
 		//Store information in DB
 		CounterPeople counterPeople = new CounterPeople();
 		counterPeople.setTime(new Date());
 		counterPeople.setUpload(false);
 		counterPeople.setDistance(distance);
+		counterPeople.setFeerBoxReference(ClientRegister.getInstance().getReference());
+		counterPeople.setType(type);
 		SaveCounterPeople.save(counterPeople);
 	}
 

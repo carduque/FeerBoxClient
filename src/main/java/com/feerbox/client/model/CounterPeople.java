@@ -5,12 +5,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import com.feerbox.client.model.CounterPeople.Type;
+
 public class CounterPeople {
+	public static enum Type {PIR, DISTANCE_SENSOR};
 	private long id;
 	private Date time;
 	private double distance;
 	private String feerBoxReference;
 	private boolean upload;
+	private Type type;
 	
 	public long getId() {
 		return id;
@@ -47,6 +51,12 @@ public class CounterPeople {
 	}
 	public void setDistance(double distance) {
 		this.distance = distance;
+	}
+	public void setType(Type type) {
+		this.type = type;
+	}
+	public Type getType() {
+		return type;
 	}
 	
 }
