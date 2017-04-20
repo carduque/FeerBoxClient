@@ -16,6 +16,7 @@ import com.pi4j.io.gpio.RaspiPin;
 public class CounterPeopleRegister extends Thread {
 	final static Logger logger = Logger.getLogger(CounterPeopleRegister.class);
 	private final static float SOUND_SPEED = 340.29f;  // speed of sound in m/s (it could differ based on many factors like temperature)
+	private static final int TIMEOUT = 10000;
 	private final GpioPinDigitalInput echoPin;
     private final GpioPinDigitalOutput trigPin;
 	
@@ -37,11 +38,23 @@ public class CounterPeopleRegister extends Thread {
 			} catch (InterruptedException e) {
 				logger.error("Error in pause between mesurements");
 			}
+			int countdown = TIMEOUT;
 			triggerSensor();
-			while(echoPin.isLow());
+			while(echoPin.isLow() && countdown > 0 ){
+				countdown--;
+			}
 			long startTime= System.nanoTime(); // Store the current time to calculate ECHO pin HIGH time.
-			while(echoPin.isHigh());
+			if(countdown<=0){
+				LCDWrapper.setTextRow1("Timeout Low");
+			}
+			countdown = TIMEOUT;
+			while(echoPin.isHigh() && countdown > 0 ){
+				countdown--;
+			}
 			long endTime= System.nanoTime(); // Store the echo pin HIGH end time to calculate ECHO pin HIGH time.
+			if(countdown<=0){
+				LCDWrapper.setTextRow1("Timeout High");
+			}
 			double distance = (((endTime-startTime)/1000.0)* SOUND_SPEED / (20000.0)); //distance in cm
 			
 			/*
