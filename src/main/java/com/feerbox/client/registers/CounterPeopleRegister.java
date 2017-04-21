@@ -20,7 +20,7 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 public class CounterPeopleRegister extends Thread {
 	final static Logger logger = Logger.getLogger(CounterPeopleRegister.class);
 	private final static float SOUND_SPEED = 340.29f;  // speed of sound in m/s (it could differ based on many factors like temperature)
-	private static final int TIMEOUT = 10000;
+	private static final int TIMEOUT = 20000;
 	private final GpioPinDigitalInput echoPin;
     private final GpioPinDigitalOutput trigPin;
     private final GpioPinDigitalInput pirPin;
@@ -51,39 +51,37 @@ public class CounterPeopleRegister extends Thread {
 				countdown--;
 			}
 			long startTime= System.nanoTime(); // Store the current time to calculate ECHO pin HIGH time.
-			if(countdown<=0){
-				LCDWrapper.setTextRow1("Timeout Low");
-			}
-			countdown = TIMEOUT;
-			while(echoPin.isHigh() && countdown > 0 ){
-				countdown--;
-			}
-			long endTime= System.nanoTime(); // Store the echo pin HIGH end time to calculate ECHO pin HIGH time.
-			if(countdown<=0){
-				LCDWrapper.setTextRow1("Timeout High");
-			}
-			double distance = (((endTime-startTime)/1000.0)* SOUND_SPEED / (20000.0)); //distance in cm
-			
-			/*
-			 * Min = distance from sensor to end of door in cm
-			 * Max = distance from sensor to end of door in cm + some buffer. It has to always less than distance from sensor to end of wall in front.
-			 * Min and Max should be the same, but we could have some buffer for error margin
-			 */
-			if(ClientRegister.getInstance().getCounterPeopleDebugMode()){
-				LCDWrapper.setTextRow1("Distance: "+distance);
-			}
-			if(distance<ClientRegister.getInstance().getCounterPeopleMinThreshold() && !counted){
-				counted=true;
-				people_count++;
-				//logger.debug("Another Person! - Total: "+people_count);
-				saveCounterPeople(distance, CounterPeople.Type.DISTANCE_SENSOR);
-				if(ClientRegister.getInstance().getCounterPeopleLCD()){
-					LCDWrapper.setTextRow0("DS: "+people_count);
+			if(countdown>0){
+				countdown = TIMEOUT;
+				while(echoPin.isHigh() && countdown > 0 ){
+					countdown--;
 				}
-			}
-			else{
-				if(distance>ClientRegister.getInstance().getCounterPeopleMaxThreshold()){
-					counted=false;
+				long endTime= System.nanoTime(); // Store the echo pin HIGH end time to calculate ECHO pin HIGH time.
+				if(countdown>0){
+					double distance = (((endTime-startTime)/1000.0)* SOUND_SPEED / (20000.0)); //distance in cm
+					
+					/*
+					 * Min = distance from sensor to end of door in cm
+					 * Max = distance from sensor to end of door in cm + some buffer. It has to always less than distance from sensor to end of wall in front.
+					 * Min and Max should be the same, but we could have some buffer for error margin
+					 */
+					if(ClientRegister.getInstance().getCounterPeopleDebugMode()){
+						LCDWrapper.setTextRow1("Distance: "+distance);
+					}
+					if(distance<ClientRegister.getInstance().getCounterPeopleMinThreshold() && !counted){
+						counted=true;
+						people_count++;
+						//logger.debug("Another Person! - Total: "+people_count);
+						saveCounterPeople(distance, CounterPeople.Type.DISTANCE_SENSOR);
+						if(ClientRegister.getInstance().getCounterPeopleLCD()){
+							LCDWrapper.setTextRow0("DS: "+people_count);
+						}
+					}
+					else{
+						if(distance>ClientRegister.getInstance().getCounterPeopleMaxThreshold()){
+							counted=false;
+						}
+					}
 				}
 			}
 		}

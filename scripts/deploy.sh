@@ -26,6 +26,7 @@ if [ "$CONFIG" = "default" ]
 fi
 sudo chmod -R 777 /opt/FeerBoxClient/FeerBoxClient/scripts
 sudo cp -rf /opt/FeerBoxClient/FeerBoxClient/config/config_$now.properties /opt/FeerBoxClient/FeerBoxClient/target/classes/config.properties
+sudo chown www-data /opt/FeerBoxClient/FeerBoxClient/target/classes/config.properties
 if  $DEPLOY_WEB_ADMIN; then
 	if [ -d "/opt/FeerBoxClient/feerbox-admin-web" ]; then
 		#feerbox-admin-web alredy installed
