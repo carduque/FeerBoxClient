@@ -24,6 +24,8 @@ public class CounterPeopleRegister extends Thread {
 	private final GpioPinDigitalInput echoPin;
     private final GpioPinDigitalOutput trigPin;
     private final GpioPinDigitalInput pirPin;
+    private int people_count_ds=0;
+    private int people_count_pir = 0;
 	
 	public CounterPeopleRegister(){
 		GpioController gpio = GpioFactory.getInstance();
@@ -35,7 +37,7 @@ public class CounterPeopleRegister extends Thread {
 	
 	public void run() {
 		logger.debug("Starting CounterPeople");
-		int people_count=0;
+		
 		boolean counted=false;
 		LCDWrapper.clear();
 		RegisterPIRListener();
@@ -70,11 +72,11 @@ public class CounterPeopleRegister extends Thread {
 					}
 					if(distance<ClientRegister.getInstance().getCounterPeopleMinThreshold() && !counted){
 						counted=true;
-						people_count++;
+						people_count_ds++;
 						//logger.debug("Another Person! - Total: "+people_count);
 						saveCounterPeople(distance, CounterPeople.Type.DISTANCE_SENSOR);
 						if(ClientRegister.getInstance().getCounterPeopleLCD()){
-							LCDWrapper.setTextRow0("DS: "+people_count);
+							printLCD();
 						}
 					}
 					else{
@@ -90,7 +92,6 @@ public class CounterPeopleRegister extends Thread {
 	private void RegisterPIRListener() {
 		// create and register gpio pin listener            
 		this.pirPin.addListener(new GpioPinListenerDigital() {           
-		    private int people_count_pir = 0;
 
 			@Override       
 		    public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {        
@@ -99,7 +100,7 @@ public class CounterPeopleRegister extends Thread {
 		        	saveCounterPeople(0, CounterPeople.Type.PIR);
 					if(ClientRegister.getInstance().getCounterPeopleLCD()){
 						people_count_pir++;
-						LCDWrapper.setTextRow1("PIR: "+people_count_pir);
+						printLCD();
 					}
 		        }   
 
@@ -130,5 +131,10 @@ public class CounterPeopleRegister extends Thread {
 		} catch (InterruptedException e) {
 			logger.error("Error triggering sensor");
 		}
+	}
+	private void printLCD(){
+		LCDWrapper.clear();
+		LCDWrapper.setTextRow0("DS: "+people_count_ds);
+		LCDWrapper.setTextRow1("PIR: "+people_count_pir);
 	}
 }
