@@ -23,13 +23,14 @@ public class ReadCounterPeople extends FeerboxDB {
 
 			// statement.executeUpdate("drop table if exists person");
 			createCounterPeopleTableIfNotExists();
-			ResultSet rs = statement.executeQuery("select id, time, mac, request, reference, upload from MACS where upload=0 order by id asc limit 100");
+			ResultSet rs = statement.executeQuery("select id, time, distance, type, reference, upload from counterPeople where upload=0 order by id asc limit 100");
 			while (rs.next()) {
 				CounterPeople counterPeople = new CounterPeople();
 				counterPeople.setId(rs.getLong("id"));
 				String time = rs.getString("time");
 				counterPeople.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(time));
 				counterPeople.setDistance(rs.getDouble("distance"));
+				counterPeople.setType(CounterPeople.Type.valueOf(rs.getString("type")));
 				counterPeople.setFeerBoxReference(rs.getString("reference"));
 				counterPeople.setUpload(rs.getInt("upload")==1); //1: true - 0: false
 				
