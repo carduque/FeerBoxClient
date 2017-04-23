@@ -25,7 +25,7 @@ public class InformationServerRegister extends Thread {
 				uploadAnswers();
 				uploadCleaningService();
 				uploadMACs();
-				//uploadCounterPeople();
+				uploadCounterPeople();
 			}
 			//Nothing to update
 			ClientRegister.getInstance().setAnswersUploaded(true); //Indicate register finished

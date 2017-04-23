@@ -28,7 +28,7 @@ public class CounterPeopleService {
 		OutputStream os = null;
 		HttpURLConnection conn = null;
 		try {
-			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/mac/add");
+			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/counterpeople/add");
 			conn = (HttpURLConnection) myURL.openConnection();
 			conn.setRequestProperty("Content-Length", "1000");
 			conn.setRequestProperty("Content-Type", "application/json");
@@ -41,7 +41,7 @@ public class CounterPeopleService {
 			os.flush();
 
 			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
-				logger.info("Failed MACService/add : HTTP error code : "+ conn.getResponseCode());
+				logger.info("Failed CounterPeopleService/add : HTTP error code : "+ conn.getResponseCode());
 				ok = false;
 			}
 			
@@ -71,6 +71,7 @@ public class CounterPeopleService {
 		json.addProperty("distance", counterPeople.getDistance());
 		json.addProperty("time", counterPeople.getTimeFormatted());
 		json.addProperty("feerboxReference", counterPeople.getFeerBoxReference());
+		json.addProperty("type", counterPeople.getType().name());
 		return json;
 	}
 
