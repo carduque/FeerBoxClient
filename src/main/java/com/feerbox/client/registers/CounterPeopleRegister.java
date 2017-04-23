@@ -43,6 +43,7 @@ public class CounterPeopleRegister extends Thread {
 			LCDWrapper.clear();
 		}
 		RegisterPIRListener();
+		logger.debug("Starting DS CounterPeople");
 		while(true){
 			try {
 				Thread.sleep(ClientRegister.getInstance().getCounterPeoplePauseBetweenMesurements());
@@ -92,6 +93,7 @@ public class CounterPeopleRegister extends Thread {
 	}
 
 	private void RegisterPIRListener() {
+		logger.debug("Register PIR CounterPeople");
 		// create and register gpio pin listener            
 		this.pirPin.addListener(new GpioPinListenerDigital() {           
 

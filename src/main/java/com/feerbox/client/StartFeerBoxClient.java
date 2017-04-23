@@ -26,7 +26,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.5.2";
+	public static final String version = "1.5.2.1";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
 	
@@ -34,7 +34,7 @@ public class StartFeerBoxClient {
 	private static final GpioController gpio = GpioFactory.getInstance();
 	
 	public static void main(String args[]) throws InterruptedException {
-        logger.debug("FeerBoxClient Started");
+        logger.debug("FeerBoxClient Started version "+version);
         // create gpio controller
         
         InitGPIO();
