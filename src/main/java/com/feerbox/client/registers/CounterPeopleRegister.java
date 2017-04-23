@@ -39,7 +39,9 @@ public class CounterPeopleRegister extends Thread {
 		logger.debug("Starting CounterPeople");
 		
 		boolean counted=false;
-		LCDWrapper.clear();
+		if(ClientRegister.getInstance().getCounterPeopleLCD()){
+			LCDWrapper.clear();
+		}
 		RegisterPIRListener();
 		while(true){
 			try {
@@ -67,7 +69,7 @@ public class CounterPeopleRegister extends Thread {
 					 * Max = distance from sensor to end of door in cm + some buffer. It has to always less than distance from sensor to end of wall in front.
 					 * Min and Max should be the same, but we could have some buffer for error margin
 					 */
-					if(ClientRegister.getInstance().getCounterPeopleDebugMode()){
+					if(ClientRegister.getInstance().getCounterPeopleDebugMode() && ClientRegister.getInstance().getCounterPeopleLCD()){
 						LCDWrapper.setTextRow1("Distance: "+distance);
 					}
 					if(distance<ClientRegister.getInstance().getCounterPeopleMinThreshold() && !counted){
