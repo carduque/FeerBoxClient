@@ -78,6 +78,9 @@ public class CounterPeopleRegister extends Thread {
 						people_count_ds++;
 						//logger.debug("Another Person! - Total: "+people_count);
 						saveCounterPeople(distance, CounterPeople.Type.DISTANCE_SENSOR);
+						if(ClientRegister.getInstance().getCounterPeopleDebugMode()){
+							logger.debug("Person!");
+						}
 						if(ClientRegister.getInstance().getCounterPeopleLCD()){
 							printLCD();
 						}

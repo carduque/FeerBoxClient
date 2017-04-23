@@ -70,7 +70,7 @@ public class CounterPeopleService {
 		json.addProperty("clientId", counterPeople.getId());
 		json.addProperty("distance", counterPeople.getDistance());
 		json.addProperty("time", counterPeople.getTimeFormatted());
-		json.addProperty("feerboxReference", counterPeople.getFeerBoxReference());
+		json.addProperty("feerBoxReference", counterPeople.getFeerBoxReference());
 		json.addProperty("type", counterPeople.getType().name());
 		return json;
 	}
