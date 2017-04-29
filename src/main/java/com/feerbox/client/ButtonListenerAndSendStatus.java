@@ -43,15 +43,15 @@ public class ButtonListenerAndSendStatus implements GpioPinListenerDigital {
 					status.run();
         		}
         		else{
-        			Led.pulse(1000, true); // set second argument to 'true' use a blocking call
                     SaveAnswerService.saveAnswer(buttonNumber);
-                	//FileStore.saveAnswer(buttonNumber);
         		}
         	}
 		}
         if(event.getState().equals(PinState.HIGH)){
         	this.exactTime = new Date();
         	this.lastState = PinState.HIGH;
+        	//We would like to light led when push
+        	Led.pulse(1000, true); // set second argument to 'true' use a blocking call
         }
 	}
 

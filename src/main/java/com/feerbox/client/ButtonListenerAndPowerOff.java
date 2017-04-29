@@ -42,14 +42,14 @@ public class ButtonListenerAndPowerOff implements GpioPinListenerDigital {
 					}
         		}
         		else{
-        			Led.pulse(1000, true); // set second argument to 'true' use a blocking call
                     SaveAnswerService.saveAnswer(buttonNumber);
-                	//FileStore.saveAnswer(buttonNumber);
         		}
         	}
 		}
         if(event.getState().equals(PinState.HIGH)){
         	this.exactTime = new Date();
+        	//We would like to light led when push
+        	Led.pulse(1000, true); // set second argument to 'true' use a blocking call
         }
 	}
 

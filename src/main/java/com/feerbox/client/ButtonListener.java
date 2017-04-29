@@ -26,15 +26,13 @@ public class ButtonListener implements GpioPinListenerDigital {
 	}
 
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-		// display pin state on console
-        //logger.debug(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
         if(event.getState().equals(PinState.LOW)){
-        	Led.pulse(1000, true); // set second argument to 'true' use a blocking call
             SaveAnswerService.saveAnswer(buttonNumber);
-        	//FileStore.saveAnswer(buttonNumber);
 		}
         if(event.getState().equals(PinState.HIGH)){
         	this.exactTime = new Date();
+        	//We would like to light led when push
+        	Led.pulse(1000, true); // set second argument to 'true' use a blocking call
         }
 	}
 
