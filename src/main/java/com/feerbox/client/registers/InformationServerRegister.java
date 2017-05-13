@@ -1,6 +1,7 @@
 package com.feerbox.client.registers;
 
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 
 import org.apache.log4j.Logger;
 
@@ -19,6 +20,7 @@ import com.feerbox.client.services.SaveAnswerService;
 
 public class InformationServerRegister extends Thread {
 	final static Logger logger = Logger.getLogger(InformationServerRegister.class);
+	private ScheduledFuture<?> future;
 	public void run(){
 		try {
 			if(InternetAccess.getInstance().getAccess()){
@@ -91,6 +93,9 @@ public class InformationServerRegister extends Thread {
 				}
 			}
 		}
+	}
+	public void setFuture(ScheduledFuture<?> future) {
+		this.future = future;
 	}
 
 }

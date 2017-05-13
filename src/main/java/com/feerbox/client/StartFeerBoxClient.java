@@ -138,7 +138,8 @@ public class StartFeerBoxClient {
 	
 	private static void saveInformationServerThread() {
 		InformationServerRegister informationServerRegister = new InformationServerRegister();
-		ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(informationServerRegister, 0, 1, TimeUnit.MINUTES);
+		ScheduledFuture<?> future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(informationServerRegister, 0, 1, TimeUnit.MINUTES);
+		informationServerRegister.setFuture(future);
 	}
 
 

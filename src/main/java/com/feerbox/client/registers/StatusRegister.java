@@ -285,6 +285,9 @@ public class StatusRegister implements Runnable {
 		        }
 		    }
 		}
+		if("true".equals(out) && !ClientRegister.getInstance().getInternet()){
+			logger.info("WLAN detected, but no internet on ClientRegister");
+		}
 		return out;
 	}
 	
