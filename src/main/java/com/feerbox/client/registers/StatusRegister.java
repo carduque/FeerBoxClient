@@ -70,6 +70,10 @@ public class StatusRegister implements Runnable {
 				info.put(Status.infoKeys.CommandExecutor.name(), getLastCommandExecutor());
 				info.put(Status.infoKeys.CommandQueue.name(), getLastGetCommands());
 				info.put(Status.infoKeys.PendingAnswersToUpload.name(), getPendingAnswersToUpload());
+				info.put(Status.infoKeys.CPU.name(), getCPU());
+				info.put(Status.infoKeys.FreeMemory.name(), getFreeMemory());
+				info.put(Status.infoKeys.MemoryProcess.name(), getMemoryProcess());
+				info.put(Status.infoKeys.JavaMemory.name(), getJavaMemory());
 				//logger.debug("Status7");
 				status.setInfo(info);
 				
@@ -130,6 +134,99 @@ public class StatusRegister implements Runnable {
 		}
 	}
 
+	private String getFreeMemory() {
+		String freemem = "";
+		BufferedReader in = null;
+		Process proc = null;
+		try {
+			proc = Runtime.getRuntime().exec("free -m | awk '/Mem:/ { total=$2 } /buffers\\/cache/ { used=$3 } END { print used/total*100}'");
+			in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+			String line = in.readLine();
+			if (line != null) {
+				freemem = line;
+			}
+		} catch (IOException e) {
+			logger.error("Error getting free memory from OS: "+e.getMessage());
+		}
+		finally{
+			if(in!=null){
+				try {
+					in.close();
+				} catch (IOException e) {
+					logger.error("Error getting free memory from OS: "+e.getMessage());
+				}
+			}
+			if(proc!=null) proc.destroy();
+			
+		}
+        return freemem;
+	}
+	private String getJavaMemory() {
+		try {
+			return  Runtime.getRuntime().totalMemory()+" - "+Runtime.getRuntime().freeMemory()+ " - "+Runtime.getRuntime().maxMemory();
+		} catch (Exception e) {
+			logger.error("Error getting memory from Runtime: "+e.getMessage());
+		}
+		return "error";
+	}
+	private String getMemoryProcess() {
+		String mem_proc = "";
+		BufferedReader in = null;
+		Process proc = null;
+		try {
+			proc = Runtime.getRuntime().exec(" top -bn1 | grep \"java\" | awk '{print $10\"%\"}'");
+			in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+			String line = in.readLine();
+			if (line != null) {
+				mem_proc = line;
+			}
+		} catch (IOException e) {
+			logger.error("Error getting memory from Process (top): "+e.getMessage());
+		}
+		finally{
+			if(in!=null){
+				try {
+					in.close();
+				} catch (IOException e) {
+					logger.error("Error getting memory from Process (top): "+e.getMessage());
+				}
+			}
+			if(proc!=null) proc.destroy();
+			
+		}
+        return mem_proc;
+	}
+	private String getCPU() {
+		String cpu = "";
+		BufferedReader in = null;
+		Process proc = null;
+		try {
+			//Alternative:
+			//top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1"%"}'
+			proc = Runtime.getRuntime().exec("grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage \"%\"}'");
+			in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+			String line = in.readLine();
+			//07:33:54 up 11 min,  1 user,  load average: 1.14, 0.96, 0.55
+			//16:30:34 up  6:40,  1 user,  load average: 0.01, 0.01, 0.00
+			if (line != null) {
+				cpu=line;
+			}
+		} catch (IOException e) {
+			logger.error("Error getting CPU: "+e.getMessage());
+		}
+		finally{
+			if(in!=null){
+				try {
+					in.close();
+				} catch (IOException e) {
+					logger.error("Error getting CPU: "+e.getMessage());
+				}
+			}
+			if(proc!=null) proc.destroy();
+			
+		}
+        return cpu;
+	}
 	private String getPendingAnswersToUpload() {
 		int total = 0;
 		try {

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.feerbox.client.model.Status;
+import com.google.gson.Gson;
 
 public class SaveStatus extends FeerboxDB{
 
@@ -19,11 +20,14 @@ public class SaveStatus extends FeerboxDB{
 			statement = con.createStatement();
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
-
+			Gson objGson= new Gson();
+			String json = objGson.toJson(status.getInfo());
 			// statement.executeUpdate("drop table if exists person");
 			createStatusTableIfNotExists(statement);
 			statement.executeUpdate(
-					"insert into Status (time, reference, internet, upload) values(datetime('now', 'localtime'),\"" + status.getReference() + "\",  \""+status.getInfo().get(Status.infoKeys.INTERNET.name())+" - "+status.getInfo().get(Status.infoKeys.IP.name())+"\", "+status.getUpload()+")");
+					"insert into Status (time, reference, internet, upload) values(datetime('now', 'localtime'),\"" + status.getReference()
+					+ "\",  \""+json+"\", "
+					+status.getUpload()+")");
 			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM Status LIMIT 1");
 			while (rs.next()) {
 				id = rs.getInt("rowid");
