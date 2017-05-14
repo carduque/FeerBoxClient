@@ -146,7 +146,7 @@ public class StatusRegister implements Runnable {
 			String[] cmd = { "/bin/sh", "-c", command };
 			proc = Runtime.getRuntime().exec(cmd);
 			in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-			String line = in.readLine();
+			String line = null;
 			 while ((line = in.readLine()) != null) {
 				out += line;
 			}
