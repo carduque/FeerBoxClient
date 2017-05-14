@@ -133,30 +133,41 @@ public class StatusRegister implements Runnable {
 			logger.error("Exception in StatusRegister");
 		}
 	}
-
+	
 	private String getFreeMemory() {
+		return executeCommandLine("free -m | awk '/Mem:/ { total=$2 } /buffers\\/cache/ { used=$3 } END { print used/total*100}'");
+	}
+
+	private String executeCommandLine(String command) {
 		String freemem = "";
 		BufferedReader in = null;
 		Process proc = null;
 		try {
-			proc = Runtime.getRuntime().exec("free -m | awk '/Mem:/ { total=$2 } /buffers\\/cache/ { used=$3 } END { print used/total*100}'");
+			proc = Runtime.getRuntime().exec(command);
 			in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 			String line = in.readLine();
 			if (line != null) {
 				freemem = line;
 			}
 		} catch (IOException e) {
-			logger.error("Error getting free memory from OS: "+e.getMessage());
+			logger.error("Error executing command: "+e.getMessage());
 		}
 		finally{
 			if(in!=null){
 				try {
 					in.close();
 				} catch (IOException e) {
-					logger.error("Error getting free memory from OS: "+e.getMessage());
+					logger.error("Error executing command: "+e.getMessage());
 				}
 			}
-			if(proc!=null) proc.destroy();
+			try {
+				if(!proc.waitFor(1, TimeUnit.MINUTES)) {
+				    //timeout - kill the process. 
+				    proc.destroyForcibly(); // consider using destroyForcibly instead
+				}
+			} catch (InterruptedException e) {
+				logger.error("Error executing command: "+e.getMessage());
+			}
 			
 		}
         return freemem;
@@ -170,62 +181,11 @@ public class StatusRegister implements Runnable {
 		return "error";
 	}
 	private String getMemoryProcess() {
-		String mem_proc = "";
-		BufferedReader in = null;
-		Process proc = null;
-		try {
-			proc = Runtime.getRuntime().exec(" top -bn1 | grep \"java\" | awk '{print $10\"%\"}'");
-			in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-			String line = in.readLine();
-			if (line != null) {
-				mem_proc = line;
-			}
-		} catch (IOException e) {
-			logger.error("Error getting memory from Process (top): "+e.getMessage());
-		}
-		finally{
-			if(in!=null){
-				try {
-					in.close();
-				} catch (IOException e) {
-					logger.error("Error getting memory from Process (top): "+e.getMessage());
-				}
-			}
-			if(proc!=null) proc.destroy();
-			
-		}
-        return mem_proc;
+		return executeCommandLine(" top -bn1 | grep \"java\" | awk '{print $10\"%\"}'");
 	}
 	private String getCPU() {
-		String cpu = "";
-		BufferedReader in = null;
-		Process proc = null;
-		try {
-			//Alternative:
-			//top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1"%"}'
-			proc = Runtime.getRuntime().exec("grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage \"%\"}'");
-			in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-			String line = in.readLine();
-			//07:33:54 up 11 min,  1 user,  load average: 1.14, 0.96, 0.55
-			//16:30:34 up  6:40,  1 user,  load average: 0.01, 0.01, 0.00
-			if (line != null) {
-				cpu=line;
-			}
-		} catch (IOException e) {
-			logger.error("Error getting CPU: "+e.getMessage());
-		}
-		finally{
-			if(in!=null){
-				try {
-					in.close();
-				} catch (IOException e) {
-					logger.error("Error getting CPU: "+e.getMessage());
-				}
-			}
-			if(proc!=null) proc.destroy();
-			
-		}
-        return cpu;
+		return executeCommandLine("grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage \"%\"}'");
+		
 	}
 	private String getPendingAnswersToUpload() {
 		int total = 0;
@@ -325,9 +285,7 @@ public class StatusRegister implements Runnable {
 
 	private String getTimeSystemUp() throws IOException {
 		String uptime = "";
-		Process uptimeProc = Runtime.getRuntime().exec("uptime");
-        BufferedReader in = new BufferedReader(new InputStreamReader(uptimeProc.getInputStream()));
-        String line = in.readLine();
+		String line =  executeCommandLine("uptime");
         //07:33:54 up 11 min,  1 user,  load average: 1.14, 0.96, 0.55
         //16:30:34 up  6:40,  1 user,  load average: 0.01, 0.01, 0.00
         if (line != null) {
