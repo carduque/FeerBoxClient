@@ -135,7 +135,7 @@ public class StatusRegister implements Runnable {
 	}
 	
 	private String getFreeMemory() {
-		return executeCommandLine("free -m | awk '/Mem:/ { total=$2 } /buffers\\/cache/ { used=$3 } END { print used/total*100}'");
+		return executeCommandLine("free -m | awk '/Mem:/ { total=$2 } /buffers\\/cache/ { free=$4 } END { print free/total*100}'");
 	}
 
 	private String executeCommandLine(String command) {
