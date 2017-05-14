@@ -139,15 +139,16 @@ public class StatusRegister implements Runnable {
 	}
 
 	private String executeCommandLine(String command) {
-		String freemem = "";
+		String out = "";
 		BufferedReader in = null;
 		Process proc = null;
 		try {
-			proc = Runtime.getRuntime().exec(command);
+			String[] cmd = { "/bin/sh", "-c", command };
+			proc = Runtime.getRuntime().exec(cmd);
 			in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 			String line = in.readLine();
-			if (line != null) {
-				freemem = line;
+			 while ((line = in.readLine()) != null) {
+				out += line;
 			}
 		} catch (IOException e) {
 			logger.error("Error executing command: "+e.getMessage());
@@ -163,14 +164,14 @@ public class StatusRegister implements Runnable {
 			try {
 				if(!proc.waitFor(1, TimeUnit.MINUTES)) {
 				    //timeout - kill the process. 
-				    proc.destroyForcibly(); // consider using destroyForcibly instead
+				    proc.destroyForcibly();
 				}
 			} catch (InterruptedException e) {
 				logger.error("Error executing command: "+e.getMessage());
 			}
 			
 		}
-        return freemem;
+        return out;
 	}
 	private String getJavaMemory() {
 		try {
