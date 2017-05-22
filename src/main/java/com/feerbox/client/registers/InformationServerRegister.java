@@ -31,7 +31,7 @@ public class InformationServerRegister extends Thread {
 			}
 			//Nothing to update
 			ClientRegister.getInstance().setAnswersUploaded(true); //Indicate register finished
-		} catch (Exception e) {
+		} catch (Throwable  t) {
 			logger.error("Error in InformationServerRegister");
 		}
 	}

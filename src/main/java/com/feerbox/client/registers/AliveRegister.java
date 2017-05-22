@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 
 import org.apache.log4j.Logger;
 
@@ -20,6 +21,7 @@ import com.feerbox.client.services.LedService;
 public class AliveRegister implements Runnable {
 	final static Logger logger = Logger.getLogger(AliveRegister.class);
 	private static boolean firstTimeTethering = false;
+	private ScheduledFuture<?> future;
 
 	public void run() {
 		try {
@@ -38,7 +40,7 @@ public class AliveRegister implements Runnable {
 			}*/
 			aliveLights();
 			checkTetheringDetection();
-		} catch (Exception e) {
+		} catch (Throwable  t) {
 			logger.error("Error at AliveRegister");
 		}
 	}
@@ -155,6 +157,10 @@ public class AliveRegister implements Runnable {
 		}
 		return false;
 
+	}
+
+	public void setFuture(ScheduledFuture<?> future) {
+		this.future = future;
 	}
 
 }

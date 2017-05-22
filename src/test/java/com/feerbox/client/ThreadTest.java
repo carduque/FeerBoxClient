@@ -12,6 +12,7 @@ public class ThreadTest extends Thread {
 		this.whenException = i;
 	}
 	public void run(){
+		try{
 			System.out.println("Thread "+this.name);
 			if(this.executions==this.whenException){
 				System.out.println(random+" Exception on "+this.name+"!");
@@ -27,6 +28,10 @@ public class ThreadTest extends Thread {
 			}
 			for(long i=0;i==10000000L;i++);
 			*/
+		}catch(Exception e){
+			System.out.println("Exception cached!");
+			this.executions++;
+		}
 			
 	}
 }

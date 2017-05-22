@@ -26,7 +26,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.5.4";
+	public static final String version = "1.5.5";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
 	
@@ -82,8 +82,8 @@ public class StartFeerBoxClient {
 		if(ClientRegister.getInstance().getCommandExecutorEnabled()){
 	        CommandQueueRegister commandQueue = new CommandQueueRegister();
 	        CommandExecutor commandExecutor = new CommandExecutor();
-	        ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(commandQueue, 0, ClientRegister.getInstance().getCommandQueueRegisterInterval(), TimeUnit.MINUTES);
-	        ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(commandExecutor, 0, ClientRegister.getInstance().getCommandExecutorInterval(), TimeUnit.MINUTES);
+	        ScheduledFuture<?> future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(commandQueue, 0, ClientRegister.getInstance().getCommandQueueRegisterInterval(), TimeUnit.MINUTES);
+	        ScheduledFuture<?> future2 = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(commandExecutor, 0, ClientRegister.getInstance().getCommandExecutorInterval(), TimeUnit.MINUTES);
 		}
 		else{
 			logger.debug("Command executor not enabled - Request commmands and execute once");
@@ -98,7 +98,8 @@ public class StartFeerBoxClient {
 	private static void StartCleanerServerPolling() {
 		if(ClientRegister.getInstance().getCleanerExecutorEnabled()){
 	        CleanerRegister cleanerRegister = new CleanerRegister();
-	        ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(cleanerRegister, 0, ClientRegister.getInstance().getCleanerRegisterInterval(), TimeUnit.MINUTES);
+	        ScheduledFuture<?> future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(cleanerRegister, 0, ClientRegister.getInstance().getCleanerRegisterInterval(), TimeUnit.MINUTES);
+	        //cleanerRegister.setFuture(future);
 		}
 	}
 
@@ -133,7 +134,8 @@ public class StartFeerBoxClient {
 	private static void StartInternetAccessThread() {
 		//check Internet & alivelights & KismetServer alive
 		AliveRegister internetRegister = new AliveRegister();
-		ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(internetRegister, 0, 1, TimeUnit.MINUTES);
+		ScheduledFuture<?> future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(internetRegister, 0, 1, TimeUnit.MINUTES);
+		internetRegister.setFuture(future);
 	}
 	
 	private static void saveInformationServerThread() {

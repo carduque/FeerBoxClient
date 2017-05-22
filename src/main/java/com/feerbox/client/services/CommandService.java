@@ -68,7 +68,6 @@ public class CommandService {
 				    command.setServerId(jsonObject.get("id").getAsInt());
 				    command.setCommand(jsonObject.get("command").getAsString());
 				    command.setParameter(jsonObject.get("parameter").getAsString());
-				    command.setRestart(jsonObject.get("id").getAsBoolean());
 				    command.setRestart(jsonObject.get("restart").getAsBoolean());
 				    String creationDate = jsonObject.get("creationDate").getAsString();
 				    SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss.SSS");
