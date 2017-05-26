@@ -1,5 +1,7 @@
 package com.feerbox.client.registers;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -38,11 +40,28 @@ public class CounterPeopleRegister extends Thread {
 	public void run() {
 		logger.debug("Starting CounterPeople");
 		
-		boolean counted=false;
+		
 		if(ClientRegister.getInstance().getCounterPeopleLCD()){
 			LCDWrapper.clear();
 		}
 		RegisterPIRListener();
+		DistanceSensorCounting();
+		LaserCounting();
+	}
+
+	private void LaserCounting() {
+		ProcessBuilder pb = new ProcessBuilder("/usr/bin/python", "laser_count.py", "");
+		pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople"));
+		try {
+			Process process = pb.start();
+			logger.debug("Laser Count enabled");
+		} catch (IOException e) {
+			logger.error("Laser Count:"+ e.getMessage());
+		}
+	}
+
+	private void DistanceSensorCounting() {
+		boolean counted=false;
 		logger.debug("Starting DS CounterPeople");
 		while(true){
 			try {

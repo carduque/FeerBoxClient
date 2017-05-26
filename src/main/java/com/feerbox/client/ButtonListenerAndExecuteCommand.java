@@ -50,6 +50,9 @@ public class ButtonListenerAndExecuteCommand implements GpioPinListenerDigital {
         			commandQueue.run();
         	        CommandExecutor commandExecutor = new CommandExecutor();
         	        commandExecutor.run(); //Just start one next command pending
+        	        //Send information to server
+        	        commandQueue = new CommandQueueRegister();
+        			commandQueue.run();
         		}
         		else{
                     SaveAnswerService.saveAnswer(buttonNumber);

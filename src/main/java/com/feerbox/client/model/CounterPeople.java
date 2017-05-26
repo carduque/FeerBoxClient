@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class CounterPeople {
-	public static enum Type {PIR, DISTANCE_SENSOR};
+	public static enum Type {PIR, DISTANCE_SENSOR, LASER};
 	private long id;
 	private Date time;
 	private double distance;
