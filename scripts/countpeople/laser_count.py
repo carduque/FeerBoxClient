@@ -14,12 +14,13 @@ CVAR_LDR1_TYPE = CT_ANALOG                  # LDR1 sensor signal type (CT_ANALOG
 CVAR_LDR2_AVAILABLE = False                  # set to True if this is a dual sensor configuration
 CVAR_LDR2_PIN = 27                          # BCM pin where LDR2 sensor is located, if any. Safe to ignore if LDR2_AVAILABLE is false.
 CVAR_LDR2_TYPE = CT_ANALOG                  # LDR2 sensor signal type (CT_ANALOG or CT_DIGITAL)
-CVAR_SENSOR_THRESHOLD = 0.2                 # Sensor detection threshold (in seconds)
+CVAR_SENSOR_THRESHOLD = 0.1 if CVAR_LDR2_AVAILABLE else 0.2
+CVAR_PURGE_THRESHOLD = 10.0                 # time given to person to walk before his entry is purged
 
 # configuration variables, logging
 CVAR_DEBUG = True                           # enables global debug mode
 CVAR_DPRINT = True                          # prints debug information on standard error
-CVAR_LOGFILE = "/opt/FeerBoxClient/FeerBoxClient/logs/laser_count.log"       # location of the log file
+CVAR_LOGFILE = "debug.log"                  # location of the log file
 
 # configuration variables, output
 CVAR_OUTPUT = "output.csv"                  # output file
@@ -71,16 +72,18 @@ def check(states,pin,sensor):
                 if (pool!=None):
                     # pair with pool entry
                     (sen,st) = pool
-                    if (sensor!=sen):
+                    if (sensor!=sen and (time.time()-st)<CVAR_PURGE_THRESHOLD):
                         counter=counter+1
                         register(sensor-sen)
                         pool=None
+                    elif (time.time()-st>=CVAR_PURGE_THRESHOLD):
+                        pool=(sensor,time.time()) # send to pool
                     else:
                         # same sensor blinking twice, false positive. Ignore
                         pass     
                 else:
                     # send to pool
-                    pool=(sensor,stamp())
+                    pool=(sensor,time.time())
 
 def selftest():
     global CVAR_LDR2_AVAILABLE, CVAR_LDR1_PIN, CVAR_LDR2_PIN

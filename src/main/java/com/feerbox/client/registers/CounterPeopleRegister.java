@@ -50,13 +50,15 @@ public class CounterPeopleRegister extends Thread {
 	}
 
 	private void LaserCounting() {
-		ProcessBuilder pb = new ProcessBuilder("/usr/bin/python", "laser_count.py", "");
-		pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople"));
-		try {
-			Process process = pb.start();
-			logger.debug("Laser Count enabled");
-		} catch (IOException e) {
-			logger.error("Laser Count:"+ e.getMessage());
+		if(ClientRegister.getInstance().getCounterPeopleLaser()){
+			ProcessBuilder pb = new ProcessBuilder("/usr/bin/python", "laser_count.py", "");
+			pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople"));
+			try {
+				Process process = pb.start();
+				logger.debug("Laser Count enabled");
+			} catch (IOException e) {
+				logger.error("Laser Count:"+ e.getMessage());
+			}
 		}
 	}
 

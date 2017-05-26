@@ -150,6 +150,16 @@ public class ClientRegister {
 			}
 			logger.info("Property "+key+" added with value "+value);
 		}
+		if(key.equals("counter_people_laser")){
+			value = "false";
+			configuration.setProperty(key, value);
+			try {
+				configuration.save();
+			} catch (ConfigurationException e) {
+				logger.error("Storing config file: "+e.getMessage());
+			}
+			logger.info("Property "+key+" added with value "+value);
+		}
 		return value;
 	}
 
@@ -445,6 +455,16 @@ public class ClientRegister {
 		boolean out = false;
 		try {
 			out = Boolean.parseBoolean(getProperty("counter_people_debug_mode"));
+		} catch (Exception e) {
+			logger.error("ShowInternetConnectionError: "+e.getMessage());
+		}
+		return out;
+	}
+
+	public boolean getCounterPeopleLaser() {
+		boolean out = false;
+		try {
+			out = Boolean.parseBoolean(getProperty("counter_people_laser"));
 		} catch (Exception e) {
 			logger.error("ShowInternetConnectionError: "+e.getMessage());
 		}
