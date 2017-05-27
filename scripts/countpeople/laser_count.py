@@ -27,7 +27,7 @@ CVAR_LOGFILE = "/opt/FeerBoxClient/FeerBoxClient/logs/lasercounter.log"         
 CVAR_OUTPUT = "output.csv"                  # output file
 CVAR_OPRINT = False                          # prints counter information on screen
 
-dbgfile = open(CVAR_LOGFILE,"a")
+dbgfile = open(CVAR_LOGFILE,"w")
 outfile = open(CVAR_OUTPUT,"a")
 db = sqlite3.connect('/opt/FeerBoxClient/FeerBoxClient/db/feerboxclient.db')
 cursor = db.cursor()
