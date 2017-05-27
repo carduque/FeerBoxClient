@@ -52,7 +52,7 @@ def register(dire):
     global counter
     st=stamp()
     #outfile.write("%s,%s\n" % (st,dire))
-    cursor.execute('''INSERT INTO CounterPeople(time, reference, type, upload)''', ('''VALUES(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),'2015001','LASER',0)'''))
+    cursor.execute('''INSERT INTO CounterPeople(time, reference, type, distance, upload)  VALUES(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),?,?,?)''', ('2015001','LASER', dire,0))
     db.commit()
     if CVAR_DEBUG:
         dbg("counter increment with direction %d (count %d)" % (dire,counter))
@@ -107,10 +107,20 @@ def selftest():
             dbg("If this is a mistake, check sensor connectivity, light conditions, and ensure beam is focusing sensor directly.")
             CVAR_LDR2_AVAILABLE=False
     dbg("End of sensor test.")
+    
+def getReferenceFeerBox():
+    global reference
+    myvars = {}
+    with open("namelist.txt") as myfile:
+        for line in myfile:
+            name, var = line.partition("=")[::2]
+            myvars[name.strip()] = float(var)
+    reference = myvars["reference"]
+    dbg(reference)
 
     
 def main():
-    global counter,pool
+    global counter,pool, reference
     dbg("Initialising.")
     GPIO_init()
     states = [GPIO.input(CVAR_LDR1_PIN)]
@@ -118,6 +128,8 @@ def main():
         states.append(GPIO.input(CVAR_LDR2_PIN))
         pool=None
     counter = 0
+    getReferenceFeerBox();
+    dbg("Reference:".reference)
     selftest()
     dbg("Ready.")
     while True:
