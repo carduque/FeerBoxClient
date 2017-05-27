@@ -25,7 +25,7 @@ CVAR_LOGFILE = "/opt/FeerBoxClient/FeerBoxClient/logs/lasercounter.log"         
 
 # configuration variables, output
 CVAR_OUTPUT = "output.csv"                  # output file
-CVAR_OPRINT = True                          # prints counter information on screen
+CVAR_OPRINT = False                          # prints counter information on screen
 
 dbgfile = open(CVAR_LOGFILE,"a")
 outfile = open(CVAR_OUTPUT,"a")
@@ -52,7 +52,7 @@ def register(dire):
     global counter
     st=stamp()
     #outfile.write("%s,%s\n" % (st,dire))
-    cursor.execute('''INSERT INTO CounterPeople(time, reference, type, distance, upload)  VALUES(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),?,?,?)''', ('2015001','LASER', dire,0))
+    cursor.execute('''INSERT INTO CounterPeople(time, reference, type, distance, upload)  VALUES(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),?,?,?,?)''', (reference,'LASER', dire,0))
     db.commit()
     if CVAR_DEBUG:
         dbg("counter increment with direction %d (count %d)" % (dire,counter))
@@ -111,12 +111,11 @@ def selftest():
 def getReferenceFeerBox():
     global reference
     myvars = {}
-    with open("namelist.txt") as myfile:
+    with open("/opt/FeerBoxClient/FeerBoxClient/target/classes/config.properties") as myfile:
         for line in myfile:
             name, var = line.partition("=")[::2]
-            myvars[name.strip()] = float(var)
+            myvars[name.strip()] = var.strip()
     reference = myvars["reference"]
-    dbg(reference)
 
     
 def main():
@@ -129,7 +128,7 @@ def main():
         pool=None
     counter = 0
     getReferenceFeerBox();
-    dbg("Reference:".reference)
+    dbg("Reference:" + reference)
     selftest()
     dbg("Ready.")
     while True:
