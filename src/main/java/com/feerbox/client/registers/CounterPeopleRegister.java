@@ -63,52 +63,54 @@ public class CounterPeopleRegister extends Thread {
 	}
 
 	private void DistanceSensorCounting() {
-		boolean counted=false;
-		logger.debug("Starting DS CounterPeople");
-		while(true){
-			try {
-				Thread.sleep(ClientRegister.getInstance().getCounterPeoplePauseBetweenMesurements());
-			} catch (InterruptedException e) {
-				logger.error("Error in pause between mesurements");
-			}
-			int countdown = TIMEOUT;
-			triggerSensor();
-			while(echoPin.isLow() && countdown > 0 ){
-				countdown--;
-			}
-			long startTime= System.nanoTime(); // Store the current time to calculate ECHO pin HIGH time.
-			if(countdown>0){
-				countdown = TIMEOUT;
-				while(echoPin.isHigh() && countdown > 0 ){
+		if(ClientRegister.getInstance().getCounterPeopleDistanceSensor()){
+			boolean counted=false;
+			logger.debug("Starting DS CounterPeople");
+			while(true){
+				try {
+					Thread.sleep(ClientRegister.getInstance().getCounterPeoplePauseBetweenMesurements());
+				} catch (InterruptedException e) {
+					logger.error("Error in pause between mesurements");
+				}
+				int countdown = TIMEOUT;
+				triggerSensor();
+				while(echoPin.isLow() && countdown > 0 ){
 					countdown--;
 				}
-				long endTime= System.nanoTime(); // Store the echo pin HIGH end time to calculate ECHO pin HIGH time.
+				long startTime= System.nanoTime(); // Store the current time to calculate ECHO pin HIGH time.
 				if(countdown>0){
-					double distance = (((endTime-startTime)/1000.0)* SOUND_SPEED / (20000.0)); //distance in cm
-					
-					/*
-					 * Min = distance from sensor to end of door in cm
-					 * Max = distance from sensor to end of door in cm + some buffer. It has to always less than distance from sensor to end of wall in front.
-					 * Min and Max should be the same, but we could have some buffer for error margin
-					 */
-					if(ClientRegister.getInstance().getCounterPeopleDebugMode() && ClientRegister.getInstance().getCounterPeopleLCD()){
-						LCDWrapper.setTextRow1("Distance: "+distance);
+					countdown = TIMEOUT;
+					while(echoPin.isHigh() && countdown > 0 ){
+						countdown--;
 					}
-					if(distance<ClientRegister.getInstance().getCounterPeopleMinThreshold() && !counted){
-						counted=true;
-						people_count_ds++;
-						//logger.debug("Another Person! - Total: "+people_count);
-						saveCounterPeople(distance, CounterPeople.Type.DISTANCE_SENSOR);
-						if(ClientRegister.getInstance().getCounterPeopleDebugMode()){
-							logger.debug("Person!");
+					long endTime= System.nanoTime(); // Store the echo pin HIGH end time to calculate ECHO pin HIGH time.
+					if(countdown>0){
+						double distance = (((endTime-startTime)/1000.0)* SOUND_SPEED / (20000.0)); //distance in cm
+						
+						/*
+						 * Min = distance from sensor to end of door in cm
+						 * Max = distance from sensor to end of door in cm + some buffer. It has to always less than distance from sensor to end of wall in front.
+						 * Min and Max should be the same, but we could have some buffer for error margin
+						 */
+						if(ClientRegister.getInstance().getCounterPeopleDebugMode() && ClientRegister.getInstance().getCounterPeopleLCD()){
+							LCDWrapper.setTextRow1("Distance: "+distance);
 						}
-						if(ClientRegister.getInstance().getCounterPeopleLCD()){
-							printLCD();
+						if(distance<ClientRegister.getInstance().getCounterPeopleMinThreshold() && !counted){
+							counted=true;
+							people_count_ds++;
+							//logger.debug("Another Person! - Total: "+people_count);
+							saveCounterPeople(distance, CounterPeople.Type.DISTANCE_SENSOR);
+							if(ClientRegister.getInstance().getCounterPeopleDebugMode()){
+								logger.debug("Person!");
+							}
+							if(ClientRegister.getInstance().getCounterPeopleLCD()){
+								printLCD();
+							}
 						}
-					}
-					else{
-						if(distance>ClientRegister.getInstance().getCounterPeopleMaxThreshold()){
-							counted=false;
+						else{
+							if(distance>ClientRegister.getInstance().getCounterPeopleMaxThreshold()){
+								counted=false;
+							}
 						}
 					}
 				}

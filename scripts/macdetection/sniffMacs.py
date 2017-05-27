@@ -43,7 +43,7 @@ if monIface is "" :
     monIface=raw_input("Enter the interface name in monitor mode: ")
 
 showMessage("Starting sniffing on interface " + monIface)
-db = sqlite3.connect('/opt/pi4j/examples/feerbox2.db')
+db = sqlite3.connect('/opt/FeerBoxClient/FeerBoxClient/db/feerboxclient.db')
 cursor = db.cursor()
 macAddrList = []
 sniff(iface=monIface, prn = PacketHandler, store=0)

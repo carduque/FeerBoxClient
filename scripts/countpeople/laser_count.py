@@ -3,6 +3,7 @@
 import RPi.GPIO as GPIO
 import time
 import sys
+import sqlite3
 
 # constants for utility, don't edit
 CT_ANALOG = GPIO.PUD_DOWN
@@ -20,7 +21,7 @@ CVAR_PURGE_THRESHOLD = 10.0                 # time given to person to walk befor
 # configuration variables, logging
 CVAR_DEBUG = True                           # enables global debug mode
 CVAR_DPRINT = True                          # prints debug information on standard error
-CVAR_LOGFILE = "debug.log"                  # location of the log file
+CVAR_LOGFILE = "/opt/FeerBoxClient/FeerBoxClient/logs/lasercounter.log"                  # location of the log file
 
 # configuration variables, output
 CVAR_OUTPUT = "output.csv"                  # output file
@@ -28,6 +29,8 @@ CVAR_OPRINT = True                          # prints counter information on scre
 
 dbgfile = open(CVAR_LOGFILE,"a")
 outfile = open(CVAR_OUTPUT,"a")
+db = sqlite3.connect('/opt/FeerBoxClient/FeerBoxClient/db/feerboxclient.db')
+cursor = db.cursor()
 
 def GPIO_init():
     GPIO.setmode(GPIO.BCM)
@@ -48,7 +51,9 @@ def dbg(msg):
 def register(dire):
     global counter
     st=stamp()
-    outfile.write("%s,%s\n" % (st,dire))
+    #outfile.write("%s,%s\n" % (st,dire))
+    cursor.execute('''INSERT INTO CounterPeople(time, reference, type, upload)''', ('''VALUES(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),'2015001','LASER',0)'''))
+    db.commit()
     if CVAR_DEBUG:
         dbg("counter increment with direction %d (count %d)" % (dire,counter))
     elif CVAR_OPRINT:
