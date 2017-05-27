@@ -12,8 +12,8 @@ CT_DIGITAL = GPIO.PUD_OFF
 # configuration variables, sensors
 CVAR_LDR1_PIN = 12                          # BCM pin where LDR1 sensor is located
 CVAR_LDR1_TYPE = CT_ANALOG                  # LDR1 sensor signal type (CT_ANALOG or CT_DIGITAL)
-CVAR_LDR2_AVAILABLE = False                  # set to True if this is a dual sensor configuration
-CVAR_LDR2_PIN = 27                          # BCM pin where LDR2 sensor is located, if any. Safe to ignore if LDR2_AVAILABLE is false.
+CVAR_LDR2_AVAILABLE = True                  # set to True if this is a dual sensor configuration
+CVAR_LDR2_PIN = 13                          # BCM pin where LDR2 sensor is located, if any. Safe to ignore if LDR2_AVAILABLE is false.
 CVAR_LDR2_TYPE = CT_ANALOG                  # LDR2 sensor signal type (CT_ANALOG or CT_DIGITAL)
 CVAR_SENSOR_THRESHOLD = 0.1 if CVAR_LDR2_AVAILABLE else 0.2
 CVAR_PURGE_THRESHOLD = 10.0                 # time given to person to walk before his entry is purged
