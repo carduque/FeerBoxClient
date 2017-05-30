@@ -26,7 +26,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.5.5";
+	public static final String version = "1.5.5.1";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
 	
@@ -146,7 +146,7 @@ public class StartFeerBoxClient {
 
 
 	private static void registerButtonListeners() {
-		ButtonListener buttonListener1 = new ButtonListener(ButtonService.getButton1(), LedService.getLed1(), 1);
+		ButtonListenerAndExecuteCommand buttonListener1 = new ButtonListenerAndExecuteCommand(ButtonService.getButton1(), LedService.getLed1(), 1);
 		ButtonService.getButton1().addListener(buttonListener1);
 		ButtonListener buttonListener2 = new ButtonListener(ButtonService.getButton2(), LedService.getLed2(), 2);
 		ButtonService.getButton2().addListener(buttonListener2);
