@@ -21,7 +21,7 @@ public class CommandExecutor implements Runnable {
 	@Override
 	public void run() {
 		try {
-			logger.debug("Command Executor");
+			//logger.debug("Command Executor");
 			if(!CommandService.isCommandInExecution()){
 				//logger.debug("No commands under execution");
 				//Execute commands enqueued
@@ -60,7 +60,7 @@ public class CommandExecutor implements Runnable {
 					}
 				}
 				else{
-					logger.debug("There is no command to be executed");
+					//logger.debug("There is no command to be executed");
 				}
 			} else{
 				if(CommandService.forceCleanQueue()){

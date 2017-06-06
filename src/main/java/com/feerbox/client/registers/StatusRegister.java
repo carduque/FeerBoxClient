@@ -1,8 +1,6 @@
 package com.feerbox.client.registers;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -31,7 +29,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-public class StatusRegister implements Runnable {
+public class StatusRegister extends Register {
 	private boolean checkStatusTime = true;
 	private String ip = "";
 	private ScheduledFuture<?> future;
@@ -64,7 +62,7 @@ public class StatusRegister implements Runnable {
 				//logger.debug("Status4");
 				info.put(Status.infoKeys.LAST_ANSWER.name(), getLastAnswerTime());
 				//logger.debug("Status5");
-				info.put(Status.infoKeys.TIME_UP.name(), getTimeSystemUp());
+				info.put(Status.infoKeys.TIME_UP.name(), getTimeSystemUp2());
 				//logger.debug("Status6");
 				info.put(Status.infoKeys.SYSTEM_TIME.name(), getSystemTime());
 				info.put(Status.infoKeys.CommandExecutor.name(), getLastCommandExecutor());
@@ -74,6 +72,7 @@ public class StatusRegister implements Runnable {
 				info.put(Status.infoKeys.FreeMemory.name(), getFreeMemory());
 				info.put(Status.infoKeys.MemoryProcess.name(), getMemoryProcess());
 				info.put(Status.infoKeys.JavaMemory.name(), getJavaMemory());
+				info.put(Status.infoKeys.AverageUptime.name(), getAverageUptime());
 				//logger.debug("Status7");
 				status.setInfo(info);
 				
@@ -134,45 +133,14 @@ public class StatusRegister implements Runnable {
 		}
 	}
 	
+	private String getAverageUptime() {
+		return executeCommandLine("sudo tuptime | grep \"Average uptime:\" | awk '{print $3\" \"$4\" \"$5\" \"$6\" \"$7\" \"$8\" \"$9\" \"$10\" \"$11}'");
+	}
 	private String getFreeMemory() {
 		return executeCommandLine("free -m | awk '/Mem:/ { total=$2 } /buffers\\/cache/ { free=$4 } END { print free/total*100}'");
 	}
 
-	private String executeCommandLine(String command) {
-		String out = "";
-		BufferedReader in = null;
-		Process proc = null;
-		try {
-			String[] cmd = { "/bin/sh", "-c", command };
-			proc = Runtime.getRuntime().exec(cmd);
-			in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-			String line = null;
-			 while ((line = in.readLine()) != null) {
-				out += line;
-			}
-		} catch (IOException e) {
-			logger.error("Error executing command: "+e.getMessage());
-		}
-		finally{
-			if(in!=null){
-				try {
-					in.close();
-				} catch (IOException e) {
-					logger.error("Error executing command: "+e.getMessage());
-				}
-			}
-			try {
-				if(!proc.waitFor(1, TimeUnit.MINUTES)) {
-				    //timeout - kill the process. 
-				    proc.destroyForcibly();
-				}
-			} catch (InterruptedException e) {
-				logger.error("Error executing command: "+e.getMessage());
-			}
-			
-		}
-        return out;
-	}
+	
 	private String getJavaMemory() {
 		try {
 			return  Runtime.getRuntime().totalMemory()+" - "+Runtime.getRuntime().freeMemory()+ " - "+Runtime.getRuntime().maxMemory();
@@ -305,6 +273,18 @@ public class StatusRegister implements Runnable {
             }
         }
 		return uptime;
+	}
+	
+	private String getTimeSystemUp2() throws IOException {
+		String uptime = null;
+		String line =  executeCommandLine("command -v tuptime");
+		if(line!=null && !"".equals(line)){
+			uptime = executeCommandLine("sudo tuptime | grep \"System uptime:\" | awk '{print $3\"%\"}'");
+		}
+		else{
+			uptime = getTimeSystemUp();
+		}
+		return  uptime;
 	}
 
 	private String getLastAnswerTime() {

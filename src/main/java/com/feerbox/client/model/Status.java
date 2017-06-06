@@ -5,7 +5,7 @@ import java.util.Map;
 public class Status {
 	private String reference;
 	private Map<String, String> info;
-	public enum infoKeys {INTERNET,LAST_ANSWER,TIME_UP, SYSTEM_TIME, SW_VERSION, IP, CommandExecutor, CommandQueue, PendingAnswersToUpload, CPU, MemoryProcess, JavaMemory, FreeMemory};
+	public enum infoKeys {INTERNET,LAST_ANSWER,TIME_UP, SYSTEM_TIME, SW_VERSION, IP, CommandExecutor, CommandQueue, PendingAnswersToUpload, CPU, MemoryProcess, JavaMemory, FreeMemory, AverageUptime};
 	private int upload;
 	
 	public Status(String reference) {

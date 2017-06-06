@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 import com.feerbox.client.StartFeerBoxClient;
 import com.feerbox.client.services.LedService;
 
-public class AliveRegister implements Runnable {
+public class AliveRegister extends Register {
 	final static Logger logger = Logger.getLogger(AliveRegister.class);
 	private static boolean firstTimeTethering = false;
 	private ScheduledFuture<?> future;
@@ -26,7 +26,7 @@ public class AliveRegister implements Runnable {
 	public void run() {
 		try {
 			boolean before = InternetAccess.getInstance().getAccess();
-			checkInternetAccess();
+			checkInternetAccessByPing2();
 			boolean after = InternetAccess.getInstance().getAccess();
 			/*if (before != after && after == true) {
 				new StatusRegister().run();
@@ -124,6 +124,20 @@ public class AliveRegister implements Runnable {
 			if (seconds > 120) {
 				LedService.animation();
 			}
+		}
+	}
+	
+	private void checkInternetAccessByPing2(){
+		String line = executeCommandLine("ping -c 2 google.com | grep received | awk '{print $6}'");
+		if(line!=null && "0%".equals(line)){
+			if (ClientRegister.getInstance().getInternet()) {
+				InternetAccess.getInstance().setAccess(true);
+			} else {
+				logger.debug("FORCED No Internet connection");
+				InternetAccess.getInstance().setAccess(false);
+			}
+		} else {
+			InternetAccess.getInstance().setAccess(false);
 		}
 	}
 
