@@ -11,9 +11,11 @@ import com.feerbox.client.db.SaveAnswer;
 import com.feerbox.client.db.SaveCleaningService;
 import com.feerbox.client.model.Answer;
 import com.feerbox.client.model.CleaningService;
+import com.feerbox.client.model.Command;
 import com.feerbox.client.model.CounterPeople;
 import com.feerbox.client.model.MAC;
 import com.feerbox.client.services.CleaningServiceService;
+import com.feerbox.client.services.CommandService;
 import com.feerbox.client.services.CounterPeopleService;
 import com.feerbox.client.services.MACService;
 import com.feerbox.client.services.SaveAnswerService;
@@ -28,11 +30,25 @@ public class InformationServerRegister extends Thread {
 				uploadCleaningService();
 				uploadMACs();
 				uploadCounterPeople();
+				uploadCommandsOutput();
 			}
 			//Nothing to update
 			ClientRegister.getInstance().setAnswersUploaded(true); //Indicate register finished
 		} catch (Throwable  t) {
 			logger.error("Error in InformationServerRegister");
+		}
+	}
+	private void uploadCommandsOutput() {
+		//Check if there are commands finished to send output
+		List<Command> commands = CommandService.getCommandsToUpload();
+		if(commands!=null && commands.size()!=0) {
+			logger.debug("Going to upload commands output");
+			for(Command command:commands){
+				boolean ok = CommandService.saveServer(command);
+				if(ok){
+					CommandService.upload(command);
+				}
+			}
 		}
 	}
 	private void uploadCounterPeople() {
