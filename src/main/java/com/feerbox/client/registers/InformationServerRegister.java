@@ -99,14 +99,16 @@ public class InformationServerRegister extends Thread {
 	private void uploadAnswers() {
 		List<Answer> list = ReadAnswer.readAnswersNotUploaded();
 		if(list!=null && list.size()!=0){
-			logger.debug("Going to update answers");
+			logger.debug("Going to update answers "+list.size());
+			int i=1;
 			for(Answer answer: list){
 				ClientRegister.getInstance().setAnswersUploaded(false);
 				boolean ok = SaveAnswerService.saveAnswerInternet(answer);
-				logger.debug("Upload to Internet? "+ok);
+				logger.debug("Upload to Internet ("+i+"/"+list.size()+")? "+ok);
 				if(ok){
 					SaveAnswer.upload(answer);
 				}
+				i++;
 			}
 		}
 	}
