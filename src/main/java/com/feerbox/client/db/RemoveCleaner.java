@@ -14,7 +14,7 @@ public class RemoveCleaner extends FeerboxDB {
 			// create a database connection
 			Connection con = getConnection();
 			//createCleanersTableIfNotExists(statement);
-			preparedStatement = con.prepareStatement("delete from Cleaners where company = ?");
+			preparedStatement = con.prepareStatement("delete from Cleaners where company != ?");
 			preparedStatement.setQueryTimeout(30); // set timeout to 30 sec.
 			 preparedStatement.setInt(1, companyId);
 			 out = preparedStatement.executeUpdate();
