@@ -40,7 +40,7 @@ public class NFCReader extends Thread {
 					CardChannel channel = card.getBasicChannel();
 					String uid = send(baReadUID, channel);
 					long now = System.currentTimeMillis();
-					if(lastNFC==null || (now - lastNFC.getTime())>60*1000){ //Skip card less than a minute
+					if(lastNFC==null || (now - lastNFC.getTime())>60*500){ //Skip card less than 30 seg
 						//logger.info("NFC UID: " + uid);
 						// Toolkit.getDefaultToolkit().beep();
 						Cleaner cleaner = ReadCleaner.read(new Cleaner(uid));
@@ -63,6 +63,7 @@ public class NFCReader extends Thread {
 							lastNFC = new Timestamp(now);
 						}
 						else{
+							lastNFC = new Timestamp(now);
 							logger.info("NFC UID: " + uid + " not found on DB ");
 							if(ClientRegister.getInstance().getShowUnknownNFCs()){
 								if(ClientRegister.getInstance().getLCDActive()){

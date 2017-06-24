@@ -1,5 +1,8 @@
 package com.feerbox.client;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +29,8 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.5.5.4";
+	public static final String version = "1.5.5.5";
+	public static final String path_conf = "/opt/FeerBoxClient/FeerBoxClient/config/";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
 	
@@ -35,6 +39,11 @@ public class StartFeerBoxClient {
 	
 	public static void main(String args[]) throws InterruptedException {
         logger.debug("FeerBoxClient Started version "+version);
+        try {
+			Files.write(Paths.get(path_conf+"version.txt"), version.getBytes());
+		} catch (IOException e) {
+			logger.error("Error writing version file");
+		}
         // create gpio controller
         
         InitGPIO();
