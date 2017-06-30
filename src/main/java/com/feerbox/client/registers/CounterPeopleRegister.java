@@ -57,7 +57,7 @@ public class CounterPeopleRegister extends Thread {
 			//ProcessBuilder pb = new ProcessBuilder("sudo /usr/bin/python", "/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople/laser_count.py");
 			//pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople"));
 			logger.debug("Laser Count enabled");
-			executeCommandLine("\"sudo python /opt/FeerBoxClient/FeerBoxClient/scripts/countpeople/laser_count.py\"");
+			executeCommandLine("\"sudo -b python /opt/FeerBoxClient/FeerBoxClient/scripts/countpeople/laser_count.py\"");
 			logger.debug("Laser Count enabled2");
 			/*try {
 				Process process = pb.start();
