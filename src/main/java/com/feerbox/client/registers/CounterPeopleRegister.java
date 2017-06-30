@@ -51,7 +51,7 @@ public class CounterPeopleRegister extends Thread {
 
 	private void LaserCounting() {
 		if(ClientRegister.getInstance().getCounterPeopleLaser()){
-			ProcessBuilder pb = new ProcessBuilder("nohub /usr/bin/python", "/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople/laser_count.py");
+			ProcessBuilder pb = new ProcessBuilder("/usr/bin/python", "/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople/laser_count.py");
 			//pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople"));
 			try {
 				Process process = pb.start();
