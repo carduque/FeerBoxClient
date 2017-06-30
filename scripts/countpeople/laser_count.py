@@ -105,7 +105,7 @@ def selftest():
         if (ldr2==0):
             dbg("INFO: LDR2 enabled but not high. Disabling sensor 2.")
             dbg("If this is a mistake, check sensor connectivity, light conditions, and ensure beam is focusing sensor directly.")
-            CVAR_LDR2_AVAILABLE=False
+            #CVAR_LDR2_AVAILABLE=False
     dbg("End of sensor test.")
     
 def getReferenceFeerBox():
