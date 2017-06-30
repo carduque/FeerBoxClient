@@ -1,8 +1,10 @@
 package com.feerbox.client.registers;
 
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
@@ -51,14 +53,8 @@ public class CounterPeopleRegister extends Thread {
 
 	private void LaserCounting() {
 		if(ClientRegister.getInstance().getCounterPeopleLaser()){
-			ProcessBuilder pb = new ProcessBuilder("/usr/bin/python", "laser_count.py", "");
-			pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople"));
-			try {
-				Process process = pb.start();
-				logger.debug("Laser Count enabled");
-			} catch (IOException e) {
-				logger.error("Laser Count:"+ e.getMessage());
-			}
+			executeCommandLine("sudo python /opt/FeerBoxClient/FeerBoxClient/scripts/countpeople/laser_count.py");
+			logger.debug("Laser Count enabled");
 		}
 	}
 
@@ -166,5 +162,41 @@ public class CounterPeopleRegister extends Thread {
 		LCDWrapper.clear();
 		LCDWrapper.setTextRow0("DS: "+people_count_ds);
 		LCDWrapper.setTextRow1("PIR: "+people_count_pir);
+	}
+	
+	protected String executeCommandLine(String command) {
+		String out = "";
+		BufferedReader in = null;
+		Process proc = null;
+		try {
+			String[] cmd = { "/bin/sh", "-c", command };
+			proc = Runtime.getRuntime().exec(cmd);
+			in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+			String line = null;
+			 while ((line = in.readLine()) != null) {
+				out += line;
+			}
+		} catch (IOException e) {
+			logger.error("Error executing command: "+e.getMessage());
+		}
+		finally{
+			if(in!=null){
+				try {
+					in.close();
+				} catch (IOException e) {
+					logger.error("Error executing command: "+e.getMessage());
+				}
+			}
+			try {
+				if(!proc.waitFor(1, TimeUnit.MINUTES)) {
+				    //timeout - kill the process. 
+				    proc.destroyForcibly();
+				}
+			} catch (InterruptedException e) {
+				logger.error("Error executing command: "+e.getMessage());
+			}
+			
+		}
+        return out;
 	}
 }
