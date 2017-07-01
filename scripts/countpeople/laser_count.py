@@ -47,6 +47,7 @@ def dbg(msg):
     if CVAR_DPRINT:
         sys.stderr.write(stamp() + ": " + msg + "\n")
     dbgfile.write(stamp() + ": " + msg + "\n")
+    dbgfile.flush()
 
 def register(dire):
     global counter
