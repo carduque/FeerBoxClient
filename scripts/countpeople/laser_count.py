@@ -140,5 +140,4 @@ def main():
         except KeyboardInterrupt:
             destroy()
 
-if __name__=="__main__":
-    main()
+main()
