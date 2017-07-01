@@ -1,3 +1,3 @@
 #!/bin/bash
 
-(sudo python laser_count.py)&
+(sudo python opt/FeerBoxClient/FeerBoxClient/scripts/countpeople/laser_count.py)&
