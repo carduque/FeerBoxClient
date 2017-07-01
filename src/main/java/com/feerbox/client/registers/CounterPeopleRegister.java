@@ -54,17 +54,15 @@ public class CounterPeopleRegister extends Thread {
 
 	private void LaserCounting() {
 		if(ClientRegister.getInstance().getCounterPeopleLaser()){
-			//ProcessBuilder pb = new ProcessBuilder("sudo /usr/bin/python", "/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople/laser_count.py");
-			//pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople"));
-			logger.debug("Laser Count enabled");
-			executeCommandLine("\"sudo -b python /opt/FeerBoxClient/FeerBoxClient/scripts/countpeople/laser_count.py\"");
-			logger.debug("Laser Count enabled2");
-			/*try {
+			ProcessBuilder pb = new ProcessBuilder("/bin/bash", "laser.sh");
+			pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople"));
+			//executeCommandLine("sudo python /opt/FeerBoxClient/FeerBoxClient/scripts/countpeople/laser_count.py");
+			try {
 				Process process = pb.start();
 				logger.debug("Laser Count enabled");
 			} catch (IOException e) {
 				logger.error("Laser Count:"+ e.getMessage());
-			}*/
+			}
 		}
 	}
 
