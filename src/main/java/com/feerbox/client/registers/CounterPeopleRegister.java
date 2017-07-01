@@ -54,8 +54,8 @@ public class CounterPeopleRegister extends Thread {
 
 	private void LaserCounting() {
 		if(ClientRegister.getInstance().getCounterPeopleLaser()){
-			ProcessBuilder pb = new ProcessBuilder("/bin/bash", "laser.sh");
-			pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople"));
+			ProcessBuilder pb = new ProcessBuilder("/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople/laser.sh");
+			//pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople"));
 			//executeCommandLine("sudo python /opt/FeerBoxClient/FeerBoxClient/scripts/countpeople/laser_count.py");
 			try {
 				Process process = pb.start();
