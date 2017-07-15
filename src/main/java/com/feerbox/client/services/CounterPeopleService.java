@@ -123,7 +123,7 @@ public class CounterPeopleService {
 				List<Post> posts = gson.fromJson(responseStrBuilder.toString(), listPost);
 				for(Post post : posts){
 					if(post.save!=null && "OK".equals(post.save)){
-						ok+=post.serverId+",";
+						ok+=post.clientId+",";
 					}
 				}
 			}
@@ -159,6 +159,8 @@ public class CounterPeopleService {
 	protected  class Post{
 		@SerializedName("serverId")
 		public String serverId;
+		@SerializedName("clientId")
+		public String clientId;
 		@SerializedName("save")
 		public String save;
 	}
