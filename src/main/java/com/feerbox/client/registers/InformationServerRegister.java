@@ -2,7 +2,9 @@ package com.feerbox.client.registers;
 
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.feerbox.client.db.ReadAnswer;
@@ -72,18 +74,40 @@ public class InformationServerRegister extends Thread {
 			if(list!=null && list.size()!=0){
 				int size = list.size();
 				int total = CounterPeopleService.notUploadedTotal();
+				activeFastUpdate(total);
 				logger.debug("Going to update CounterPeople "+size+"/"+total);
 				String ok = CounterPeopleService.saveServerBulky(list);
 				
 				if(ok!=null && !"".equals(ok) && ok.length()>0){
 					int length = ok.length();
-					logger.debug("Upload to Internet "+size+"? "+length);
 					ok = ok.substring(0, length-1); //last comma has to be out
+					logger.debug("Upload to Internet "+size+"? "+StringUtils.countMatches(ok, ","));
 					CounterPeopleService.uploadList(ok);
 				} else{
 					logger.debug("Error uploading to server: "+ok);
 				}
 			}
+			else{
+				activeFastUpdate(0);
+			}
+		}
+	}
+
+	private void activeFastUpdate(int total) {
+		if (total > CounterPeopleService.MAX_BULKY) {
+			if (future != null) {
+				future.cancel(true);
+			}
+			logger.info("Activating fast update");
+			InformationServerRegister informationServerRegister = new InformationServerRegister();
+			future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(informationServerRegister, 0, 11, TimeUnit.SECONDS);
+		} else {
+			if (future != null) {
+				future.cancel(true);
+			}
+			logger.info("Back to normal update time rate");
+			InformationServerRegister informationServerRegister = new InformationServerRegister();
+			future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(informationServerRegister, 0, 1, TimeUnit.MINUTES);
 		}
 	}
 	private void uploadMACs() {

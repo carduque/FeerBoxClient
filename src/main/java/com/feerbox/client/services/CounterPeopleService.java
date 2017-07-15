@@ -24,7 +24,7 @@ import com.google.gson.reflect.TypeToken;
 
 
 public class CounterPeopleService {
-	private static final int MAX_BULKY = 500;
+	public static final int MAX_BULKY = 10;
 	protected final static Logger logger = Logger.getLogger(CounterPeopleService.class);
 
 	public static List<CounterPeople> notUploaded() {
