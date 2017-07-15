@@ -82,7 +82,7 @@ public class InformationServerRegister extends Thread {
 				if(ok!=null && !"".equals(ok) && ok.length()>0){
 					int length = ok.length();
 					ok = ok.substring(0, length-1); //last comma has to be out
-					logger.debug("Upload to Internet "+size+"? "+StringUtils.countMatches(ok, ","));
+					logger.debug("Upload to Internet "+size+"? "+StringUtils.countMatches(ok, ",")+1);
 					CounterPeopleService.uploadList(ok);
 				} else{
 					logger.debug("Error uploading to server: "+ok);
@@ -95,21 +95,21 @@ public class InformationServerRegister extends Thread {
 	}
 
 	private void activeFastUpdate(int total) {
-		if (total > CounterPeopleService.MAX_BULKY) {
+		if (total > CounterPeopleService.MAX_BULKY && normalScheduler) {
 			if (future != null) {
 				future.cancel(true);
 			}
 			logger.info("Activating fast update");
 			normalScheduler = false;
-			future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(this, 0, 11, TimeUnit.SECONDS);
+			future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(this, 11, 11, TimeUnit.SECONDS);
 		} else {
-			if(!normalScheduler){
+			if(!normalScheduler && total < CounterPeopleService.MAX_BULKY){
 				if (future != null) {
 					future.cancel(true);
 				}
 				logger.info("Back to normal update time rate");
 				normalScheduler = true;
-				future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(this, 0, 1, TimeUnit.MINUTES);
+				future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(this, 1, 1, TimeUnit.MINUTES);
 			}
 		}
 	}
