@@ -66,6 +66,20 @@ public class InformationServerRegister extends Thread {
 			}
 		}
 	}
+	private void uploadBulkyCounterPeople() {
+		if(ClientRegister.getInstance().getCounterPeopleEnabled()){
+			List<CounterPeople> list = CounterPeopleService.notUploadedBulky();
+			if(list!=null && list.size()!=0){
+				logger.debug("Going to update CounterPeople");
+				String ok = CounterPeopleService.saveServerBulky(list);
+				logger.debug("Upload to Internet "+list.size()+"? "+ok);
+				if(ok!=null && !"".equals(ok) && ok.length()>0){
+					ok.substring(ok.length()-1, ok.length()); //last comma has to be out
+					CounterPeopleService.uploadList(ok);
+				}
+			}
+		}
+	}
 	private void uploadMACs() {
 		if(ClientRegister.getInstance().getMACUplodEnable()){
 			List<MAC> list = MACService.notUploaded();

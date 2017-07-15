@@ -68,4 +68,28 @@ public class SaveCounterPeople extends FeerboxDB {
 		}
 	}
 
+	public static void uploadList(String ids) {
+		logger.debug("Upload CounterPeopleBulky");
+		Statement statement = null;
+		try {
+			// create a database connection
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+			// statement.executeUpdate("drop table if exists person");
+			createCounterPeopleTableIfNotExists();
+			statement.executeUpdate("update CounterPeople set upload=1 where id in ("+ids+")");
+		} catch (SQLException e) {
+			logger.error("SQLException", e);
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.error("SQLException", e);
+			}
+		}
+		
+	}
+
 }

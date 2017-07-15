@@ -12,7 +12,7 @@ import java.util.List;
 import com.feerbox.client.model.CounterPeople;
 
 public class ReadCounterPeople extends FeerboxDB {
-	public static List<CounterPeople> notUpload() {
+	public static List<CounterPeople> notUpload(int limit) {
 		Statement statement = null;
 		List<CounterPeople> counterPeoples = new ArrayList<CounterPeople>();
 		try {
@@ -23,7 +23,7 @@ public class ReadCounterPeople extends FeerboxDB {
 
 			// statement.executeUpdate("drop table if exists person");
 			createCounterPeopleTableIfNotExists();
-			ResultSet rs = statement.executeQuery("select id, time, distance, type, reference, upload from counterPeople where upload=0 order by id asc limit 100");
+			ResultSet rs = statement.executeQuery("select id, time, distance, type, reference, upload from counterPeople where upload=0 order by id asc limit "+limit);
 			while (rs.next()) {
 				CounterPeople counterPeople = new CounterPeople();
 				counterPeople.setId(rs.getLong("id"));
@@ -52,4 +52,5 @@ public class ReadCounterPeople extends FeerboxDB {
 		}
 		return counterPeoples;
 	}
+
 }
