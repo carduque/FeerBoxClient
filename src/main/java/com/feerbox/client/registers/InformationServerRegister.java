@@ -25,6 +25,7 @@ import com.feerbox.client.services.SaveAnswerService;
 public class InformationServerRegister extends Thread {
 	final static Logger logger = Logger.getLogger(InformationServerRegister.class);
 	private ScheduledFuture<?> future;
+	private boolean normalScheduler = true;
 	public void run(){
 		try {
 			if(InternetAccess.getInstance().getAccess()){
@@ -99,15 +100,17 @@ public class InformationServerRegister extends Thread {
 				future.cancel(true);
 			}
 			logger.info("Activating fast update");
-			InformationServerRegister informationServerRegister = new InformationServerRegister();
-			future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(informationServerRegister, 0, 11, TimeUnit.SECONDS);
+			normalScheduler = false;
+			future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(this, 0, 11, TimeUnit.SECONDS);
 		} else {
-			if (future != null) {
-				future.cancel(true);
+			if(!normalScheduler){
+				if (future != null) {
+					future.cancel(true);
+				}
+				logger.info("Back to normal update time rate");
+				normalScheduler = true;
+				future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(this, 0, 1, TimeUnit.MINUTES);
 			}
-			logger.info("Back to normal update time rate");
-			InformationServerRegister informationServerRegister = new InformationServerRegister();
-			future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(informationServerRegister, 0, 1, TimeUnit.MINUTES);
 		}
 	}
 	private void uploadMACs() {
