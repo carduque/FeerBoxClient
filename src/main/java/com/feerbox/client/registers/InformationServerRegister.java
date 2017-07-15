@@ -76,7 +76,7 @@ public class InformationServerRegister extends Thread {
 				String ok = CounterPeopleService.saveServerBulky(list);
 				logger.debug("Upload to Internet "+size+"? "+ok);
 				if(ok!=null && !"".equals(ok) && ok.length()>0){
-					ok.substring(ok.length()-1, ok.length()); //last comma has to be out
+					ok = ok.substring(0, ok.length()-1); //last comma has to be out
 					CounterPeopleService.uploadList(ok);
 				}
 			}
