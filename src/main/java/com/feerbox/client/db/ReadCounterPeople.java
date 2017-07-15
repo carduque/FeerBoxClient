@@ -53,4 +53,31 @@ public class ReadCounterPeople extends FeerboxDB {
 		return counterPeoples;
 	}
 
+	public static int notUpload() {
+		Statement statement = null;
+		int total = 0;
+		try {
+			// create a database connection
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+			// statement.executeUpdate("drop table if exists person");
+			createCounterPeopleTableIfNotExists();
+			ResultSet rs = statement.executeQuery("select count(*) as total from counterPeople where upload=0");
+			while (rs.next()) {
+				total = rs.getInt("total");
+			}
+		} catch (SQLException e) {
+			logger.error("SQLException", e);
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.error("SQLException", e);
+			}
+		}
+		return total;
+	}
+
 }

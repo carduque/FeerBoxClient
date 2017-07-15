@@ -29,7 +29,7 @@ public class InformationServerRegister extends Thread {
 				uploadAnswers();
 				uploadCleaningService();
 				uploadMACs();
-				uploadCounterPeople();
+				uploadBulkyCounterPeople();
 				uploadCommandsOutput();
 			}
 			//Nothing to update
@@ -70,9 +70,11 @@ public class InformationServerRegister extends Thread {
 		if(ClientRegister.getInstance().getCounterPeopleEnabled()){
 			List<CounterPeople> list = CounterPeopleService.notUploadedBulky();
 			if(list!=null && list.size()!=0){
-				logger.debug("Going to update CounterPeople");
+				int size = list.size();
+				int total = CounterPeopleService.notUploadedTotal();
+				logger.debug("Going to update CounterPeople "+size+"/"+total);
 				String ok = CounterPeopleService.saveServerBulky(list);
-				logger.debug("Upload to Internet "+list.size()+"? "+ok);
+				logger.debug("Upload to Internet "+size+"? "+ok);
 				if(ok!=null && !"".equals(ok) && ok.length()>0){
 					ok.substring(ok.length()-1, ok.length()); //last comma has to be out
 					CounterPeopleService.uploadList(ok);

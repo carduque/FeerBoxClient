@@ -163,4 +163,8 @@ public class CounterPeopleService {
 		public String save;
 	}
 
+	public static int notUploadedTotal() {
+		return ReadCounterPeople.notUpload();
+	}
+
 }
