@@ -69,7 +69,7 @@ public class SaveCounterPeople extends FeerboxDB {
 	}
 
 	public static void uploadList(String ids) {
-		logger.debug("Upload CounterPeopleBulky");
+		//logger.debug("Upload CounterPeopleBulky");
 		Statement statement = null;
 		try {
 			// create a database connection

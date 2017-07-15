@@ -23,6 +23,7 @@ import com.feerbox.client.services.MACService;
 import com.feerbox.client.services.SaveAnswerService;
 
 public class InformationServerRegister extends Thread {
+	private static final int INTERVAL_FAST_UPDATE = 10;
 	final static Logger logger = Logger.getLogger(InformationServerRegister.class);
 	private ScheduledFuture<?> future;
 	private boolean normalScheduler = true;
@@ -82,7 +83,7 @@ public class InformationServerRegister extends Thread {
 				if(ok!=null && !"".equals(ok) && ok.length()>0){
 					int length = ok.length();
 					ok = ok.substring(0, length-1); //last comma has to be out
-					logger.debug("Upload to Internet "+size+"? "+StringUtils.countMatches(ok, ",")+1);
+					logger.debug("Upload to Internet "+size+"? "+(StringUtils.countMatches(ok, ",")+1));
 					CounterPeopleService.uploadList(ok);
 				} else{
 					logger.debug("Error uploading to server: "+ok);
@@ -101,7 +102,7 @@ public class InformationServerRegister extends Thread {
 			}
 			logger.info("Activating fast update");
 			normalScheduler = false;
-			future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(this, 11, 11, TimeUnit.SECONDS);
+			future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(this, INTERVAL_FAST_UPDATE, INTERVAL_FAST_UPDATE, TimeUnit.SECONDS);
 		} else {
 			if(!normalScheduler && total < CounterPeopleService.MAX_BULKY){
 				if (future != null) {
