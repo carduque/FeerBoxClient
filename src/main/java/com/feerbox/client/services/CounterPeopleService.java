@@ -25,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 
 public class CounterPeopleService {
 	public static final int MAX_BULKY = 500;
+	private static int TIMEOUT_VALUE = 15000;
 	protected final static Logger logger = Logger.getLogger(CounterPeopleService.class);
 
 	public static List<CounterPeople> notUploaded() {
@@ -95,6 +96,8 @@ public class CounterPeopleService {
 			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/counterpeople/addbulky");
 			conn = (HttpURLConnection) myURL.openConnection();
 			//conn.setRequestProperty("Content-Length", "1000");
+			conn.setConnectTimeout(TIMEOUT_VALUE);
+			conn.setReadTimeout(TIMEOUT_VALUE);
 			conn.setRequestProperty("Content-Type", "application/json");
 			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
