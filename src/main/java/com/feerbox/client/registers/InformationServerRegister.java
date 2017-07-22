@@ -79,7 +79,16 @@ public class InformationServerRegister extends Thread {
 				activeFastUpdate(total);
 				logger.debug("Going to update CounterPeople "+size+"/"+total);
 				String ok = CounterPeopleService.saveServerBulky(list);
-				
+				if(ok!=null && "TIMEOUT".equals(ok)){
+					logger.error("Error timeout on bulky, back to normal update");
+					for(CounterPeople counterPeople: list){
+						boolean ok2 = CounterPeopleService.saveServer(counterPeople);
+						logger.debug("Upload to Internet? "+ok2);
+						if(ok2){
+							CounterPeopleService.upload(counterPeople);
+						}
+					}
+				}
 				if(ok!=null && !"".equals(ok) && ok.length()>0){
 					int length = ok.length();
 					ok = ok.substring(0, length-1); //last comma has to be out

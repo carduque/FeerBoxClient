@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.List;
 
@@ -24,8 +25,8 @@ import com.google.gson.reflect.TypeToken;
 
 
 public class CounterPeopleService {
-	public static final int MAX_BULKY = 500;
-	private static int TIMEOUT_VALUE = 0;
+	public static final int MAX_BULKY = 200;
+	private static int TIMEOUT_VALUE = 60000;
 	protected final static Logger logger = Logger.getLogger(CounterPeopleService.class);
 
 	public static List<CounterPeople> notUploaded() {
@@ -60,7 +61,7 @@ public class CounterPeopleService {
 		} catch (IOException e) {
 			logger.debug("IOException", e);
 			ok = false;
-		}
+		} 
 		finally {
 			try {
 				if(os!=null){
@@ -134,6 +135,9 @@ public class CounterPeopleService {
 		} catch (MalformedURLException e) {
 			logger.debug("MalformedURLException", e);
 			ok = "";
+		} catch (SocketTimeoutException e){
+			logger.debug("Error Timeout", e);
+			ok = "TIMEOUT";
 		} catch (IOException e) {
 			logger.debug("IOException", e);
 			ok = "";
