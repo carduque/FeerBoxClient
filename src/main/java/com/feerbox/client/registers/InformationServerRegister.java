@@ -33,7 +33,7 @@ public class InformationServerRegister extends Thread {
 				uploadAnswers();
 				uploadCleaningService();
 				uploadMACs();
-				uploadBulkyCounterPeople();
+				uploadCounterPeople();
 				uploadCommandsOutput();
 			}
 			//Nothing to update
