@@ -16,8 +16,8 @@ def main():
     for row in cursor:
         if first[2]==row[2]:
             if first[0]==row[0]:
-                del_cursor.execute("delete from counterpoeple where id="+str(row[1]))
-                #print("delete from counterpoeple where id="+str(row[1]))
+                del_cursor.execute("delete from counterpeople where id="+str(row[1]))
+                #print("delete from counterpeople where id="+str(row[1]))
         else:
              first = row
     cursor.close()
