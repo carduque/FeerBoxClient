@@ -60,13 +60,7 @@ public class InformationServerRegister extends Thread {
 			List<CounterPeople> list = CounterPeopleService.notUploaded();
 			if(list!=null && list.size()!=0){
 				logger.debug("Going to update CounterPeople");
-				for(CounterPeople counterPeople: list){
-					boolean ok = CounterPeopleService.saveServer(counterPeople);
-					logger.debug("Upload to Internet? "+ok);
-					if(ok){
-						CounterPeopleService.upload(counterPeople);
-					}
-				}
+				saveCounterPeopleList(list);
 			}
 		}
 	}
@@ -81,14 +75,13 @@ public class InformationServerRegister extends Thread {
 				String ok = CounterPeopleService.saveServerBulky(list);
 				if(ok!=null && "TIMEOUT".equals(ok)){
 					logger.error("Error timeout on bulky, back to normal update");
-					for(CounterPeople counterPeople: list){
-						boolean ok2 = CounterPeopleService.saveServer(counterPeople);
-						logger.debug("Upload to Internet? "+ok2);
-						if(ok2){
-							CounterPeopleService.upload(counterPeople);
-						}
-					}
+					saveCounterPeopleList(list);
 				}
+				else if(ok!=null && "NOT_CREATED".equals(ok)){
+					logger.error("Error not created on bulky, back to normal update");
+					saveCounterPeopleList(list);
+				}
+				else
 				if(ok!=null && !"".equals(ok) && ok.length()>0){
 					int length = ok.length();
 					ok = ok.substring(0, length-1); //last comma has to be out
@@ -100,6 +93,15 @@ public class InformationServerRegister extends Thread {
 			}
 			else{
 				activeFastUpdate(0);
+			}
+		}
+	}
+	private void saveCounterPeopleList(List<CounterPeople> list) {
+		for(CounterPeople counterPeople: list){
+			boolean ok2 = CounterPeopleService.saveServer(counterPeople);
+			logger.debug("Upload to Internet? "+ok2);
+			if(ok2){
+				CounterPeopleService.upload(counterPeople);
 			}
 		}
 	}

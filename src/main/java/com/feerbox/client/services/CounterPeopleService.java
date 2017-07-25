@@ -25,8 +25,8 @@ import com.google.gson.reflect.TypeToken;
 
 
 public class CounterPeopleService {
-	public static final int MAX_BULKY = 1000;
-	private static int TIMEOUT_VALUE = 60000;
+	public static final int MAX_BULKY = 500;
+	private static int TIMEOUT_VALUE = 600000;
 	protected final static Logger logger = Logger.getLogger(CounterPeopleService.class);
 
 	public static List<CounterPeople> notUploaded() {
@@ -96,7 +96,7 @@ public class CounterPeopleService {
 		try {
 			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/counterpeople/addbulky");
 			conn = (HttpURLConnection) myURL.openConnection();
-			//conn.setRequestProperty("Content-Length", "1000");
+			
 			conn.setConnectTimeout(TIMEOUT_VALUE);
 			conn.setReadTimeout(TIMEOUT_VALUE);
 			conn.setRequestProperty("Content-Type", "application/json");
@@ -106,14 +106,15 @@ public class CounterPeopleService {
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSS").create();
 			Type listType = new TypeToken<List<CounterPeople>>() {}.getType();
 			String json = gson.toJson(counterPeoples, listType);
-			
+			conn.setRequestProperty("Content-Length", json.length()+"");
+			//conn.connect();
 			os = conn.getOutputStream();
 			os.write(json.toString().getBytes());
 			os.flush();
-
 			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
 				logger.info("Failed CounterPeopleService/add : HTTP error code : "+ conn.getResponseCode());
-				ok = "";
+				logger.info("Error stream: "+conn.getErrorStream());
+				ok = "NOT_CREATED";
 			}
 			else{
 				//[{"serverId":406,"save":"OK"},{"serverId":407,"save":"OK"}]
