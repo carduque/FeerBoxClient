@@ -11,7 +11,7 @@ def main():
     cursor = db.cursor()
     del_cursor = db.cursor();
     
-    cursor.execute("select strftime('%M', time) as sec, id, strftime('%j:%H', time) as day_hour_minute from counterpeople order by id asc")
+    cursor.execute("select strftime('%S', time) as sec, id, strftime('%j:%H:%M', time) as day_hour_minute from counterpeople order by id asc")
     first = cursor.fetchone()
     for row in cursor:
         if first[2]==row[2]:
@@ -22,6 +22,7 @@ def main():
              first = row
     cursor.close()
     del_cursor.close()
+    db.commit()
     db.close()
     print("Cleaning finished")
 
