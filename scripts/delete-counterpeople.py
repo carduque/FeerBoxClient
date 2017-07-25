@@ -25,5 +25,6 @@ def main():
     db.commit()
     db.close()
     print("Cleaning finished")
+    sys.exit(0)
 
 main()
