@@ -3,6 +3,8 @@ package com.feerbox.client;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Calendar;
+import java.util.Timer;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -15,6 +17,7 @@ import com.feerbox.client.registers.ClientRegister;
 import com.feerbox.client.registers.CommandExecutor;
 import com.feerbox.client.registers.CommandQueueRegister;
 import com.feerbox.client.registers.CounterPeopleRegister;
+import com.feerbox.client.registers.DataAlertsRegister;
 import com.feerbox.client.registers.InformationServerRegister;
 import com.feerbox.client.registers.MACDetection;
 import com.feerbox.client.registers.NFCReader;
@@ -29,7 +32,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.5.6.3";
+	public static final String version = "1.5.7";
 	public static final String path_conf = "/opt/FeerBoxClient/FeerBoxClient/config/";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
@@ -151,6 +154,17 @@ public class StartFeerBoxClient {
 		InformationServerRegister informationServerRegister = new InformationServerRegister();
 		ScheduledFuture<?> future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(informationServerRegister, 0, 1, TimeUnit.MINUTES);
 		informationServerRegister.setFuture(future);
+	}
+	
+	private static void checkForAlertsThread() {
+		Calendar today = Calendar.getInstance();
+		today.set(Calendar.HOUR_OF_DAY, 0);
+		today.set(Calendar.MINUTE, 0);
+		today.set(Calendar.SECOND, 0);
+		DataAlertsRegister dataAlertsRegister = new DataAlertsRegister();
+		Timer timer = new Timer();
+		timer.schedule(dataAlertsRegister, today.getTime(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)); // period: 1 day
+		dataAlertsRegister.setTimer(timer);
 	}
 
 

@@ -15,13 +15,14 @@ public class FeerboxDB {
 	private static boolean cleaningServicesTableCreated = false;
 	private static boolean macTableCreated;
 	private static boolean counterPeopleTableCreated;
+	private static boolean alertsTableCreated;
 	protected final static Logger logger = Logger.getLogger(FeerboxDB.class);
 
 	
 	public static Connection getConnection() {
 		try {
 			if(connection==null || connection.isClosed()){
-				createConnection();
+				createConnectionTEST();
 				createTables();
 			}
 		} catch (SQLException e) {
@@ -33,6 +34,10 @@ public class FeerboxDB {
 	private static void createTables() {
 		try {
 			createMACTableIfNotExists();
+			createAlertConfigurationTableIfNotExists();
+			createAlertTimeTablesTableIfNotExists();
+			createAlertThresholdsTableIfNotExists();
+			createAlertsTableIfNotExists();
 		} catch (SQLException e) {
 			logger.error("SQLException", e);
 		}
@@ -44,6 +49,19 @@ public class FeerboxDB {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:/opt/FeerBoxClient/FeerBoxClient/db/feerboxclient.db");
+			connection.setAutoCommit(true);
+		} catch (SQLException e) {
+			logger.error( "SQLException", e );
+		} catch (ClassNotFoundException e) {
+			logger.error( "ClassNotFoundException", e );
+		}
+	}
+	
+	private static void createConnectionTEST() {
+		connection = null;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\cduquemarcos\\documentation\\Personal\\FeerBox\\clients\\mercat\\CP2017001\\feerboxclient.db");
 			connection.setAutoCommit(true);
 		} catch (SQLException e) {
 			logger.error( "SQLException", e );
@@ -132,6 +150,38 @@ public class FeerboxDB {
 			commandsTableCreated = true;
 		}
 	}
-
+	protected static void createAlertsTableIfNotExists() throws SQLException {
+		if (!alertsTableCreated ) {
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+			//severity, generator, threshold, name, reference, time, type, weekday
+			String sql = "create table if not exists Alerts (id INTEGER PRIMARY KEY AUTOINCREMENT, severity varchar, generator varchar, threshold integer, name varchar, time timestamp, type varchar, weekday integer, reference varchar, upload integer)";
+			//logger.debug(sql);
+			statement.executeUpdate(sql);
+			alertsTableCreated = true;
+		}
+	}
+	protected static void createAlertConfigurationTableIfNotExists() throws SQLException {
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+			//severity, generator, threshold, name, reference, time, type, weekday
+			String sql = "create table if not exists AlertConfigurations (id INTEGER PRIMARY KEY AUTOINCREMENT, active integer, type varchar, name varchar)";
+			//logger.debug(sql);
+			statement.executeUpdate(sql);
+	}
+	protected static void createAlertTimeTablesTableIfNotExists() throws SQLException {
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+			String sql = "create table if not exists alerttimetables (id_alertconfiguration INTEGER, startingtime timestamp, closingtime timestamp, weekday integer, threshold integer)";
+			//logger.debug(sql);
+			statement.executeUpdate(sql);
+	}
+	protected static void createAlertThresholdsTableIfNotExists() throws SQLException {
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+			String sql = "create table if not exists alertthresholds (id_alertconfiguration INTEGER, threshold integer, type varchar, weekday integer)";
+			//logger.debug(sql);
+			statement.executeUpdate(sql);
+	}
 
 }

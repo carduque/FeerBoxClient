@@ -6,12 +6,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import com.feerbox.client.model.Answer;
 
 public class ReadAnswer extends FeerboxDB{
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	public static List<Answer> readAnswersNotUploaded() {
 		Statement statement = null;
@@ -110,6 +113,65 @@ public class ReadAnswer extends FeerboxDB{
 			}
 		}
 		return answer;
+	}
+
+	public static long readAnswersDayBefore() {
+		Statement statement = null;
+		long total = 0;
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, -1);
+		try {
+			// create a database connection
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+			// statement.executeUpdate("drop table if exists person");
+			createAnswersTableIfNotExists(statement);
+			ResultSet rs = statement.executeQuery("select count(*) as total from Answers where time>=date('"+sdf.format(calendar.getTime())+" 00:00:00') and time<=date('"+sdf.format(calendar.getTime())+" 23:59:59')");
+			while (rs.next()) {
+				total = rs.getLong("total");
+			}
+		} catch (SQLException e) {
+			logger.error("SQLException", e);
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.error("SQLException", e);
+			}
+		}
+		return total;
+	}
+
+	public static long readAnswersDayBefore(LocalTime startingTime, LocalTime closingTime) {
+		Statement statement = null;
+		long total = 0;
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, -1);
+		try {
+			// create a database connection
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+			// statement.executeUpdate("drop table if exists person");
+			createAnswersTableIfNotExists(statement);
+			ResultSet rs = statement.executeQuery("select count(*) as total from Answers where time>=date('"+sdf.format(calendar.getTime())+" "+startingTime.getHour()+":"+startingTime.getMinute()+":"+startingTime.getSecond()+
+					"') and time<=date('"+sdf.format(calendar.getTime())+" "+closingTime.getHour()+":"+closingTime.getMinute()+":"+closingTime.getSecond()+"')");
+			while (rs.next()) {
+				total = rs.getLong("total");
+			}
+		} catch (SQLException e) {
+			logger.error("SQLException", e);
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.error("SQLException", e);
+			}
+		}
+		return total;
 	}
 	
 	

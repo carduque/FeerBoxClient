@@ -12,7 +12,7 @@ public abstract class Register implements Runnable {
 
 	abstract public void run();
 	
-	protected String executeCommandLine(String command) {
+	public String executeCommandLine(String command) {
 		String out = "";
 		BufferedReader in = null;
 		Process proc = null;
