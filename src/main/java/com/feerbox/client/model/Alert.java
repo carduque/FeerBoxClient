@@ -5,7 +5,7 @@ import java.util.Date;
 public class Alert {
 	public enum AlertSeverity { HIGH, MEDIUM, LOW, INFORMATIONAL;}
 	public enum AlertGenerator { DB, LOG, CATCH_EXCEPTION, RASPBIAN;}
-	public enum AlertType { NotEnoughDataBeenCollected,TooMuchDataBeenCollected, PoorUpTime, TuptimeNotInstalled;}
+	public enum AlertType { NotEnoughDataBeenCollected,TooMuchDataBeenCollected, PoorUpTime, TuptimeNotInstalled, OutOfTimeDataCollected;}
 	
 	private AlertSeverity severity;
 	private AlertGenerator generator;

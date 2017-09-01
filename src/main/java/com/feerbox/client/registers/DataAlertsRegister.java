@@ -56,8 +56,22 @@ public class DataAlertsRegister extends TimerTask {
 
 
 	private void ChangeOfFeerBoxReference() {
-		// TODO Auto-generated method stub
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR, -1);
+		/*AbstractMap<String, Long> answers = ReadAnswer.GroupByReferenceByDay(calendar);
+		AbstractMap<String, Long> counterpeople = ReadCounterPeople.GroupByReferenceByDay(calendar);
+		AbstractMap<String, Long> macs = ReadMAC.GroupByReferenceByDay(calendar);
 		
+		if(answers.size()>1 || counterpeople.size()>1 || macs.size()>1){
+			Alert alert = createMoreThanOneReferenceAlert();
+			SaveAlert.save(alert);
+		}*/
+	}
+
+
+	private Alert createMoreThanOneReferenceAlert() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
@@ -75,14 +89,24 @@ public class DataAlertsRegister extends TimerTask {
 
 
 	private Alert createMaximumDiskOccupancyAlert(double occupancy) {
-		// TODO Auto-generated method stub
-		return null;
+		Alert alert = new Alert();
+		alert.setSeverity(Alert.AlertSeverity.HIGH);
+		alert.setGenerator(Alert.AlertGenerator.RASPBIAN);
+		alert.setThreshold((long)(occupancy*100));
+		alert.setName("Disk Occupancy at midnight was more than threshold");
+		alert.setReference(ClientRegister.getInstance().getReference());
+		alert.setTime(new Date());
+		alert.setType(Alert.AlertType.PoorUpTime);
+		return alert;
 	}
 
 
 	private double getDiskOccupancy() {
-		// TODO Auto-generated method stub
-		return 0;
+		double occupancy = 0.0;
+		StatusRegister register = new StatusRegister();
+		String txt = register.executeCommandLine("df -h | grep \"/dev/sda1\" | awk '{print $5}'");
+		occupancy = Double.parseDouble(txt);
+		return occupancy;
 	}
 
 
@@ -248,10 +272,17 @@ public class DataAlertsRegister extends TimerTask {
 	}
 
 
-	private Alert createAnswerOutOfTimeAlert(long threshold, int day_of_week, LocalTime startingTime,
-			LocalTime closingTime) {
-		// TODO Auto-generated method stub
-		return null;
+	private Alert createAnswerOutOfTimeAlert(long threshold, int day_of_week, LocalTime startingTime, LocalTime closingTime) {
+		Alert alert = new Alert();
+		alert.setSeverity(Alert.AlertSeverity.HIGH);
+		alert.setGenerator(Alert.AlertGenerator.DB);
+		alert.setThreshold(threshold);
+		alert.setName("Answers on day before had data out of time");
+		alert.setReference(ClientRegister.getInstance().getReference());
+		alert.setTime(new Date());
+		alert.setType(Alert.AlertType.OutOfTimeDataCollected);
+		alert.setWeekday(day_of_week);
+		return alert;
 	}
 
 
