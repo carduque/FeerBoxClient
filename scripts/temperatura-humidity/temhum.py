@@ -5,10 +5,6 @@ import sys
 import sqlite3
 import Adafruit_DHT
 
-# constants for utility, don't edit
-CT_ANALOG = GPIO.PUD_DOWN
-CT_DIGITAL = GPIO.PUD_OFF
-
 # configuration variables, sensors
 CVAR_PIN = 25  
 CVAR_SENSOR = 2302                       
