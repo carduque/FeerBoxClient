@@ -16,7 +16,6 @@ CVAR_DPRINT = True                          # prints debug information on standa
 CVAR_LOGFILE = "/opt/FeerBoxClient/FeerBoxClient/logs/temhum.log"                  # location of the log file
 
 dbgfile = open(CVAR_LOGFILE,"w")
-outfile = open(CVAR_OUTPUT,"a")
 db = sqlite3.connect('/opt/FeerBoxClient/FeerBoxClient/db/feerboxclient.db')
 cursor = db.cursor()
 
@@ -34,7 +33,6 @@ def dbg(msg):
 def register(temperature, humidity):
     global counter
     st=stamp()
-    #outfile.write("%s,%s\n" % (st,dire))
     #cursor.execute('''INSERT INTO CounterPeople(time, reference, type, distance, upload)  VALUES(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),?,?,?,?)''', (reference,'LASER', dire,0))
     #db.commit()
     if CVAR_DEBUG:
