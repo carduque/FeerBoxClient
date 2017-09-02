@@ -16,11 +16,13 @@ import com.feerbox.client.model.CleaningService;
 import com.feerbox.client.model.Command;
 import com.feerbox.client.model.CounterPeople;
 import com.feerbox.client.model.MAC;
+import com.feerbox.client.model.Weather;
 import com.feerbox.client.services.CleaningServiceService;
 import com.feerbox.client.services.CommandService;
 import com.feerbox.client.services.CounterPeopleService;
 import com.feerbox.client.services.MACService;
 import com.feerbox.client.services.SaveAnswerService;
+import com.feerbox.client.services.WeatherService;
 
 public class InformationServerRegister extends Thread {
 	private static final int INTERVAL_FAST_UPDATE = 10;
@@ -35,11 +37,30 @@ public class InformationServerRegister extends Thread {
 				uploadMACs();
 				uploadCounterPeople();
 				uploadCommandsOutput();
+				uploadWeather();
 			}
 			//Nothing to update
 			ClientRegister.getInstance().setAnswersUploaded(true); //Indicate register finished
 		} catch (Throwable  t) {
 			logger.error("Error in InformationServerRegister");
+		}
+	}
+	private void uploadWeather() {
+		if(ClientRegister.getInstance().getWeatherSensor()){
+			List<Weather> list = WeatherService.notUploaded();
+			if(list!=null && list.size()!=0){
+				logger.debug("Going to update weather data "+list.size());
+				int i=1;
+				for(Weather weather: list){
+					boolean ok = WeatherService.saveServer(weather);
+					if(ok){
+						WeatherService.uploaded(weather);
+					} else{
+						logger.info("Not able to upload weather data on server");
+					}
+					i++;
+				}
+			}
 		}
 	}
 	private void uploadCommandsOutput() {

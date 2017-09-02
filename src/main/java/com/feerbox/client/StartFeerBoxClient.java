@@ -22,6 +22,7 @@ import com.feerbox.client.registers.InformationServerRegister;
 import com.feerbox.client.registers.MACDetection;
 import com.feerbox.client.registers.NFCReader;
 import com.feerbox.client.registers.StatusRegister;
+import com.feerbox.client.registers.WeatherSensorRegister;
 import com.feerbox.client.services.ButtonService;
 import com.feerbox.client.services.LedService;
 import com.feerbox.client.services.SaveAnswerService;
@@ -60,6 +61,7 @@ public class StartFeerBoxClient {
         StartCommandServerPolling();
         StartCleanerServerPolling();
         StartCounterPeoplePolling();
+        StartWeatherSensorThread();
         
         // create and register gpio pin listener
         registerButtonListeners();
@@ -73,6 +75,14 @@ public class StartFeerBoxClient {
         // (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
         // gpio.shutdown();   <--- implement this method call if you wish to terminate the Pi4J GPIO controller        
     }
+
+
+	private static void StartWeatherSensorThread() {
+		if(ClientRegister.getInstance().getWeatherSensor()){
+			WeatherSensorRegister weatherSensor = new WeatherSensorRegister();
+			weatherSensor.start();
+		}
+	}
 
 
 	private static void StartCounterPeoplePolling() {

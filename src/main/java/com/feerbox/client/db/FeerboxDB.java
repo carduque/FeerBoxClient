@@ -22,7 +22,7 @@ public class FeerboxDB {
 	public static Connection getConnection() {
 		try {
 			if(connection==null || connection.isClosed()){
-				createConnectionTEST();
+				createConnection();
 				createTables();
 			}
 		} catch (SQLException e) {
@@ -38,10 +38,20 @@ public class FeerboxDB {
 			createAlertTimeTablesTableIfNotExists();
 			createAlertThresholdsTableIfNotExists();
 			createAlertsTableIfNotExists();
+			createWeatherSensorTableIfNotExists();
 		} catch (SQLException e) {
 			logger.error("SQLException", e);
 		}
 		
+	}
+
+	private static void createWeatherSensorTableIfNotExists() throws SQLException{
+		Statement statement = connection.createStatement();
+		statement.setQueryTimeout(30); // set timeout to 30 sec.
+		//severity, generator, threshold, name, reference, time, type, weekday
+		String sql = "create table if not exists WeatherSensor (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, temperature varchar, humidity varchar, reference varchar, upload integer)";
+		//logger.debug(sql);
+		statement.executeUpdate(sql);
 	}
 
 	private static void createConnection() {
