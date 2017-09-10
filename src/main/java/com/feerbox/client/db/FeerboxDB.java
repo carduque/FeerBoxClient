@@ -22,7 +22,12 @@ public class FeerboxDB {
 	public static Connection getConnection() {
 		try {
 			if(connection==null || connection.isClosed()){
-				createConnection();
+				if(System.getenv("TEST")!=null){
+					createConnectionTEST();
+				}
+				else{
+					createConnection();
+				}
 				createTables();
 			}
 		} catch (SQLException e) {
