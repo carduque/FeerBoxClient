@@ -4,14 +4,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.apache.log4j.Logger;
+
 import com.diozero.HD44780Lcd;
 import com.diozero.HD44780Lcd.LcdConnection;
 import com.diozero.api.I2CConstants;
 import com.diozero.util.SleepUtil;
 
 public class LCDWrapper {
+	protected final static Logger logger = Logger.getLogger(LCDWrapper.class);
 	static{
-		System.setProperty("com.diozero.devicefactory", "com.diozero.internal.provider.pi4j.Pi4jDeviceFactory");
+		try{
+			System.setProperty("com.diozero.devicefactory", "com.diozero.internal.provider.pi4j.Pi4jDeviceFactory");
+		}catch(Throwable t){
+			logger.error("LCD error: "+t.getMessage());
+		}
 	}
 	private static LcdConnection lcd_connection = new HD44780Lcd.PCF8574LcdConnection(I2CConstants.BUS_1, HD44780Lcd.PCF8574LcdConnection.DEFAULT_DEVICE_ADDRESS);
 	private static HD44780Lcd  instance = new HD44780Lcd(lcd_connection, 16, 2);
