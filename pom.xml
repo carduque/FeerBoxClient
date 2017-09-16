@@ -52,6 +52,11 @@
 		  <artifactId>diozero-core</artifactId>
 		  <version>0.9</version>
 		</dependency>
+		<dependency>
+		  <groupId>com.diozero</groupId>
+		  <artifactId>diozero-provider-pi4j</artifactId>
+		  <version>0.10</version>
+		</dependency>
 	</dependencies>
 
 	<properties>

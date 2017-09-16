@@ -62,7 +62,7 @@ public class StartFeerBoxClient {
         StartCleanerServerPolling();
         StartCounterPeoplePolling();
         StartWeatherSensorThread();
-        
+        checkForAlertsThread();
         // create and register gpio pin listener
         registerButtonListeners();
         
@@ -128,8 +128,12 @@ public class StartFeerBoxClient {
 
 	private static void StartNFCReaderThreat() {
 		if(ClientRegister.getInstance().getNFCReaderEnabled()){
-			if(ClientRegister.getInstance().getLCDActive()){
-				LCDWrapper.init("NFC Reader Starter...");
+			try{
+				if(ClientRegister.getInstance().getLCDActive()){
+					LCDWrapper.init("NFC Reader Starter...");
+				}
+			} catch (Exception e) {
+				logger.error("Error initialicing LCD: "+e.getMessage());
 			}
 			try {
 				NFCReader reader = new NFCReader();
@@ -171,14 +175,16 @@ public class StartFeerBoxClient {
 	}
 	
 	private static void checkForAlertsThread() {
-		Calendar today = Calendar.getInstance();
-		today.set(Calendar.HOUR_OF_DAY, 0);
-		today.set(Calendar.MINUTE, 0);
-		today.set(Calendar.SECOND, 0);
-		DataAlertsRegister dataAlertsRegister = new DataAlertsRegister();
-		Timer timer = new Timer();
-		timer.schedule(dataAlertsRegister, today.getTime(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)); // period: 1 day
-		dataAlertsRegister.setTimer(timer);
+		if(ClientRegister.getInstance().getAlertsEnabled()){
+			Calendar today = Calendar.getInstance();
+			today.set(Calendar.HOUR_OF_DAY, 0);
+			today.set(Calendar.MINUTE, 0);
+			today.set(Calendar.SECOND, 0);
+			DataAlertsRegister dataAlertsRegister = new DataAlertsRegister();
+			Timer timer = new Timer();
+			timer.schedule(dataAlertsRegister, today.getTime(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)); // period: 1 day
+			dataAlertsRegister.setTimer(timer);
+		}
 	}
 
 
