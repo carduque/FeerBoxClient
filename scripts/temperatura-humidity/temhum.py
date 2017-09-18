@@ -8,7 +8,7 @@ import Adafruit_DHT
 # configuration variables, sensors
 CVAR_PIN = 25  
 CVAR_SENSOR = Adafruit_DHT.AM2302                       
-CVAR_PULL_FRECUENCE = 60                 # time given pull temp and humidity from sensor in SECONDS
+CVAR_PULL_FRECUENCE = 1800                 # time given pull temp and humidity from sensor in SECONDS
 
 # configuration variables, logging
 CVAR_DEBUG = True                           # enables global debug mode

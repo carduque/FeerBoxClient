@@ -29,6 +29,7 @@ public class CounterPeopleRegister extends Thread {
 	private final GpioPinDigitalInput echoPin;
     private final GpioPinDigitalOutput trigPin;
     private final GpioPinDigitalInput pirPin;
+    private long lastPIRPersonDetected = 0;
     private int people_count_ds=0;
     private int people_count_pir = 0;
 	
@@ -131,11 +132,14 @@ public class CounterPeopleRegister extends Thread {
 		    public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {        
 
 		        if(event.getState().isHigh()){
-		        	saveCounterPeople(0, CounterPeople.Type.PIR);
-					if(ClientRegister.getInstance().getCounterPeopleLCD()){
-						people_count_pir++;
-						printLCD();
-					}
+		        	if(lastPIRPersonDetected!=0 && (new Date().getTime() - lastPIRPersonDetected>ClientRegister.getInstance().getCounterPeoplePauseBetweenMesurements())){
+		        		saveCounterPeople(0, CounterPeople.Type.PIR);
+						if(ClientRegister.getInstance().getCounterPeopleLCD()){
+							people_count_pir++;
+							printLCD();
+						}
+		        	}
+		        	lastPIRPersonDetected = new Date().getTime();
 		        }   
 
 		        if(event.getState().isLow()){
