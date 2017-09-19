@@ -70,10 +70,14 @@ public class WeatherService {
 		JsonObject json = new JsonObject();
 		json.addProperty("clientId", weather.getId());
 		try {
-			json.addProperty("temperature", Double.parseDouble(weather.getTemperature()));
-			json.addProperty("humidity", Double.parseDouble(weather.getHumidity()));
+			String temperature = weather.getTemperature();
+			temperature = temperature.replaceAll(",", ".");
+			String humidity = weather.getHumidity();
+			humidity = humidity.replaceAll(",", ".");
+			json.addProperty("temperature", Double.parseDouble(temperature));
+			json.addProperty("humidity", Double.parseDouble(humidity));
 		} catch (NumberFormatException e) {
-			logger.error("Error converting temperature and humidity");
+			logger.error("Error converting temperature and humidity: "+e.getMessage());
 			json.addProperty("temperature", weather.getTemperature());
 			json.addProperty("humidity", weather.getHumidity());
 		}
