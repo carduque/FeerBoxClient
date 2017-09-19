@@ -69,8 +69,14 @@ public class WeatherService {
 	private static JsonObject weatherToJson(Weather weather) {
 		JsonObject json = new JsonObject();
 		json.addProperty("clientId", weather.getId());
-		json.addProperty("temperature", weather.getTemperature());
-		json.addProperty("humidity", weather.getHumidity());
+		try {
+			json.addProperty("temperature", Double.parseDouble(weather.getTemperature()));
+			json.addProperty("humidity", Double.parseDouble(weather.getHumidity()));
+		} catch (NumberFormatException e) {
+			logger.error("Error converting temperature and humidity");
+			json.addProperty("temperature", weather.getTemperature());
+			json.addProperty("humidity", weather.getHumidity());
+		}
 		json.addProperty("time", weather.getTimeFormatted());
 		json.addProperty("feerboxReference", weather.getFeerBoxReference());
 		return json;
