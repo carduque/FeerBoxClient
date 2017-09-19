@@ -33,7 +33,7 @@ def dbg(msg):
 def register(temperature, humidity):
     global counter
     st=stamp()
-    cursor.execute('''INSERT INTO WeatherSensor(time, reference, temperature, humidity, upload)  VALUES(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),?,?,?,?)''', (reference,"'"+temperature+"'", "'"+humidity+"'",0))
+    cursor.execute('''INSERT INTO WeatherSensor(time, reference, temperature, humidity, upload)  VALUES(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),?,?,?,?)''', (reference,"'"+str(round(temperature, 2))+"'", "'"+str(round(humidity, 2))+"'",0))
     db.commit()
     if CVAR_DEBUG:
         dbg("temperature %d and humidity %d" % (temperature,humidity))
