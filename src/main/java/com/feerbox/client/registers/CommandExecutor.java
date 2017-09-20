@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -33,7 +36,14 @@ public class CommandExecutor implements Runnable {
 					SaveCommand.startExecution(command);
 					//List<String> commandParameters = command.getParameters();
 					//commandParameters.add(0, command.getCommand());
-					ProcessBuilder pb = new ProcessBuilder("/bin/bash", command.getCommand(), command.getParameter());
+					List<String> parameters = new ArrayList<String>();
+					parameters.add("/bin/bash");
+					parameters.add(command.getCommand());
+					if(command.getParameter()!=null){
+						String[] parametersArray = command.getParameter().split("\\s+");
+						parameters.addAll(Arrays.asList(parametersArray));
+					}
+					ProcessBuilder pb = new ProcessBuilder(parameters);
 					/*Map<String, String> env = pb.environment();
 					env.put("VAR1", "myValue");
 					env.remove("OTHERVAR");
