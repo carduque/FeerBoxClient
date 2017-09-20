@@ -71,9 +71,9 @@ public class WeatherService {
 		json.addProperty("clientId", weather.getId());
 		try {
 			String temperature = weather.getTemperature();
-			temperature = temperature.replaceAll(",", ".");
+			temperature = temperature.replaceAll(".", ",");
 			String humidity = weather.getHumidity();
-			humidity = humidity.replaceAll(",", ".");
+			humidity = humidity.replaceAll(".", ",");
 			json.addProperty("temperature", Double.parseDouble(temperature));
 			json.addProperty("humidity", Double.parseDouble(humidity));
 		} catch (NumberFormatException e) {
