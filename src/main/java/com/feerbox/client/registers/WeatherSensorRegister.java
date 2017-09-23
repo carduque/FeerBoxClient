@@ -8,7 +8,7 @@ public class WeatherSensorRegister {
 	final static Logger logger = Logger.getLogger(WeatherSensorRegister.class);
 
 	public void start() {
-		ProcessBuilder pb = new ProcessBuilder("/bin/bash", "/opt/FeerBoxClient/FeerBoxClient/scripts/temperatura-humidity/temhum.sh");
+		ProcessBuilder pb = new ProcessBuilder("/bin/bash", "/opt/FeerBoxClient/FeerBoxClient/scripts/temperatura-humidity/temphum.sh");
 		//pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts/countpeople"));
 		//executeCommandLine("sudo python /opt/FeerBoxClient/FeerBoxClient/scripts/countpeople/laser_count.py");
 		try {
