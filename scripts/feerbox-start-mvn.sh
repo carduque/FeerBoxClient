@@ -4,5 +4,5 @@ sudo hwclock -s
 cd /opt/FeerBoxClient/FeerBoxClient/
 sudo mvn exec:java -Dsun.security.smartcardio.library=/usr/lib/arm-linux-gnueabihf/libpcsclite.so.1 -Dexec.mainClass="com.feerbox.client.StartFeerBoxClient" &
 disown
-echo $! > /opt/FeerBoxClient/FeerBoxClient/feerbox.pid
-pgrep java > /opt/FeerBoxClient/FeerBoxClient/feerbox2.pid
+sudo echo $! > /opt/FeerBoxClient/FeerBoxClient/feerbox.pid
+sudo pgrep java > /opt/FeerBoxClient/FeerBoxClient/feerbox2.pid
