@@ -14,7 +14,7 @@ public class LCDWrapper {
 	protected final static Logger logger = Logger.getLogger(LCDWrapper.class);
 	static{
 		try{
-			System.setProperty("com.diozero.devicefactory", "com.diozero.internal.provider.wiringpi.WiringPiDeviceFactory");
+			System.setProperty("com.diozero.devicefactory", "com.diozero.internal.provider.sysfs.SysFsDeviceFactory");
 		}catch(Throwable t){
 			logger.error("LCD error: "+t.getMessage());
 		}

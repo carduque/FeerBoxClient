@@ -52,11 +52,6 @@
 		  <artifactId>diozero-core</artifactId>
 		  <version>0.10</version>
 		</dependency>
-		<dependency>
-		  <groupId>com.diozero</groupId>
-		  <artifactId>diozero-provider-wiringpi</artifactId>
-		  <version>0.11-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 	<properties>
