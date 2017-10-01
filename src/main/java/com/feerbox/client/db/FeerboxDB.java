@@ -45,6 +45,7 @@ public class FeerboxDB {
 			createAlertsTableIfNotExists();
 			createWeatherSensorTableIfNotExists();
 			createCleanersTableIfNotExists();
+			createCleaningServicesTableIfNotExists();
 		} catch (SQLException e) {
 			logger.error("SQLException", e);
 		}
@@ -124,15 +125,13 @@ public class FeerboxDB {
 		}
 	}
 	
-	protected static void createCleaningServicesTableIfNotExists(Statement statement) throws SQLException {
-		if (!cleaningServicesTableCreated) {
-			//logger.debug("Creating table if not exists...");
-			//table = ClientRegister.getInstance().getCustomer();
-			String sql = "create table if not exists CleaningServices (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, cleanerReference varchar, feerBoxReference varchar, upload integer)";
-			//logger.debug(sql);
-			statement.executeUpdate(sql);
-			cleaningServicesTableCreated = true;
-		}
+	protected static void createCleaningServicesTableIfNotExists() throws SQLException {
+		Statement statement = connection.createStatement();
+		//logger.debug("Creating table if not exists...");
+		//table = ClientRegister.getInstance().getCustomer();
+		String sql = "create table if not exists CleaningServices (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, cleanerReference varchar, feerBoxReference varchar, upload integer)";
+		//logger.debug(sql);
+		statement.executeUpdate(sql);
 	}
 	
 	protected static void createCleanersTableIfNotExists() throws SQLException {
