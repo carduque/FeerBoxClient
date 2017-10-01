@@ -13,13 +13,13 @@ import com.diozero.util.SleepUtil;
 
 public class LCDWrapper {
 	protected final static Logger logger = Logger.getLogger(LCDWrapper.class);
-	static{
+	/*static{
 		try{
 			System.setProperty("com.diozero.devicefactory", "com.diozero.internal.provider.pi4j.Pi4jDeviceFactory");
 		}catch(Throwable t){
 			logger.error("LCD error: "+t.getMessage());
 		}
-	}
+	}*/
 	private static LcdConnection lcd_connection = new HD44780Lcd.PCF8574LcdConnection(I2CConstants.BUS_1, HD44780Lcd.PCF8574LcdConnection.DEFAULT_DEVICE_ADDRESS);
 	private static HD44780Lcd  instance = new HD44780Lcd(lcd_connection, 16, 2);
 	//I2CLcd instance = new I2CLcd(16, 2)
