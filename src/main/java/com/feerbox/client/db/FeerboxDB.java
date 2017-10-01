@@ -44,6 +44,7 @@ public class FeerboxDB {
 			createAlertThresholdsTableIfNotExists();
 			createAlertsTableIfNotExists();
 			createWeatherSensorTableIfNotExists();
+			createCleanersTableIfNotExists();
 		} catch (SQLException e) {
 			logger.error("SQLException", e);
 		}
@@ -64,6 +65,7 @@ public class FeerboxDB {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:/opt/FeerBoxClient/FeerBoxClient/db/feerboxclient.db");
+			logger.info(connection.getClientInfo());
 			connection.setAutoCommit(true);
 		} catch (SQLException e) {
 			logger.error( "SQLException", e );
@@ -133,15 +135,14 @@ public class FeerboxDB {
 		}
 	}
 	
-	protected static void createCleanersTableIfNotExists(Statement statement) throws SQLException {
-		if (!cleaningServicesTableCreated) {
+	protected static void createCleanersTableIfNotExists() throws SQLException {
+			Statement statement = connection.createStatement();
 			//logger.debug("Creating table if not exists...");
 			//table = ClientRegister.getInstance().getCustomer();
 			String sql = "create table if not exists Cleaners (id INTEGER PRIMARY KEY AUTOINCREMENT, name varchar, surname varchar, reference varchar, serverlastupdate timestamp, company integer, servercreationdate timestamp, serverid integer)";
 			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			cleaningServicesTableCreated = true;
-		}
 	}
 	
 	protected static void createStatusTableIfNotExists(Statement statement) throws SQLException {

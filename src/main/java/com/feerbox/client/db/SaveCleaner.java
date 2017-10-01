@@ -19,7 +19,6 @@ public class SaveCleaner extends FeerboxDB {
 			statement = con.createStatement();
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
-			createCleanersTableIfNotExists(statement);
 			String sql = "insert or replace into Cleaners (id, name, surname, reference, serverid, company, servercreationdate, serverlastupdate) "
 					+ " values("
 					+ " (select id from Cleaners where serverid="+cleaner.getServerId()+"),"

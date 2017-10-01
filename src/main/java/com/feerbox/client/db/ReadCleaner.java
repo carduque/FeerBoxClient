@@ -24,7 +24,6 @@ public class ReadCleaner extends FeerboxDB{
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createCleanersTableIfNotExists(statement);
 			ResultSet rs = statement.executeQuery("select id, name, surname, serverlastupdate from Cleaners where reference='" + cleaner.getReference()+"'");
 			while (rs.next()) {
 				cleaner.setId(rs.getInt("id"));
@@ -55,7 +54,6 @@ public class ReadCleaner extends FeerboxDB{
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createCleanersTableIfNotExists(statement);
 			ResultSet rs = statement.executeQuery("select max(serverlastupdate) as max_lastupdate from Cleaners");
 			while (rs.next()) {
 				out = rs.getTimestamp("max_lastupdate");
