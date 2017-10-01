@@ -131,7 +131,7 @@ public class StartFeerBoxClient {
 				if(ClientRegister.getInstance().getLCDActive()){
 					LCDWrapper.init("");
 				}
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				logger.error("Error initialicing LCD: "+e.getMessage());
 			}
 			try {
