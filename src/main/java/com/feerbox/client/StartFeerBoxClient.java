@@ -33,7 +33,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.5.7.3.3";
+	public static final String version = "1.5.7.4";
 	public static final String path_conf = "/opt/FeerBoxClient/FeerBoxClient/config/";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
@@ -49,7 +49,7 @@ public class StartFeerBoxClient {
 			logger.error("Error writing version file: "+e.getMessage());
 		}
         // create gpio controller
-        
+        gpio.shutdown();
         InitGPIO();
         lights();
         StartLedPower();
@@ -129,9 +129,9 @@ public class StartFeerBoxClient {
 	private static void StartNFCReaderThreat() {
 		if(ClientRegister.getInstance().getNFCReaderEnabled()){
 			try{
-				/*if(ClientRegister.getInstance().getLCDActive()){
-					LCDWrapper.init("NFC Reader Starter...");
-				}*/
+				if(ClientRegister.getInstance().getLCDActive()){
+					LCDWrapper.init("");
+				}
 			} catch (Exception e) {
 				logger.error("Error initialicing LCD: "+e.getMessage());
 			}

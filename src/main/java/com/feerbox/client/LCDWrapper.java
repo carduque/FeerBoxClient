@@ -35,8 +35,8 @@ public class LCDWrapper {
 	}
 	
 	public static void init(String text){
-		instance.setText(0, text);
-		SleepUtil.sleepSeconds(2);
+		//instance.setText(0, text);
+		//SleepUtil.sleepSeconds(2);
 		instance.clear();
 	}
 	
