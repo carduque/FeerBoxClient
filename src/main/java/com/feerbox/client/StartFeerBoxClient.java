@@ -49,7 +49,6 @@ public class StartFeerBoxClient {
 			logger.error("Error writing version file: "+e.getMessage());
 		}
         // create gpio controller
-        gpio.shutdown();
         InitGPIO();
         lights();
         StartLedPower();
