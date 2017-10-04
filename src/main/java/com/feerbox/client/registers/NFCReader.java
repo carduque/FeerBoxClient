@@ -1,5 +1,6 @@
 package com.feerbox.client.registers;
 
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -11,6 +12,8 @@ import javax.smartcardio.CardChannel;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardTerminal;
 import javax.smartcardio.CardTerminals;
+import javax.smartcardio.CommandAPDU;
+import javax.smartcardio.ResponseAPDU;
 import javax.smartcardio.TerminalFactory;
 
 import org.apache.log4j.Logger;
@@ -39,7 +42,7 @@ public class NFCReader extends Thread {
 					baReadUID = new byte[] { (byte) 0xFF, (byte) 0xCA, (byte) 0x00, (byte) 0x00, (byte) 0x00 };
 					CardChannel channel = card.getBasicChannel();
 					logger.debug("Basic channel: "+channel);
-					String uid = send(baReadUID, channel);
+					String uid = send2(baReadUID, channel);
 					long now = System.currentTimeMillis();
 					if(lastNFC==null || (now - lastNFC.getTime())>60*500){ //Skip card less than 30 seg
 						//logger.info("NFC UID: " + uid);
@@ -55,7 +58,7 @@ public class NFCReader extends Thread {
 							}
 							//cleaningService.setCleanerReference(cleaner.getName()+" "+cleaner.getSurname()); //TO DO change by real identifier
 							cleaningService.setCleanerReference(cleaner.getReference());
-							terminal.waitForCardAbsent(0);
+							card.disconnect(false);
 							cleaningService.setFeerboxReference(ClientRegister.getInstance().getReference());
 							
 							Date date = new Date(now);
@@ -116,6 +119,27 @@ public class NFCReader extends Thread {
 		}
 
 		return res;
+	}
+	
+	public static String send2(byte[] cmd, CardChannel channel) {
+		ResponseAPDU response = null;
+		try {
+
+			response = channel.transmit(new CommandAPDU(cmd));
+		} catch (CardException ex) {
+			ex.printStackTrace();
+		}
+
+		if (response.getSW1() == 0x63 && response.getSW2() == 0x00){
+			logger.error("Failed reading card");
+		}
+		String res = bin2hex(response.getData());
+		//System.out.println("UID: " + res);
+		return res;
+	}
+	
+	static String bin2hex(byte[] data) {
+	    return String.format("%0" + (data.length * 2) + "X", new BigInteger(1,data));
 	}
 
 	public boolean init() {
