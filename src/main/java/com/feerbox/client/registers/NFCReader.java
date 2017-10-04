@@ -35,7 +35,7 @@ public class NFCReader extends Thread {
 		try {
 			while (terminal.waitForCardPresent(0)) {
 				try {
-					card = terminal.connect("T=0");
+					card = terminal.connect("*");
 					// System.out.println("Terminal connected");
 					byte[] baReadUID = new byte[5];
 
@@ -58,7 +58,6 @@ public class NFCReader extends Thread {
 							}
 							//cleaningService.setCleanerReference(cleaner.getName()+" "+cleaner.getSurname()); //TO DO change by real identifier
 							cleaningService.setCleanerReference(cleaner.getReference());
-							card.disconnect(false);
 							cleaningService.setFeerboxReference(ClientRegister.getInstance().getReference());
 							
 							Date date = new Date(now);
@@ -80,6 +79,7 @@ public class NFCReader extends Thread {
 						}
 						// logger.debug("Card removed");
 					}
+					card.disconnect(false);
 				} catch (Exception e) {
 					logger.error("Terminal NOT connected: " + e.toString());
 				}
