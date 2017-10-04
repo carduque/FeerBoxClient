@@ -127,12 +127,8 @@ public class StartFeerBoxClient {
 
 	private static void StartNFCReaderThreat() {
 		if(ClientRegister.getInstance().getNFCReaderEnabled()){
-			try{
-				if(ClientRegister.getInstance().getLCDActive()){
-					LCDWrapper.init("");
-				}
-			} catch (Throwable e) {
-				logger.error("Error initialicing LCD: "+e.getMessage());
+			if(ClientRegister.getInstance().getLCDActive()){
+				LCDWrapper.init("");
 			}
 			try {
 				NFCReader reader = new NFCReader();

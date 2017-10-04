@@ -24,23 +24,39 @@ public class LCDWrapper {
 	//I2CLcd instance = new I2CLcd(16, 2)
 
 	public static void setTextRow0(String text){
-		instance.displayControl(true, false, false);
-		instance.setText(0, text);
+		try{
+			instance.displayControl(true, false, false);
+			instance.setText(0, text);
+		} catch (Throwable e) {
+			logger.error("Error setting text to LCD: "+e.getMessage());
+		}
 	}
 	
 	public static void setTextRow1(String text){
-		instance.displayControl(true, false, false);
-		instance.setText(1, text);
+		try{
+			instance.displayControl(true, false, false);
+			instance.setText(1, text);
+		} catch (Throwable e) {
+			logger.error("Error setting text to LCD: "+e.getMessage());
+		}
 	}
 	
 	public static void init(String text){
-		//instance.setText(0, text);
-		//SleepUtil.sleepSeconds(2);
-		instance.clear();
+		try{
+			//instance.setText(0, text);
+			//SleepUtil.sleepSeconds(2);
+			instance.clear();
+		} catch (Throwable e) {
+			logger.error("Error initialicing LCD: "+e.getMessage());
+		}
 	}
 	
 	public static void clear(){
-		instance.clear();
+		try{
+			instance.clear();
+		} catch (Throwable e) {
+			logger.error("Error clearing LCD: "+e.getMessage());
+		}
 	}
 
 	public static void setCurrentTimeRow1() {
