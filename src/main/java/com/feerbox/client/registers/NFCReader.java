@@ -41,7 +41,7 @@ public class NFCReader extends Thread {
 
 					baReadUID = new byte[] { (byte) 0xFF, (byte) 0xCA, (byte) 0x00, (byte) 0x00, (byte) 0x00 };
 					CardChannel channel = card.getBasicChannel();
-					logger.debug("Basic channel: "+channel);
+					//logger.debug("Basic channel: "+channel);
 					String uid = send2(baReadUID, channel);
 					long now = System.currentTimeMillis();
 					if((lastNFC==null || (now - lastNFC.getTime())>60*500) && uid!=null){ //Skip card less than 30 seg
