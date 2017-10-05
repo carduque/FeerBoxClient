@@ -44,7 +44,7 @@ public class NFCReader extends Thread {
 					logger.debug("Basic channel: "+channel);
 					String uid = send2(baReadUID, channel);
 					long now = System.currentTimeMillis();
-					if(lastNFC==null || (now - lastNFC.getTime())>60*500){ //Skip card less than 30 seg
+					if((lastNFC==null || (now - lastNFC.getTime())>60*500) && uid!=null){ //Skip card less than 30 seg
 						//logger.info("NFC UID: " + uid);
 						// Toolkit.getDefaultToolkit().beep();
 						Cleaner cleaner = ReadCleaner.read(new Cleaner(uid));
@@ -129,11 +129,12 @@ public class NFCReader extends Thread {
 		} catch (CardException ex) {
 			ex.printStackTrace();
 		}
-
+		String res = null;
 		if (response.getSW1() == 0x63 && response.getSW2() == 0x00){
-			logger.error("Failed reading card");
+			//logger.error("Failed reading card");
+			return res;
 		}
-		String res = bin2hex(response.getData());
+		res = bin2hex(response.getData());
 		//System.out.println("UID: " + res);
 		return res;
 	}
