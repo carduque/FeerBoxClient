@@ -79,7 +79,7 @@ public class NFCReader extends Thread {
 						}
 						// logger.debug("Card removed");
 					}
-					card.disconnect(false);
+					terminal.waitForCardAbsent(0);
 				} catch (Exception e) {
 					logger.error("Terminal NOT connected: " + e.toString());
 				}
@@ -131,16 +131,23 @@ public class NFCReader extends Thread {
 		}
 		String res = null;
 		if (response.getSW1() == 0x63 && response.getSW2() == 0x00){
-			//logger.error("Failed reading card");
+			logger.warn("Failed reading card");
 			return res;
 		}
-		res = bin2hex(response.getData());
+		res = bytesToHex(response.getData());
 		//System.out.println("UID: " + res);
 		return res;
 	}
 	
-	static String bin2hex(byte[] data) {
-	    return String.format("%0" + (data.length * 2) + "X", new BigInteger(1,data));
+	private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+	public static String bytesToHex(byte[] bytes) {
+	    char[] hexChars = new char[bytes.length * 2];
+	    for ( int j = 0; j < bytes.length; j++ ) {
+	        int v = bytes[j] & 0xFF;
+	        hexChars[j * 2] = hexArray[v >>> 4];
+	        hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+	    }
+	    return new String(hexChars);
 	}
 
 	public boolean init() {
