@@ -14,7 +14,6 @@ then
     fi
   done  < "$CONFIG"
 fi
-newname=$reference"_"$FILE
 
 curl --ftp-ssl -k ftp.feerbox.com --user db_backup@happycustomerbox.com:feerboxcompany2015 -T $FILE_OUT -Q "-RNFR feerboxclient${now}.db.gz" -Q "-RNTO ${reference}_feerboxclient${now}.db.gz"
 rm $FILE_OUT

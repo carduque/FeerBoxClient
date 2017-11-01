@@ -28,16 +28,17 @@ public class AliveRegister extends Register {
 			boolean before = InternetAccess.getInstance().getAccess();
 			checkInternetAccessByPing2();
 			boolean after = InternetAccess.getInstance().getAccess();
-			/*if (before != after && after == true) {
-				new StatusRegister().run();
-				if (ClientRegister.getInstance().getLastGetCommands() != null) {
+			if (before != after && after == true) {
+				StatusRegister status = new StatusRegister(false);
+				status.run();
+				/*if (ClientRegister.getInstance().getLastGetCommands() != null) {
 					long diff = System.currentTimeMillis() - ClientRegister.getInstance().getLastGetCommands().getTime();
 					long diffMinutes = diff / (60 * 1000) % 60;
 					if (diffMinutes > ClientRegister.getInstance().getCommandQueueRegisterInterval()) {
 						new CommandQueueRegister().run();
 					}
-				}
-			}*/
+				}*/
+			}
 			aliveLights();
 			checkTetheringDetection();
 		} catch (Throwable  t) {
@@ -55,8 +56,7 @@ public class AliveRegister extends Register {
 				// 07:33:54 up 11 min, 1 user, load average: 1.14, 0.96, 0.55
 				// 16:30:34 up 6:40, 1 user, load average: 0.01, 0.01, 0.00
 				if (line != null) {
-					if ((line.trim().equals("feerbox-wifi") || line.trim().equals("feerbox.com"))
-							&& firstTimeTethering == false) {
+					if ((line.trim().equals("feerbox-wifi") || line.trim().equals("feerbox.com")) && firstTimeTethering == false) {
 						// Tethering activated
 						LedService.animation();
 						firstTimeTethering = true;
