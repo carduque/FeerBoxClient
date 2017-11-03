@@ -110,7 +110,7 @@ def selftest():
     dbg("End of sensor test.")
     
 def getReferenceFeerBox():
-    global reference
+    global reference, CVAR_SENSOR_THRESHOLD
     myvars = {}
     with open("/opt/FeerBoxClient/FeerBoxClient/target/classes/config.properties") as myfile:
         for line in myfile:
