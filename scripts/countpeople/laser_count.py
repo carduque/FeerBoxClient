@@ -130,7 +130,7 @@ def main():
         pool=None
     counter = 0
     getReferenceFeerBox();
-    dbg("Reference:" + reference + "Laser sensor threshold: "+CVAR_SENSOR_THRESHOLD)
+    dbg("Reference:" + reference + "Laser sensor threshold: "+str(CVAR_SENSOR_THRESHOLD))
     selftest()
     dbg("Ready.")
     while True:
@@ -138,7 +138,7 @@ def main():
             check(states,CVAR_LDR1_PIN,0)
             if CVAR_LDR2_AVAILABLE:
                 check(states,CVAR_LDR2_PIN,1)
-            time.sleep(CVAR_SENSOR_THRESHOLD)
+            time.sleep(float(CVAR_SENSOR_THRESHOLD))
         except KeyboardInterrupt:
             destroy()
 
