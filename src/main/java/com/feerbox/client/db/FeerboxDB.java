@@ -66,7 +66,7 @@ public class FeerboxDB {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:/opt/FeerBoxClient/FeerBoxClient/db/feerboxclient.db");
-			logger.info(connection.getClientInfo());
+			//logger.info(connection.getClientInfo());
 			connection.setAutoCommit(true);
 		} catch (SQLException e) {
 			logger.error( "SQLException", e );

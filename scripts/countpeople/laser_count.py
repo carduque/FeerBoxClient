@@ -117,6 +117,7 @@ def getReferenceFeerBox():
             name, var = line.partition("=")[::2]
             myvars[name.strip()] = var.strip()
     reference = myvars["reference"]
+    CVAR_SENSOR_THRESHOLD = myvars["laser_sensor_threshold"]
 
     
 def main():
@@ -129,7 +130,7 @@ def main():
         pool=None
     counter = 0
     getReferenceFeerBox();
-    dbg("Reference:" + reference)
+    dbg("Reference:" + reference + "Laser sensor threshold: "+CVAR_SENSOR_THRESHOLD)
     selftest()
     dbg("Ready.")
     while True:

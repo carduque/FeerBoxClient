@@ -33,6 +33,7 @@ public class ClientRegister {
 	        try {
 	            configuration = new PropertiesConfiguration("config.properties");
 	            configuration.setReloadingStrategy(new FileChangedReloadingStrategy());
+	            addPropertiesAtRunTimeOutsideJava();
 	        } catch (ConfigurationException e) {
 	        	logger.debug("ConfigurationException", e);
 	        }
@@ -47,6 +48,19 @@ public class ClientRegister {
 	    	 }
 	        return property;
 	    }
+
+	private static void addPropertiesAtRunTimeOutsideJava() {
+		String property = (String)configuration.getProperty("laser_sensor_threshold");
+   	 	if(property==null){
+			configuration.setProperty("laser_sensor_threshold", "0.2"); //seconds
+			try {
+				configuration.save();
+			} catch (ConfigurationException e) {
+				logger.error("Storing config file: "+e.getMessage());
+			}
+			logger.info("Property laser_sensor_threshold added with value 0.2");
+		}
+	}
 
 	private static String addPropertiesAtRunTime(String key) {
 		String value = null;
