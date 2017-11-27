@@ -11,12 +11,14 @@ import com.feerbox.client.db.ReadAnswer;
 import com.feerbox.client.db.ReadCleaningService;
 import com.feerbox.client.db.SaveAnswer;
 import com.feerbox.client.db.SaveCleaningService;
+import com.feerbox.client.model.Alert;
 import com.feerbox.client.model.Answer;
 import com.feerbox.client.model.CleaningService;
 import com.feerbox.client.model.Command;
 import com.feerbox.client.model.CounterPeople;
 import com.feerbox.client.model.MAC;
 import com.feerbox.client.model.Weather;
+import com.feerbox.client.services.AlertService;
 import com.feerbox.client.services.CleaningServiceService;
 import com.feerbox.client.services.CommandService;
 import com.feerbox.client.services.CounterPeopleService;
@@ -38,11 +40,30 @@ public class InformationServerRegister extends Thread {
 				uploadCounterPeople();
 				uploadCommandsOutput();
 				uploadWeather();
+				uploadAlerts();
 			}
 			//Nothing to update
 			ClientRegister.getInstance().setAnswersUploaded(true); //Indicate register finished
 		} catch (Throwable  t) {
 			logger.error("Error in InformationServerRegister");
+		}
+	}
+	private void uploadAlerts() {
+		if(ClientRegister.getInstance().getAlertsEnabled()){
+			List<Alert> list = AlertService.notUploaded();
+			if(list!=null && list.size()!=0){
+				logger.debug("Going to update alert data "+list.size());
+				int i=1;
+				for(Alert alert: list){
+					boolean ok = AlertService.saveServer(alert);
+					if(ok){
+						AlertService.uploaded(alert);
+					} else{
+						logger.info("Not able to upload alert data on server");
+					}
+					i++;
+				}
+			}
 		}
 	}
 	private void uploadWeather() {
