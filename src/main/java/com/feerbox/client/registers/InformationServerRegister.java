@@ -130,7 +130,8 @@ public class InformationServerRegister extends Thread {
 					logger.debug("Upload to Internet "+size+"? "+(StringUtils.countMatches(ok, ",")+1));
 					CounterPeopleService.uploadList(ok);
 				} else{
-					logger.debug("Error uploading to server: "+ok);
+					logger.debug("Error uploading to server: "+ok+" , back to normal update");
+					saveCounterPeopleList(list);
 				}
 			}
 			else{
