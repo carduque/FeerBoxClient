@@ -33,7 +33,7 @@ def dbg(msg):
 def register(temperature, humidity):
     global counter
     st=stamp()
-    cursor.execute('''INSERT INTO WeatherSensor(time, reference, temperature, humidity, upload)  VALUES(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),?,?,?,?)''', (reference,"'"+str(round(temperature, 2))+"'", "'"+str(round(humidity, 2))+"'",0))
+    cursor.execute('''INSERT INTO WeatherSensor(time, reference, temperature, humidity, upload)  VALUES(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),?,?,?,?)''', (reference,str(round(temperature, 2)),str(round(humidity, 2)),0))
     db.commit()
     if CVAR_DEBUG:
         dbg("temperature %d and humidity %d" % (temperature,humidity))
@@ -48,6 +48,8 @@ def check(sensor, pin):
     humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
     dbg(type(temperature))
     dbg(type(humidity))
+    dbg(type(round(temperature, 2)))
+    dbg(type(str(round(temperature, 2))))
     register(temperature, humidity)
 
 def getReferenceFeerBox():
