@@ -67,7 +67,7 @@ def main():
     dbg("Initialising.")
     getReferenceFeerBox();
     dbg("Reference:" + reference)
-    dbg("Ready.")
+    dbg("Ready2.")
     while True:
         try:
             check(CVAR_SENSOR,CVAR_PIN)
