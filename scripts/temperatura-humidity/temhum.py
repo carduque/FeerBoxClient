@@ -46,6 +46,8 @@ def destroy():
 
 def check(sensor, pin):
     humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
+    dbg(type(temperature))
+    dbg(type(humidity))
     register(temperature, humidity)
 
 def getReferenceFeerBox():
