@@ -46,11 +46,12 @@ def destroy():
 
 def check(sensor, pin):
     humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
-    dbg(type(temperature))
-    dbg(type(humidity))
-    dbg(type(round(temperature, 2)))
-    dbg(type(str(round(temperature, 2))))
-    register(temperature, humidity)
+    if humidity is not None and temperature is not None:
+        dbg(str(temperature))
+        dbg(str(humidity))
+        register(temperature, humidity)
+    else:
+        dbg('None read from sensor')
 
 def getReferenceFeerBox():
     global reference
