@@ -18,7 +18,6 @@ public class SaveCommand extends FeerboxDB {
 			statement = con.createStatement();
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
-			createCommandsTableIfNotExists(statement);
 			int restart = 0;
 			if(command.getRestart()){
 				restart=1;
@@ -63,7 +62,6 @@ public class SaveCommand extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createCommandsTableIfNotExists(statement);
 			statement.executeUpdate("update Commands set upload=1 where id="+command.getId());
 		} catch (SQLException e) {
 			logger.error("SQLException", e);
@@ -86,7 +84,6 @@ public class SaveCommand extends FeerboxDB {
 
 
 			// statement.executeUpdate("drop table if exists person");
-			createCommandsTableIfNotExists(statement);
 			statement.executeUpdate("update Commands set startTime=STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime') where id="+command.getId());
 		} catch (SQLException e) {
 			logger.error("SQLException", e);
@@ -112,7 +109,6 @@ public class SaveCommand extends FeerboxDB {
 			}
 
 			// statement.executeUpdate("drop table if exists person");
-			createCommandsTableIfNotExists(statement);
 			statement.executeUpdate("update Commands set output='"+output+"',finishTime=STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime') where id="+command.getId());
 		} catch (SQLException e) {
 			logger.error("SQLException", e);

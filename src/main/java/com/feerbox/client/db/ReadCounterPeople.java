@@ -26,7 +26,6 @@ public class ReadCounterPeople extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createCounterPeopleTableIfNotExists();
 			ResultSet rs = statement.executeQuery("select id, time, distance, type, reference, upload from counterPeople where upload=0 order by id asc limit "+limit);
 			while (rs.next()) {
 				CounterPeople counterPeople = new CounterPeople();
@@ -67,7 +66,6 @@ public class ReadCounterPeople extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createCounterPeopleTableIfNotExists();
 			ResultSet rs = statement.executeQuery("select count(*) as total from counterPeople where upload=0");
 			while (rs.next()) {
 				total = rs.getInt("total");
@@ -96,7 +94,6 @@ public class ReadCounterPeople extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createCounterPeopleTableIfNotExists();
 			ResultSet rs = statement.executeQuery("select count(*) as total from counterpeople where time>=date('"+sdf.format(calendar.getTime())+" 00:00:00') and time<=date('"+sdf.format(calendar.getTime())+" 23:59:59')");
 			while (rs.next()) {
 				total = rs.getLong("total");
@@ -125,7 +122,6 @@ public class ReadCounterPeople extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createAnswersTableIfNotExists(statement);
 			ResultSet rs = statement.executeQuery("select count(*) as total from counterpeople where time>=date('"+sdf.format(calendar.getTime())+" "+startingTime.getHour()+":"+startingTime.getMinute()+":"+startingTime.getSecond()+
 					"') and time<=date('"+sdf.format(calendar.getTime())+" "+closingTime.getHour()+":"+closingTime.getMinute()+":"+closingTime.getSecond()+"')");
 			while (rs.next()) {

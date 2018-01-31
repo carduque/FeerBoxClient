@@ -18,7 +18,6 @@ public class SaveMAC extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createMACTableIfNotExists();
 			statement.executeUpdate("update MACS set upload=1 where id="+mac.getId());
 		} catch (SQLException e) {
 			logger.error("SQLException", e);

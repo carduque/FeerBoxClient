@@ -26,7 +26,6 @@ public class ReadAnswer extends FeerboxDB{
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createAnswersTableIfNotExists(statement);
 			ResultSet rs = statement.executeQuery("select id, time, button, reference, upload from Answers where upload=0 order by id asc limit 100");
 			while (rs.next()) {
 				Answer answer = new Answer();
@@ -65,7 +64,6 @@ public class ReadAnswer extends FeerboxDB{
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createAnswersTableIfNotExists(statement);
 			ResultSet rs = statement.executeQuery("select count(*) as total from Answers where upload=0");
 			while (rs.next()) {
 				total = rs.getInt("total");
@@ -92,7 +90,6 @@ public class ReadAnswer extends FeerboxDB{
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createAnswersTableIfNotExists(statement);
 			ResultSet rs = statement.executeQuery("select id, time, button, reference from Answers where id=" + id);
 			while (rs.next()) {
 				answer.setId(rs.getInt("id"));
@@ -127,7 +124,6 @@ public class ReadAnswer extends FeerboxDB{
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createAnswersTableIfNotExists(statement);
 			ResultSet rs = statement.executeQuery("select count(*) as total from Answers where time>=date('"+sdf.format(calendar.getTime())+" 00:00:00') and time<=date('"+sdf.format(calendar.getTime())+" 23:59:59')");
 			while (rs.next()) {
 				total = rs.getLong("total");
@@ -156,7 +152,6 @@ public class ReadAnswer extends FeerboxDB{
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createAnswersTableIfNotExists(statement);
 			ResultSet rs = statement.executeQuery("select count(*) as total from Answers where time>=date('"+sdf.format(calendar.getTime())+" "+startingTime.getHour()+":"+startingTime.getMinute()+":"+startingTime.getSecond()+
 					"') and time<=date('"+sdf.format(calendar.getTime())+" "+closingTime.getHour()+":"+closingTime.getMinute()+":"+closingTime.getSecond()+"')");
 			while (rs.next()) {
