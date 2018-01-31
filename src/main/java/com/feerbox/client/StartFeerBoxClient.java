@@ -21,6 +21,7 @@ import com.feerbox.client.registers.DataAlertsRegister;
 import com.feerbox.client.registers.InformationServerRegister;
 import com.feerbox.client.registers.MACDetection;
 import com.feerbox.client.registers.NFCReader;
+import com.feerbox.client.registers.RestartEveryDayRegister;
 import com.feerbox.client.registers.StatusRegister;
 import com.feerbox.client.registers.WeatherSensorRegister;
 import com.feerbox.client.services.ButtonService;
@@ -33,7 +34,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.5.9.1";
+	public static final String version = "1.5.9.2";
 	public static final String path_conf = "/opt/FeerBoxClient/FeerBoxClient/config/";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
@@ -61,9 +62,10 @@ public class StartFeerBoxClient {
         StartCleanerServerPolling();
         StartCounterPeoplePolling();
         StartWeatherSensorThread();
-        checkForAlertsThread();
+        //checkForAlertsThread();
         // create and register gpio pin listener
         registerButtonListeners();
+        restartEveryDay();
         
         // keep program running until user aborts (CTRL-C)
         for (;;) {
@@ -74,6 +76,19 @@ public class StartFeerBoxClient {
         // (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
         // gpio.shutdown();   <--- implement this method call if you wish to terminate the Pi4J GPIO controller        
     }
+
+
+	private static void restartEveryDay() {
+		Calendar today = Calendar.getInstance();
+		today.add(Calendar.DAY_OF_YEAR, 1);
+		today.set(Calendar.HOUR_OF_DAY, 3);
+		today.set(Calendar.MINUTE, 0);
+		today.set(Calendar.SECOND, 0);
+		RestartEveryDayRegister restartEveryDayRegister = new RestartEveryDayRegister();
+		Timer timer = new Timer();
+		timer.schedule(restartEveryDayRegister, today.getTime(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)); // period: 1 day
+		restartEveryDayRegister.setTimer(timer);
+	}
 
 
 	private static void StartWeatherSensorThread() {
@@ -176,6 +191,7 @@ public class StartFeerBoxClient {
 	private static void checkForAlertsThread() {
 		if(ClientRegister.getInstance().getAlertsEnabled()){
 			Calendar today = Calendar.getInstance();
+			today.add(Calendar.DAY_OF_YEAR, 1);
 			today.set(Calendar.HOUR_OF_DAY, 0);
 			today.set(Calendar.MINUTE, 0);
 			today.set(Calendar.SECOND, 0);
