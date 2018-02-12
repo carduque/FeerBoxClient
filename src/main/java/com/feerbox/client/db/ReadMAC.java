@@ -23,7 +23,6 @@ public class ReadMAC extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			createMACTableIfNotExists();
 			ResultSet rs = statement.executeQuery("select id, time, mac, request, reference, upload from MACS where upload=0 order by id asc limit 100");
 			while (rs.next()) {
 				MAC mac = new MAC();

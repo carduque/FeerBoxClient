@@ -24,7 +24,6 @@ public class SaveStatus extends FeerboxDB{
 			String json = objGson.toJson(status.getInfo());
 			logger.debug(json);
 			// statement.executeUpdate("drop table if exists person");
-			createStatusTableIfNotExists(statement);
 			statement.executeUpdate(
 					"insert into Status (time, reference, internet, upload) values(datetime('now', 'localtime'),\"" + status.getReference()
 					+ "\",  '"+json+"\', "

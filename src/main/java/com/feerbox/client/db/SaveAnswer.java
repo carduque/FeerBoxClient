@@ -22,7 +22,6 @@ public class SaveAnswer extends FeerboxDB{
 
 
 			// statement.executeUpdate("drop table if exists person");
-			createAnswersTableIfNotExists(statement);
 			statement.executeUpdate(
 					"insert into Answers (time, button, upload, reference) values(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime')," + answer.getButton() + ", 0, \""+answer.getReference()+"\")");
 			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM Answers LIMIT 1");
@@ -53,7 +52,6 @@ public class SaveAnswer extends FeerboxDB{
 
 
 			// statement.executeUpdate("drop table if exists person");
-			createAnswersTableIfNotExists(statement);
 			statement.executeUpdate(
 					"update Answers set upload=1 where id="+answer.getId());
 		} catch (SQLException e) {

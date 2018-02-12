@@ -37,6 +37,10 @@ public class FeerboxDB {
 			createWeatherSensorTableIfNotExists();
 			createCleanersTableIfNotExists();
 			createCleaningServicesTableIfNotExists();
+			createAnswersTableIfNotExists();
+			createStatusTableIfNotExists();
+			createCommandsTableIfNotExists();
+			createCounterPeopleTableIfNotExists();
 		} catch (SQLException e) {
 			logger.error("SQLException", e);
 		}
@@ -81,7 +85,9 @@ public class FeerboxDB {
 		}
 	}
 
-	protected static void createAnswersTableIfNotExists(Statement statement) throws SQLException {
+	private static void createAnswersTableIfNotExists() throws SQLException {
+		Statement statement = connection.createStatement();
+		statement.setQueryTimeout(30); // set timeout to 30 sec.
 		// logger.debug("Creating table if not exists...");
 		// table = ClientRegister.getInstance().getCustomer();
 		String sql = "create table if not exists Answers (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, button integer, reference varchar, upload integer)";
@@ -89,7 +95,7 @@ public class FeerboxDB {
 		statement.executeUpdate(sql);
 	}
 
-	protected static void createMACTableIfNotExists() throws SQLException {
+	private static void createMACTableIfNotExists() throws SQLException {
 		Statement statement = connection.createStatement();
 		statement.setQueryTimeout(30); // set timeout to 30 sec.
 		// logger.debug("Creating table if not exists...");
@@ -99,7 +105,7 @@ public class FeerboxDB {
 		statement.executeUpdate(sql);
 	}
 
-	protected static void createCounterPeopleTableIfNotExists() throws SQLException {
+	private static void createCounterPeopleTableIfNotExists() throws SQLException {
 		Statement statement = connection.createStatement();
 		statement.setQueryTimeout(30); // set timeout to 30 sec.
 		// logger.debug("Creating table if not exists...");
@@ -109,7 +115,7 @@ public class FeerboxDB {
 		statement.executeUpdate(sql);
 	}
 
-	protected static void createCleaningServicesTableIfNotExists() throws SQLException {
+	private static void createCleaningServicesTableIfNotExists() throws SQLException {
 		Statement statement = connection.createStatement();
 		// logger.debug("Creating table if not exists...");
 		// table = ClientRegister.getInstance().getCustomer();
@@ -118,7 +124,7 @@ public class FeerboxDB {
 		statement.executeUpdate(sql);
 	}
 
-	protected static void createCleanersTableIfNotExists() throws SQLException {
+	private static void createCleanersTableIfNotExists() throws SQLException {
 		Statement statement = connection.createStatement();
 		// logger.debug("Creating table if not exists...");
 		// table = ClientRegister.getInstance().getCustomer();
@@ -127,7 +133,9 @@ public class FeerboxDB {
 		statement.executeUpdate(sql);
 	}
 
-	protected static void createStatusTableIfNotExists(Statement statement) throws SQLException {
+	private static void createStatusTableIfNotExists() throws SQLException {
+		Statement statement = connection.createStatement();
+		statement.setQueryTimeout(30); // set timeout to 30 sec.		
 		// logger.debug("Creating table if not exists...");
 		// table = ClientRegister.getInstance().getCustomer();
 		String sql = "create table if not exists Status (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, reference varchar, internet varchar, upload integer)";
@@ -135,7 +143,9 @@ public class FeerboxDB {
 		statement.executeUpdate(sql);
 	}
 
-	protected static void createCommandsTableIfNotExists(Statement statement) throws SQLException {
+	private static void createCommandsTableIfNotExists() throws SQLException {
+		Statement statement = connection.createStatement();
+		statement.setQueryTimeout(30); // set timeout to 30 sec.		
 		// logger.debug("Creating table if not exists...");
 		// table = ClientRegister.getInstance().getCustomer();
 		String sql = "create table if not exists Commands (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, command varchar, output varchar, startTime timestamp, finishTime timestamp, serverId integer, upload integer, serverCreationTime timestamp, restart integer, parameter varchar)";
@@ -143,7 +153,7 @@ public class FeerboxDB {
 		statement.executeUpdate(sql);
 	}
 
-	protected static void createAlertsTableIfNotExists() throws SQLException {
+	private static void createAlertsTableIfNotExists() throws SQLException {
 		Statement statement = connection.createStatement();
 		statement.setQueryTimeout(30); // set timeout to 30 sec.
 		// severity, generator, threshold, name, reference, time, type, weekday
@@ -152,7 +162,7 @@ public class FeerboxDB {
 		statement.executeUpdate(sql);
 	}
 
-	protected static void createAlertConfigurationTableIfNotExists() throws SQLException {
+	private static void createAlertConfigurationTableIfNotExists() throws SQLException {
 		Statement statement = connection.createStatement();
 		statement.setQueryTimeout(30); // set timeout to 30 sec.
 		// severity, generator, threshold, name, reference, time, type, weekday
@@ -161,7 +171,7 @@ public class FeerboxDB {
 		statement.executeUpdate(sql);
 	}
 
-	protected static void createAlertTimeTablesTableIfNotExists() throws SQLException {
+	private static void createAlertTimeTablesTableIfNotExists() throws SQLException {
 		Statement statement = connection.createStatement();
 		statement.setQueryTimeout(30); // set timeout to 30 sec.
 		String sql = "create table if not exists alerttimetables (id_alertconfiguration INTEGER, startingtime timestamp, closingtime timestamp, weekday integer, threshold integer)";
@@ -169,7 +179,7 @@ public class FeerboxDB {
 		statement.executeUpdate(sql);
 	}
 
-	protected static void createAlertThresholdsTableIfNotExists() throws SQLException {
+	private static void createAlertThresholdsTableIfNotExists() throws SQLException {
 		Statement statement = connection.createStatement();
 		statement.setQueryTimeout(30); // set timeout to 30 sec.
 		String sql = "create table if not exists alertthresholds (id_alertconfiguration INTEGER, threshold integer, type varchar, weekday integer)";
