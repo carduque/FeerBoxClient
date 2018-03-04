@@ -9,6 +9,8 @@ public class LedService {
 	private static GpioPinDigitalOutput Led4 = null;
 	private static GpioPinDigitalOutput Led5 = null;
 	private static GpioPinDigitalOutput LedPower = null;
+	private static GpioPinDigitalOutput Led6 = null;
+	private static GpioPinDigitalOutput Led7 = null;
 	
 	
 	public static GpioPinDigitalOutput getLed1() {
@@ -60,6 +62,18 @@ public class LedService {
 	}
 	public static GpioPinDigitalOutput getLedPower() {
 		return LedPower;
+	}
+	public static GpioPinDigitalOutput getLed6() {
+		return Led6;
+	}
+	public static void setLed6(GpioPinDigitalOutput led6) {
+		Led6 = led6;
+	}
+	public static GpioPinDigitalOutput getLed7() {
+		return Led7;
+	}
+	public static void setLed7(GpioPinDigitalOutput led7) {
+		Led7 = led7;
 	}
 	
 	

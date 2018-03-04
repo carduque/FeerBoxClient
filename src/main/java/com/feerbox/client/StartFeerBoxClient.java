@@ -34,7 +34,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.5.9.2";
+	public static final String version = "1.6.0";
 	public static final String path_conf = "/opt/FeerBoxClient/FeerBoxClient/config/";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
@@ -215,6 +215,10 @@ public class StartFeerBoxClient {
 		//ButtonListener buttonListener5 = new ButtonListener(ButtonService.getButton5(), LedService.getLed5(), 5);
 		ButtonListenerAndReboot buttonListener5 = new ButtonListenerAndReboot(ButtonService.getButton5(), LedService.getLed5(), 5);
 		ButtonService.getButton5().addListener(buttonListener5);
+		ButtonListener buttonListener6 = new ButtonListener(ButtonService.getButton6(), LedService.getLed6(), 6);
+		ButtonService.getButton6().addListener(buttonListener6);
+		ButtonListener buttonListener7 = new ButtonListener(ButtonService.getButton7(), LedService.getLed7(), 7);
+		ButtonService.getButton7().addListener(buttonListener7);
 	}
 
 
@@ -224,6 +228,8 @@ public class StartFeerBoxClient {
 		LedService.getLed3().pulse(500, true);
 		LedService.getLed4().pulse(500, true);
 		LedService.getLed5().pulse(500, true);
+		LedService.getLed6().pulse(500, true);
+		LedService.getLed7().pulse(500, true);
 		try {
 			SaveAnswerService.tryConnection();
 		} catch (SaveAnswerError e) {
@@ -234,11 +240,14 @@ public class StartFeerBoxClient {
 		} catch (InterruptedException e) {
 			logger.debug("InterruptedException", e);
 		}
+		LedService.getLed1().pulse(2000, false);
 		LedService.getLed2().pulse(2000, false);
 		LedService.getLed3().pulse(2000, false);
 		LedService.getLed4().pulse(2000, false);
 		LedService.getLed5().pulse(2000, false);
-		LedService.getLed1().pulse(2000, false);
+		LedService.getLed6().pulse(2000, false);
+		LedService.getLed7().pulse(2000, false);
+		
 	}
 
 
@@ -270,6 +279,19 @@ public class StartFeerBoxClient {
 		LedService.getLed5().setShutdownOptions(true, PinState.LOW);
 		
 		LedService.setLedPower(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_23, "LEDPOWER", PinState.LOW)); //13
+		
+		//DONA
+		ButtonService.setButton6(gpio.provisionDigitalInputPin(RaspiPin.GPIO_13, PinPullResistance.PULL_DOWN)); //21 
+		ButtonService.getButton6().setDebounce(700);
+		ButtonService.getButton6().setShutdownOptions(true);
+		LedService.setLed6(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_14, "LED6", PinState.LOW)); //23
+		LedService.getLed6().setShutdownOptions(true, PinState.LOW);
+		//HOME
+		ButtonService.setButton7(gpio.provisionDigitalInputPin(RaspiPin.GPIO_10, PinPullResistance.PULL_DOWN)); //24 
+		ButtonService.getButton7().setDebounce(700);
+		ButtonService.getButton7().setShutdownOptions(true);
+		LedService.setLed7(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_11, "LED7", PinState.LOW)); //26
+		LedService.getLed7().setShutdownOptions(true, PinState.LOW);
 	}
 	
 

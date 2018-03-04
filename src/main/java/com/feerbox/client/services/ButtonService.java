@@ -8,6 +8,8 @@ public class ButtonService {
 	private static GpioPinDigitalInput Button3 = null;
 	private static GpioPinDigitalInput Button4 = null;
 	private static GpioPinDigitalInput Button5 = null;
+	private static GpioPinDigitalInput Button6 = null;
+	private static GpioPinDigitalInput Button7 = null;
 	
 	public static GpioPinDigitalInput getButton1() {
 		return Button1;
@@ -38,6 +40,18 @@ public class ButtonService {
 	}
 	public static void setButton5(GpioPinDigitalInput button5) {
 		Button5 = button5;
+	}
+	public static GpioPinDigitalInput getButton6() {
+		return Button6;
+	}
+	public static void setButton6(GpioPinDigitalInput button6) {
+		Button6 = button6;
+	}
+	public static GpioPinDigitalInput getButton7() {
+		return Button7;
+	}
+	public static void setButton7(GpioPinDigitalInput button7) {
+		Button7 = button7;
 	}
 
 	
