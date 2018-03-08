@@ -204,6 +204,16 @@ public class ClientRegister {
 			}
 			logger.info("Property "+key+" added with value "+value);
 		}
+		if(key.equals("monitoring_internet")){
+			value = "false";
+			configuration.setProperty(key, value);
+			try {
+				configuration.save();
+			} catch (ConfigurationException e) {
+				logger.error("Storing config file: "+e.getMessage());
+			}
+			logger.info("Property "+key+" added with value "+value);
+		}
 		return value;
 	}
 
@@ -539,6 +549,16 @@ public class ClientRegister {
 		boolean out = false;
 		try {
 			out = Boolean.parseBoolean(getProperty("monitoring_alerts"));
+		} catch (Exception e) {
+			logger.error("Error: "+e.getMessage());
+		}
+		return out;
+	}
+
+	public boolean getMonitorInternetConnection() {
+		boolean out = false;
+		try {
+			out = Boolean.parseBoolean(getProperty("monitoring_internet"));
 		} catch (Exception e) {
 			logger.error("Error: "+e.getMessage());
 		}

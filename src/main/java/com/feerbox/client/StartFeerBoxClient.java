@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Timer;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +21,7 @@ import com.feerbox.client.registers.CounterPeopleRegister;
 import com.feerbox.client.registers.DataAlertsRegister;
 import com.feerbox.client.registers.InformationServerRegister;
 import com.feerbox.client.registers.MACDetection;
+import com.feerbox.client.registers.MonitorInternetConnectionRegister;
 import com.feerbox.client.registers.NFCReader;
 import com.feerbox.client.registers.RestartEveryDayRegister;
 import com.feerbox.client.registers.StatusRegister;
@@ -34,7 +36,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.6.0";
+	public static final String version = "1.6.1";
 	public static final String path_conf = "/opt/FeerBoxClient/FeerBoxClient/config/";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
@@ -66,6 +68,7 @@ public class StartFeerBoxClient {
         // create and register gpio pin listener
         registerButtonListeners();
         restartEveryDay();
+        MonitorInternetConnection();
         
         // keep program running until user aborts (CTRL-C)
         for (;;) {
@@ -76,6 +79,16 @@ public class StartFeerBoxClient {
         // (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
         // gpio.shutdown();   <--- implement this method call if you wish to terminate the Pi4J GPIO controller        
     }
+
+
+	private static void MonitorInternetConnection() {
+		if(ClientRegister.getInstance().getMonitorInternetConnection()){
+			MonitorInternetConnectionRegister restartEveryDayRegister = new MonitorInternetConnectionRegister();
+			Timer timer = new Timer();
+			timer.schedule(restartEveryDayRegister, new Date(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.MINUTES)); // period: 1 minute
+			restartEveryDayRegister.setTimer(timer);
+		}
+	}
 
 
 	private static void restartEveryDay() {
@@ -280,13 +293,13 @@ public class StartFeerBoxClient {
 		
 		LedService.setLedPower(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_23, "LEDPOWER", PinState.LOW)); //13
 		
-		//DONA
+		//HOME
 		ButtonService.setButton6(gpio.provisionDigitalInputPin(RaspiPin.GPIO_13, PinPullResistance.PULL_DOWN)); //21 
 		ButtonService.getButton6().setDebounce(700);
 		ButtonService.getButton6().setShutdownOptions(true);
 		LedService.setLed6(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_14, "LED6", PinState.LOW)); //23
 		LedService.getLed6().setShutdownOptions(true, PinState.LOW);
-		//HOME
+		//DONA
 		ButtonService.setButton7(gpio.provisionDigitalInputPin(RaspiPin.GPIO_10, PinPullResistance.PULL_DOWN)); //24 
 		ButtonService.getButton7().setDebounce(700);
 		ButtonService.getButton7().setShutdownOptions(true);
