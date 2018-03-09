@@ -20,6 +20,12 @@ public class MonitorInternetConnectionRegister extends TimerTask {
 		}
 		else{
 			logger.warn("Internet connection NOT ALIVE");
+			String line = executeCommandLine("ifup gprs");
+			if(line!=null && "".equals(line)){
+				logger.info("GPRS interface restarted succesfully");
+			} else {
+				logger.info("GPRS interface was already up or there is an issue with it: "+line);
+			}
 		}
 	}
 	
