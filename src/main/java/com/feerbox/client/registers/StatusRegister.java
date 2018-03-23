@@ -319,10 +319,16 @@ public class StatusRegister extends Register {
 		        	this.ip = addr.getHostAddress();
 		        	out = "true";
 		        }
+		        if(ClientRegister.getInstance().getUSB3G()){
+			        if((this.ip==null || "".equals(this.ip.trim())) && iface.getName().toUpperCase().contains("PPP0")){
+			        	this.ip = addr.getHostAddress();
+			        	out = "true";
+			        }
+		        }
 		    }
 		}
 		if("true".equals(out) && !ClientRegister.getInstance().getInternet()){
-			logger.info("WLAN detected, but no internet on ClientRegister");
+			logger.info("WLAN-GPRS detected, but no internet on ClientRegister");
 		}
 		return out;
 	}

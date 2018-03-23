@@ -138,6 +138,14 @@ public class AliveRegister extends Register {
 			}
 		} else {
 			InternetAccess.getInstance().setAccess(false);
+			if(ClientRegister.getInstance().getUSB3G()){
+				String line2 = executeCommandLine("sudo ifup gprs");
+				if(line2!=null && "".equals(line)){
+					logger.info("GPRS interface restarted succesfully");
+				} else {
+					logger.warn("GPRS interface was already up or there is an issue with it: "+line2);
+				}
+			}
 		}
 	}
 
