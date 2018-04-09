@@ -36,7 +36,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.6.0.2";
+	public static final String version = "1.6.0.3";
 	public static final String path_conf = "/opt/FeerBoxClient/FeerBoxClient/config/";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
@@ -245,21 +245,22 @@ public class StartFeerBoxClient {
 		LedService.getLed7().pulse(500, true);
 		try {
 			SaveAnswerService.tryConnection();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				logger.debug("InterruptedException", e);
+			}
+			LedService.getLed1().pulse(2000, false);
+			LedService.getLed2().pulse(2000, false);
+			LedService.getLed3().pulse(2000, false);
+			LedService.getLed4().pulse(2000, false);
+			LedService.getLed5().pulse(2000, false);
+			LedService.getLed6().pulse(2000, false);
+			LedService.getLed7().pulse(2000, false);
 		} catch (SaveAnswerError e) {
-			LedService.getLed3().pulse(2000, true);
+			LedService.getLed3().pulse(2000, false);
+			LedService.getLed4().pulse(2000, false);
 		}
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			logger.debug("InterruptedException", e);
-		}
-		LedService.getLed1().pulse(2000, false);
-		LedService.getLed2().pulse(2000, false);
-		LedService.getLed3().pulse(2000, false);
-		LedService.getLed4().pulse(2000, false);
-		LedService.getLed5().pulse(2000, false);
-		LedService.getLed6().pulse(2000, false);
-		LedService.getLed7().pulse(2000, false);
 		
 	}
 

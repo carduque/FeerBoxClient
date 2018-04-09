@@ -95,21 +95,28 @@ public class SaveAnswerService{
 	}
 	
 	public static void tryConnection() throws SaveAnswerError {
+		InputStream stream = null;
+		HttpURLConnection myURLConnection = null;
 		try {
 			URL myURL = new URL(ClientRegister.getInstance().getEnvironment());
-			HttpURLConnection myURLConnection = (HttpURLConnection) myURL.openConnection();
+			myURLConnection = (HttpURLConnection) myURL.openConnection();
 			myURLConnection.setConnectTimeout(5000);
 			myURLConnection.setReadTimeout(5000);
 			myURLConnection.setRequestProperty("Content-Length", "1000");
-			InputStream stream = myURLConnection.getInputStream();
-			stream.close();
-			myURLConnection.disconnect();
+			stream = myURLConnection.getInputStream();
 		} catch (MalformedURLException e) {
 			throw new SaveAnswerError(e);
 		} catch (IOException e) {
 			throw new SaveAnswerError(e);
 		}
-		
+		finally{
+			try {
+				if(stream!=null) stream.close();
+			} catch (IOException e) {
+				throw new SaveAnswerError(e);
+			}
+			if(myURLConnection!=null) myURLConnection.disconnect();
+		}
 	}
 
 	public static void saveIP(String iface, String ip) {
