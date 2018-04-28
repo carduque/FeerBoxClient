@@ -37,7 +37,8 @@ public class InformationServerRegister extends Thread {
 				uploadAnswers();
 				uploadCleaningService();
 				uploadMACs();
-				uploadBulkyCounterPeople();
+				//uploadBulkyCounterPeople();
+				uploadCounterPeople();
 				uploadCommandsOutput();
 				uploadWeather();
 				uploadAlerts();
