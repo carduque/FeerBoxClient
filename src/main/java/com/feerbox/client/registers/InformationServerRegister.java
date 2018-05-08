@@ -27,7 +27,7 @@ import com.feerbox.client.services.SaveAnswerService;
 import com.feerbox.client.services.WeatherService;
 
 public class InformationServerRegister extends Thread {
-	private static final int INTERVAL_FAST_UPDATE = 10;
+	private static final int INTERVAL_FAST_UPDATE = 60;
 	final static Logger logger = Logger.getLogger(InformationServerRegister.class);
 	private ScheduledFuture<?> future;
 	private boolean normalScheduler = true;
@@ -37,7 +37,7 @@ public class InformationServerRegister extends Thread {
 				uploadAnswers();
 				uploadCleaningService();
 				uploadMACs();
-				//uploadBulkyCounterPeople();
+				//uploadSafeBulkyCounterPeople();
 				uploadCounterPeople();
 				uploadCommandsOutput();
 				uploadWeather();
@@ -107,6 +107,49 @@ public class InformationServerRegister extends Thread {
 			}
 		}
 	}
+	
+	private void uploadSafeBulkyCounterPeople() {
+		if(ClientRegister.getInstance().getCounterPeopleEnabled()){
+			List<CounterPeople> list = CounterPeopleService.notUploadedBulky();
+			if(list!=null && list.size()!=0){
+				int size = list.size();
+				int total = CounterPeopleService.notUploadedTotal();
+				activeFastUpdate(total);
+				logger.debug("Going to update CounterPeople "+size+"/"+total);
+				logger.debug("ids: "+getIds(list));
+				String ok = CounterPeopleService.saveServerBulky(list);
+				if(ok!=null && "TIMEOUT".equals(ok)){
+					logger.error("Error timeout on bulky, back to normal update");
+					activeFastUpdate(0);
+				}
+				else if(ok!=null && "NOT_CREATED".equals(ok)){
+					logger.error("Error not created on bulky, back to normal update");
+					activeFastUpdate(0);
+				}
+				else
+				if(ok!=null && !"".equals(ok) && ok.length()>0){
+					int length = ok.length();
+					ok = ok.substring(0, length-1); //last comma has to be out
+					logger.debug("Upload to Internet "+size+"? "+(StringUtils.countMatches(ok, ",")+1));
+					CounterPeopleService.uploadList(ok);
+				} else{
+					logger.debug("Error uploading to server: "+ok+" , back to normal update");
+					activeFastUpdate(0);
+				}
+			}
+			else{
+				activeFastUpdate(0);
+			}
+		}
+	}
+	
+	private String getIds(List<CounterPeople> list) {
+		String out = "";
+		for(CounterPeople counterPeople: list){
+			out += counterPeople.getId()+",";
+		}
+		return out;
+	}
 	private void uploadBulkyCounterPeople() {
 		if(ClientRegister.getInstance().getCounterPeopleEnabled()){
 			List<CounterPeople> list = CounterPeopleService.notUploadedBulky();
@@ -166,6 +209,8 @@ public class InformationServerRegister extends Thread {
 				logger.info("Back to normal update time rate");
 				normalScheduler = true;
 				future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(this, 1, 1, TimeUnit.MINUTES);
+			} else {
+				logger.warn("Conditions not supported!");
 			}
 		}
 	}

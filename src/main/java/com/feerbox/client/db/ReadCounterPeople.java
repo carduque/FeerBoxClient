@@ -55,6 +55,53 @@ public class ReadCounterPeople extends FeerboxDB {
 		}
 		return counterPeoples;
 	}
+	
+	public static List<CounterPeople> notUploadSafe(int limit) {
+		Statement statement = null;
+		List<CounterPeople> counterPeoples = new ArrayList<CounterPeople>();
+		// create a database connection
+		Connection con = getConnection();
+		try {
+			con.setAutoCommit(false);
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+			// statement.executeUpdate("drop table if exists person");
+			String ids = "";
+			ResultSet rs = statement.executeQuery("select id, time, distance, type, reference, upload from counterPeople where upload=0 order by id asc limit "+limit);
+			while (rs.next()) {
+				CounterPeople counterPeople = new CounterPeople();
+				counterPeople.setId(rs.getLong("id"));
+				String time = rs.getString("time");
+				counterPeople.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(time));
+				counterPeople.setDistance(rs.getDouble("distance"));
+				counterPeople.setType(CounterPeople.Type.valueOf(rs.getString("type")));
+				counterPeople.setFeerBoxReference(rs.getString("reference"));
+				counterPeople.setUpload(rs.getInt("upload")==1); //1: true - 0: false
+				
+				ids+=counterPeople.getId()+",";
+				counterPeoples.add(counterPeople);
+			}
+			ids = ids.substring(0, ids.length() - 1); //Remove last comma
+			statement.executeUpdate("update CounterPeople set upload=2 where id in ("+ids+")");
+			con.commit();
+		} catch (SQLException e) {
+			logger.error("SQLException", e);
+			counterPeoples = null;
+		} catch (ParseException e) {
+			logger.error("ParseException", e);
+			counterPeoples = null;
+		} finally {
+			try {
+				con.setAutoCommit(true);
+				statement.close();
+			} catch (SQLException e) {
+				logger.error("SQLException", e);
+				counterPeoples = null;
+			}
+		}
+		return counterPeoples;
+	}
 
 	public static int notUpload() {
 		Statement statement = null;
