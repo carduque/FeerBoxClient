@@ -25,12 +25,13 @@ import com.google.gson.reflect.TypeToken;
 
 
 public class CounterPeopleService {
-	public static final int MAX_BULKY = 500;
+	public static final int MAX_BULKY = 5;
+	public static final int MAX_SAFE_BULKY = 10;
 	private static int TIMEOUT_VALUE = 600000;
 	protected final static Logger logger = Logger.getLogger(CounterPeopleService.class);
 
 	public static List<CounterPeople> notUploaded() {
-		return ReadCounterPeople.notUpload(100);
+		return ReadCounterPeople.notUpload(100, 1);
 	}
 
 	public static boolean saveServer(CounterPeople counterPeople) {
@@ -90,58 +91,19 @@ public class CounterPeopleService {
 	}
 	
 	public static String saveServerBulky(List<CounterPeople> counterPeoples) {
-		String ok = "";
+		String ok = null;
 		OutputStream os = null;
 		HttpURLConnection conn = null;
 		try {
 			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/counterpeople/addbulky");
-			conn = (HttpURLConnection) myURL.openConnection();
-			
-			conn.setConnectTimeout(TIMEOUT_VALUE);
-			conn.setReadTimeout(TIMEOUT_VALUE);
-			conn.setRequestProperty("Content-Type", "application/json");
-			conn.setDoOutput(true);
-			conn.setRequestMethod("POST");
-			
-			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSS").create();
-			Type listType = new TypeToken<List<CounterPeople>>() {}.getType();
-			String json = gson.toJson(counterPeoples, listType);
-			conn.setRequestProperty("Content-Length", json.length()+"");
-			//conn.connect();
-			os = conn.getOutputStream();
-			os.write(json.toString().getBytes());
-			os.flush();
-			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
-				logger.info("Failed CounterPeopleService/add : HTTP error code : "+ conn.getResponseCode());
-				logger.info("Error stream: "+conn.getErrorStream());
-				ok = "NOT_CREATED";
-			}
-			else{
-				//[{"serverId":406,"save":"OK"},{"serverId":407,"save":"OK"}]
-				BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
-				StringBuilder responseStrBuilder = new StringBuilder();
-				String inputStr;
-				while ((inputStr = br.readLine()) != null){
-				    responseStrBuilder.append(inputStr);
-				}
-				Type listPost= new TypeToken<List<Post>>() {}.getType();
-				List<Post> posts = gson.fromJson(responseStrBuilder.toString(), listPost);
-				for(Post post : posts){
-					if(post.save!=null && "OK".equals(post.save)){
-						ok+=post.clientId+",";
-					}
-				}
-			}
+			ok = sendServer(myURL, conn, os, counterPeoples);
 			
 		} catch (MalformedURLException e) {
-			logger.debug("MalformedURLException", e);
-			ok = "";
+			logger.error("MalformedURLException", e);
 		} catch (SocketTimeoutException e){
-			logger.debug("Error Timeout", e);
-			ok = "TIMEOUT";
+			logger.error("Error Timeout", e);
 		} catch (IOException e) {
-			logger.debug("IOException", e);
-			ok = "";
+			logger.error("IOException", e);
 		}
 		finally {
 			try {
@@ -156,8 +118,51 @@ public class CounterPeopleService {
 		return ok;
 	}
 
+	private static String sendServer(URL myURL, HttpURLConnection conn, OutputStream os, List<CounterPeople> counterPeoples) throws IOException {
+		String ok = null;
+		conn = (HttpURLConnection) myURL.openConnection();
+		
+		conn.setConnectTimeout(TIMEOUT_VALUE);
+		conn.setReadTimeout(TIMEOUT_VALUE);
+		conn.setRequestProperty("Content-Type", "application/json");
+		conn.setDoOutput(true);
+		conn.setRequestMethod("POST");
+		
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSS").create();
+		Type listType = new TypeToken<List<CounterPeople>>() {}.getType();
+		String json = gson.toJson(counterPeoples, listType);
+		conn.setRequestProperty("Content-Length", json.length()+"");
+		//conn.connect();
+		os = conn.getOutputStream();
+		os.write(json.toString().getBytes());
+		os.flush();
+		if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+			logger.warn("Failed CounterPeopleService/add : HTTP error code : "+ conn.getResponseCode());
+			logger.warn("Error stream: "+conn.getErrorStream());
+			ok = null;
+		}
+		else{
+			ok = "";
+			//[{"serverId":406,"save":"OK"},{"serverId":407,"save":"OK"}]
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+			StringBuilder responseStrBuilder = new StringBuilder();
+			String inputStr;
+			while ((inputStr = br.readLine()) != null){
+			    responseStrBuilder.append(inputStr);
+			}
+			Type listPost= new TypeToken<List<Post>>() {}.getType();
+			List<Post> posts = gson.fromJson(responseStrBuilder.toString(), listPost);
+			for(Post post : posts){
+				if(post.save!=null && "OK".equals(post.save)){
+					ok+=post.clientId+",";
+				}
+			}
+		}
+		return ok;
+	}
+
 	public static List<CounterPeople> notUploadedBulky() {
-		return ReadCounterPeople.notUpload(MAX_BULKY);
+		return ReadCounterPeople.notUploadSafe(MAX_BULKY);
 	}
 
 	public static void uploadList(String ids) {
@@ -175,6 +180,38 @@ public class CounterPeopleService {
 
 	public static int notUploadedTotal() {
 		return ReadCounterPeople.notUpload();
+	}
+
+	public static List<CounterPeople> failedUploadedBulky() {
+		return ReadCounterPeople.notUpload(MAX_SAFE_BULKY, 2);
+	}
+
+	public static String saveFailedServerBulky(List<CounterPeople> counterPeoples) {
+		String ok = null;
+		OutputStream os = null;
+		HttpURLConnection conn = null;
+		try {
+			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/counterpeople/addSafeBulky");
+			ok = sendServer(myURL, conn, os, counterPeoples);
+			
+		} catch (MalformedURLException e) {
+			logger.error("MalformedURLException", e);
+		} catch (SocketTimeoutException e){
+			logger.error("Error Timeout", e);
+		} catch (IOException e) {
+			logger.error("IOException", e);
+		}
+		finally {
+			try {
+				if(os!=null){
+					os.close();
+				}
+			} catch (IOException e) {
+				logger.error( "IOException", e );
+			}
+			if(conn!=null) conn.disconnect();
+		}
+		return ok;
 	}
 
 }

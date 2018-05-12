@@ -45,6 +45,10 @@ public class SaveCounterPeople extends FeerboxDB {
 	}
 	
 	public static void upload(CounterPeople counterPeople) {
+		upload(counterPeople, 1);
+	}
+	
+	public static void upload(CounterPeople counterPeople, int upload) {
 		logger.debug("Upload CounterPeople "+counterPeople.getId());
 		Statement statement = null;
 		try {
@@ -54,7 +58,7 @@ public class SaveCounterPeople extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			statement.executeUpdate("update CounterPeople set upload=1 where id="+counterPeople.getId());
+			statement.executeUpdate("update CounterPeople set upload="+upload+" where id="+counterPeople.getId());
 		} catch (SQLException e) {
 			logger.error("SQLException", e);
 		} finally {
