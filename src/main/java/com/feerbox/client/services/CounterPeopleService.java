@@ -25,8 +25,8 @@ import com.google.gson.reflect.TypeToken;
 
 
 public class CounterPeopleService {
-	public static final int MAX_BULKY = 5;
-	public static final int MAX_SAFE_BULKY = 10;
+	public static final int MAX_BULKY = 400;
+	public static final int MAX_SAFE_BULKY = 100;
 	private static int TIMEOUT_VALUE = 600000;
 	protected final static Logger logger = Logger.getLogger(CounterPeopleService.class);
 
