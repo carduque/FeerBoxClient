@@ -132,7 +132,7 @@ public class StatusRegister extends Register {
 			}
 			checkStatusTime();
 		}catch(Throwable  t){
-			logger.error("Exception in StatusRegister");
+			logger.error("Exception in StatusRegister", t);
 		}
 	}
 	
