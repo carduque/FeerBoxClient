@@ -142,7 +142,7 @@ public class StatusRegister extends Register {
 		Weather weather = WeatherService.getLastSaved();
 		if(weather!=null){
 			Date last = weather.getTime();
-			out = df.format(last);
+			if(last!=null) out = df.format(last);
 		}
 		return out;
 	}
