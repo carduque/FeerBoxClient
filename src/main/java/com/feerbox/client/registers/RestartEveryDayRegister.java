@@ -1,10 +1,20 @@
 package com.feerbox.client.registers;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
+
+import com.feerbox.client.model.Command;
+import com.feerbox.client.services.CommandService;
+import com.google.gson.JsonObject;
 
 public class RestartEveryDayRegister extends TimerTask {
 	final static Logger logger = Logger.getLogger(RestartEveryDayRegister.class);
@@ -14,6 +24,8 @@ public class RestartEveryDayRegister extends TimerTask {
 	@Override
 	public void run() {
 		try {
+			//sendYesterdayLog();
+			//sendConfiguration();
 			ProcessBuilder reboot = new ProcessBuilder("/bin/bash", "restart.sh");
 			reboot.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts"));
 			logger.info("Scheduled restarted as planned");
@@ -22,6 +34,38 @@ public class RestartEveryDayRegister extends TimerTask {
 		} catch (Throwable  t) {
 			logger.error("Error in RestartEveryDayRegister");
 		}
+	}
+
+
+	private void sendConfiguration() {
+		Command command = new Command();
+		command.setCommand("cat-config.sh");
+		command.setRestart(false);
+		command.setStartTime(new Date());
+		command.setOutput(executeUnsoCommand(command));
+		command.setFinishTime(new Date());
+		sendUnsoCommand(command);
+	}
+
+
+	private void sendYesterdayLog() {
+		Command command = new Command();
+		command.setCommand("cat-yesterday-log.sh");
+		command.setRestart(false);
+		command.setStartTime(new Date());
+		command.setOutput(executeUnsoCommand(command));
+		command.setFinishTime(new Date());
+		sendUnsoCommand(command);
+	}
+
+
+	private String executeUnsoCommand(Command command) {
+		return CommandExecutor.executeCommand(command);
+	}
+
+
+	private void sendUnsoCommand(Command command) {
+		CommandService.sendUnsoCommand(command);
 	}
 
 

@@ -113,7 +113,7 @@ public class ReadCounterPeople extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			ResultSet rs = statement.executeQuery("select count(*) as total from counterPeople where upload=0");
+			ResultSet rs = statement.executeQuery("select count(*) as total from counterPeople where upload!=1");
 			while (rs.next()) {
 				total = rs.getInt("total");
 			}

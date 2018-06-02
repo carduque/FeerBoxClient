@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.feerbox.client.model.CounterPeople;
+import com.feerbox.client.registers.ClientRegister;
 
 public class SaveCounterPeople extends FeerboxDB {
 
@@ -41,6 +42,7 @@ public class SaveCounterPeople extends FeerboxDB {
 				logger.error("SQLException", e);
 			}
 		}
+		ClientRegister.getInstance().setLastCPSaved(counterPeople.getTime());
 		return id;
 	}
 	

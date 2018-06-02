@@ -27,6 +27,8 @@ public class ClientRegister {
 	private Date lastGetCommands;
 	private Date lastGetCleaners;
 	private Date lastExecuteCommand;
+	private Date lastCPSaved;
+	private Date lastWeatherSaved;
 
 	static
 	    {
@@ -583,6 +585,22 @@ public class ClientRegister {
 			logger.error("Error: "+e.getMessage());
 		}
 		return out;
+	}
+
+	public void setLastCPSaved(Date time) {
+		this.lastCPSaved = time;
+	}
+	
+	public Date getLastCPSaved() {
+		return lastCPSaved;
+	}
+
+	public Date getLastWeatherSaved() {
+		return lastWeatherSaved;
+	}
+
+	public void setLastWeatherSaved(Date lastWeatherSaved) {
+		this.lastWeatherSaved = lastWeatherSaved;
 	}
 
 }

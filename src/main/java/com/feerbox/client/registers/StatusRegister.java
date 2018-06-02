@@ -23,8 +23,13 @@ import org.apache.log4j.Logger;
 
 import com.feerbox.client.StartFeerBoxClient;
 import com.feerbox.client.db.ReadAnswer;
+import com.feerbox.client.db.ReadWeather;
+import com.feerbox.client.model.CounterPeople;
 import com.feerbox.client.model.Status;
+import com.feerbox.client.model.Weather;
+import com.feerbox.client.services.CounterPeopleService;
 import com.feerbox.client.services.StatusService;
+import com.feerbox.client.services.WeatherService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -52,27 +57,25 @@ public class StatusRegister extends Register {
 			try {
 				logger.debug("Going to update status for "+ClientRegister.getInstance().getReference());
 				status.setReference(ClientRegister.getInstance().getReference());
-				//logger.debug("Status1");
 				HashMap<String, String> info = new HashMap<String, String>();
-				info.put(Status.infoKeys.INTERNET.name(), getInternetStatus());
-				//logger.debug("Status2");
+				info.put(Status.infoKeys.INTERNET.name(), getInternetStatusPing());
 				info.put(Status.infoKeys.IP.name(), getIp());
-				//logger.debug("Status3");
 				info.put(Status.infoKeys.SW_VERSION.name(), getSoftwareVersion());
-				//logger.debug("Status4");
 				info.put(Status.infoKeys.LAST_ANSWER.name(), getLastAnswerTime());
-				//logger.debug("Status5");
-				info.put(Status.infoKeys.TIME_UP.name(), getTimeSystemUp2());
-				//logger.debug("Status6");
+				info.put(Status.infoKeys.LAST_CP.name(), getLastCPime());
+				info.put(Status.infoKeys.LAST_WEATHER.name(), getLastWeatherTime());
+				info.put(Status.infoKeys.TIME_UP.name(), getTimeSystemUp());
 				info.put(Status.infoKeys.SYSTEM_TIME.name(), getSystemTime());
 				info.put(Status.infoKeys.CommandExecutor.name(), getLastCommandExecutor());
 				info.put(Status.infoKeys.CommandQueue.name(), getLastGetCommands());
-				info.put(Status.infoKeys.PendingAnswersToUpload.name(), getPendingAnswersToUpload());
 				info.put(Status.infoKeys.CPU.name(), getCPU());
 				info.put(Status.infoKeys.FreeMemory.name(), getFreeMemory());
 				info.put(Status.infoKeys.MemoryProcess.name(), getMemoryProcess());
 				info.put(Status.infoKeys.JavaMemory.name(), getJavaMemory());
 				info.put(Status.infoKeys.AverageUptime.name(), getAverageUptime());
+				info.put(Status.infoKeys.PendingAnswersToUpload.name(), getPendingAnswersToUpload());
+				info.put(Status.infoKeys.PendingCPToUpload.name(), getPendingCP());
+				info.put(Status.infoKeys.PendingWeatherToUpload.name(), getPendingWeather());
 				//logger.debug("Status7");
 				status.setInfo(info);
 				
@@ -133,6 +136,31 @@ public class StatusRegister extends Register {
 		}
 	}
 	
+	private String getLastWeatherTime() {
+		String out = "";
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+		Weather weather = WeatherService.getLastSaved();
+		if(weather!=null){
+			Date last = weather.getTime();
+			out = df.format(last);
+		}
+		return out;
+	}
+	private String getLastCPime() {
+		String out = "";
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+		Date last = ClientRegister.getInstance().getLastCPSaved();
+		if(last!=null){
+			out = df.format(last);
+		}
+		return out;
+	}
+	private String getPendingWeather() {
+		return WeatherService.notUploadedTotal()+"";
+	}
+	private String getPendingCP() {
+		return CounterPeopleService.notUploadedTotal()+"";
+	}
 	private String getAverageUptime() {
 		return executeCommandLine("sudo tuptime | grep \"Average uptime:\" | awk '{print $3\" \"$4\" \"$5\" \"$6\" \"$7\" \"$8\" \"$9\" \"$10\" \"$11}'");
 	}
@@ -254,12 +282,12 @@ public class StatusRegister extends Register {
 
 	private String getTimeSystemUp() throws IOException {
 		String uptime = "";
-		String line =  executeCommandLine("uptime");
+		String line =  executeCommandLine("uptime -s");
         //07:33:54 up 11 min,  1 user,  load average: 1.14, 0.96, 0.55
         //16:30:34 up  6:40,  1 user,  load average: 0.01, 0.01, 0.00
         if (line != null) {
         	//logger.debug(line);
-            Pattern parse = Pattern.compile("((\\d+) days,)? (\\d+):(\\d+)");
+            /*Pattern parse = Pattern.compile("((\\d+) days,)? (\\d+):(\\d+)");
             Matcher matcher = parse.matcher(line);
             if (matcher.find()) {
                 String _days = matcher.group(2);
@@ -270,7 +298,8 @@ public class StatusRegister extends Register {
                 int minutes = _minutes != null ? Integer.parseInt(_minutes) : 0;
                 //uptime = (minutes * 60000) + (hours * 60000 * 60) + (days * 6000 * 60 * 24);
                 uptime = days + "d - "+hours+"h - "+minutes+"m";
-            }
+            }*/
+        	uptime=line;
         }
 		return uptime;
 	}
@@ -299,6 +328,14 @@ public class StatusRegister extends Register {
 
 	private String getSoftwareVersion() {
 		return StartFeerBoxClient.version;
+	}
+	
+	private String getInternetStatusPing(){
+		String line = executeCommandLine("ping -c 2 google.com | grep received | awk '{print $6}'");
+		if(line!=null && "0%".equals(line)){
+			return "true";
+		}
+		return "false";
 	}
 
 	private String getInternetStatus() throws SocketException, InterruptedException {

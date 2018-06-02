@@ -188,4 +188,49 @@ public class CommandService {
 		SaveCommand.update(command);
 	}
 
+	public static boolean sendUnsoCommand(Command command) {
+		boolean out = true;
+		HttpURLConnection conn = null;
+		OutputStream os = null;
+		try {
+			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/command/unso");
+			conn = (HttpURLConnection) myURL.openConnection();
+			//conn.setRequestProperty("Content-Length", "1000");
+			conn.setRequestProperty("Content-Type", "application/json");
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			JsonObject json = new JsonObject();
+			//json.addProperty("id", command.getServerId());
+			json.addProperty("reference", ClientRegister.getInstance().getReference());
+			json.addProperty("output", command.getOutput());
+			json.addProperty("startTime", command.getStartTimeFormatted());
+			json.addProperty("finishTime", command.getFinishTimeFormatted());
+			
+			os = conn.getOutputStream();
+			os.write(json.toString().getBytes());
+			os.flush();
+
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+				logger.error("Failed saving command to server: HTTP error code : "+ conn.getResponseCode());
+				out = false;
+			}
+			
+		} catch (MalformedURLException e) {
+			logger.error("MalformedURLException", e);
+		} catch (IOException e) {
+			logger.error("IOException", e);
+		}
+		finally {
+			try {
+				if(os!=null){
+					os.close();
+				}
+			} catch (IOException e) {
+				logger.error( "IOException", e );
+			}
+			if(conn!=null) conn.disconnect();
+		}
+		return out;
+	}
+
 }

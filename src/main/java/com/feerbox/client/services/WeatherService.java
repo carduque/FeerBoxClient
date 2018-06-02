@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import com.feerbox.client.db.ReadWeather;
 import com.feerbox.client.db.SaveWeather;
+import com.feerbox.client.model.CounterPeople;
 import com.feerbox.client.model.Weather;
 import com.feerbox.client.registers.ClientRegister;
 import com.google.gson.JsonObject;
@@ -91,5 +92,14 @@ public class WeatherService {
 	public static void uploaded(Weather weather) {
 		SaveWeather.uploaded(weather);
 	}
+
+	public static int notUploadedTotal() {
+		return ReadWeather.notUploadTotal();
+	}
+
+	public static Weather getLastSaved() {
+		return ReadWeather.getLastSaved();
+	}
+	
 
 }
