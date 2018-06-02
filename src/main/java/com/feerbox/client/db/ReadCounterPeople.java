@@ -82,9 +82,11 @@ public class ReadCounterPeople extends FeerboxDB {
 				ids+=counterPeople.getId()+",";
 				counterPeoples.add(counterPeople);
 			}
-			ids = ids.substring(0, ids.length() - 1); //Remove last comma
-			statement.executeUpdate("update CounterPeople set upload=2 where id in ("+ids+")");
-			con.commit();
+			if(counterPeoples.size()>0){
+				ids = ids.substring(0, ids.length() - 1); //Remove last comma
+				statement.executeUpdate("update CounterPeople set upload=2 where id in ("+ids+")");
+				con.commit();
+			}
 		} catch (SQLException e) {
 			logger.error("SQLException", e);
 			counterPeoples = null;
