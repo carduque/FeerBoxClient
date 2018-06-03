@@ -76,6 +76,7 @@ public class StatusRegister extends Register {
 				info.put(Status.infoKeys.PendingAnswersToUpload.name(), getPendingAnswersToUpload());
 				info.put(Status.infoKeys.PendingCPToUpload.name(), getPendingCP());
 				info.put(Status.infoKeys.PendingWeatherToUpload.name(), getPendingWeather());
+				info.put(Status.infoKeys.FreeDiskSpace.name(), getFreeDiskSpace());
 				//logger.debug("Status7");
 				status.setInfo(info);
 				
@@ -136,6 +137,9 @@ public class StatusRegister extends Register {
 		}
 	}
 	
+	private String getFreeDiskSpace() {
+		return executeCommandLine("df -P / | awk '/%/ {print 100 -$5 \"%\"}'");
+	}
 	private String getLastWeatherTime() {
 		String out = "";
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
