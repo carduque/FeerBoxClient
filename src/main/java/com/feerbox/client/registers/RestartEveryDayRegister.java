@@ -51,7 +51,7 @@ public class RestartEveryDayRegister extends TimerTask {
 		command.setParameter("");
 		command.setOutput(executeUnsoCommand(command));
 		command.setFinishTime(new Date());
-		sendUnsoCommand(command);
+		if(command.getOutput()!=null && !command.getOutput().equals("")) sendUnsoCommand(command);
 	}
 
 
