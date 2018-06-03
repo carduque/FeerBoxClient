@@ -203,6 +203,7 @@ public class CommandService {
 			//json.addProperty("id", command.getServerId());
 			json.addProperty("reference", ClientRegister.getInstance().getReference());
 			json.addProperty("output", command.getOutput());
+			json.addProperty("command", command.getCommand());
 			json.addProperty("startTime", command.getStartTimeFormatted());
 			json.addProperty("finishTime", command.getFinishTimeFormatted());
 			
