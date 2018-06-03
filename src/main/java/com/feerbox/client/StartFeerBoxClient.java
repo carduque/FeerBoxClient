@@ -38,7 +38,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.6.4";
+	public static final String version = "1.7.0";
 	public static final String path_conf = "/opt/FeerBoxClient/FeerBoxClient/config/";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
@@ -71,7 +71,7 @@ public class StartFeerBoxClient {
         registerButtonListeners();
         restartEveryDay();
         MonitorInternetConnection();
-        sendConfandLastLog();
+        
         
         // keep program running until user aborts (CTRL-C)
         for (;;) {
@@ -82,45 +82,6 @@ public class StartFeerBoxClient {
         // (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
         // gpio.shutdown();   <--- implement this method call if you wish to terminate the Pi4J GPIO controller        
     }
-
-
-	private static void sendConfandLastLog() {
-		sendYesterdayLog();
-		sendConfiguration();
-	}
-	
-	private static void sendConfiguration() {
-		Command command = new Command();
-		command.setCommand("cat-config.sh");
-		command.setRestart(false);
-		command.setStartTime(new Date());
-		command.setParameter("");
-		command.setOutput(executeUnsoCommand(command));
-		command.setFinishTime(new Date());
-		sendUnsoCommand(command);
-	}
-
-
-	private static void sendYesterdayLog() {
-		Command command = new Command();
-		command.setCommand("cat-yesterday-log.sh");
-		command.setRestart(false);
-		command.setStartTime(new Date());
-		command.setParameter("");
-		command.setOutput(executeUnsoCommand(command));
-		command.setFinishTime(new Date());
-		if(command.getOutput()!=null && !command.getOutput().equals("")) sendUnsoCommand(command);
-	}
-
-
-	private static String executeUnsoCommand(Command command) {
-		return CommandExecutor.executeCommand(command);
-	}
-
-
-	private static void sendUnsoCommand(Command command) {
-		CommandService.sendUnsoCommand(command);
-	}
 
 
 	private static void MonitorInternetConnection() {
