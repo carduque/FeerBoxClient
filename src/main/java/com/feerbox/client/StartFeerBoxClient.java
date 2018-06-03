@@ -99,8 +99,8 @@ public class StartFeerBoxClient {
 		today.set(Calendar.SECOND, 0);
 		RestartEveryDayRegister restartEveryDayRegister = new RestartEveryDayRegister();
 		Timer timer = new Timer();
-		timer.schedule(restartEveryDayRegister, new Date(), TimeUnit.MILLISECONDS.convert(3, TimeUnit.MINUTES)); // period: 1 day
-		//timer.schedule(restartEveryDayRegister, today.getTime(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)); // period: 1 day
+		//timer.schedule(restartEveryDayRegister, new Date(), TimeUnit.MILLISECONDS.convert(3, TimeUnit.MINUTES)); // period: 1 day
+		timer.schedule(restartEveryDayRegister, today.getTime(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)); // period: 1 day
 		restartEveryDayRegister.setTimer(timer);
 	}
 

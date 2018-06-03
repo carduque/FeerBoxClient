@@ -36,6 +36,7 @@ public class RestartEveryDayRegister extends TimerTask {
 		command.setCommand("cat-config.sh");
 		command.setRestart(false);
 		command.setStartTime(new Date());
+		command.setParameter("");
 		command.setOutput(executeUnsoCommand(command));
 		command.setFinishTime(new Date());
 		sendUnsoCommand(command);
@@ -47,6 +48,7 @@ public class RestartEveryDayRegister extends TimerTask {
 		command.setCommand("cat-yesterday-log.sh");
 		command.setRestart(false);
 		command.setStartTime(new Date());
+		command.setParameter("");
 		command.setOutput(executeUnsoCommand(command));
 		command.setFinishTime(new Date());
 		sendUnsoCommand(command);
