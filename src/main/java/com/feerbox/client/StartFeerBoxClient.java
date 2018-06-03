@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import com.feerbox.client.db.SaveAnswerError;
+import com.feerbox.client.model.Command;
 import com.feerbox.client.registers.AliveRegister;
 import com.feerbox.client.registers.CleanerRegister;
 import com.feerbox.client.registers.ClientRegister;
@@ -27,6 +28,7 @@ import com.feerbox.client.registers.RestartEveryDayRegister;
 import com.feerbox.client.registers.StatusRegister;
 import com.feerbox.client.registers.WeatherSensorRegister;
 import com.feerbox.client.services.ButtonService;
+import com.feerbox.client.services.CommandService;
 import com.feerbox.client.services.LedService;
 import com.feerbox.client.services.SaveAnswerService;
 import com.pi4j.io.gpio.GpioController;
@@ -69,6 +71,7 @@ public class StartFeerBoxClient {
         registerButtonListeners();
         restartEveryDay();
         MonitorInternetConnection();
+        sendConfandLastLog();
         
         // keep program running until user aborts (CTRL-C)
         for (;;) {
@@ -79,6 +82,45 @@ public class StartFeerBoxClient {
         // (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
         // gpio.shutdown();   <--- implement this method call if you wish to terminate the Pi4J GPIO controller        
     }
+
+
+	private static void sendConfandLastLog() {
+		sendYesterdayLog();
+		sendConfiguration();
+	}
+	
+	private static void sendConfiguration() {
+		Command command = new Command();
+		command.setCommand("cat-config.sh");
+		command.setRestart(false);
+		command.setStartTime(new Date());
+		command.setParameter("");
+		command.setOutput(executeUnsoCommand(command));
+		command.setFinishTime(new Date());
+		sendUnsoCommand(command);
+	}
+
+
+	private static void sendYesterdayLog() {
+		Command command = new Command();
+		command.setCommand("cat-yesterday-log.sh");
+		command.setRestart(false);
+		command.setStartTime(new Date());
+		command.setParameter("");
+		command.setOutput(executeUnsoCommand(command));
+		command.setFinishTime(new Date());
+		if(command.getOutput()!=null && !command.getOutput().equals("")) sendUnsoCommand(command);
+	}
+
+
+	private static String executeUnsoCommand(Command command) {
+		return CommandExecutor.executeCommand(command);
+	}
+
+
+	private static void sendUnsoCommand(Command command) {
+		CommandService.sendUnsoCommand(command);
+	}
 
 
 	private static void MonitorInternetConnection() {
@@ -99,7 +141,6 @@ public class StartFeerBoxClient {
 		today.set(Calendar.SECOND, 0);
 		RestartEveryDayRegister restartEveryDayRegister = new RestartEveryDayRegister();
 		Timer timer = new Timer();
-		//timer.schedule(restartEveryDayRegister, new Date(), TimeUnit.MILLISECONDS.convert(5, TimeUnit.MINUTES)); // period: 1 day
 		timer.schedule(restartEveryDayRegister, today.getTime(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)); // period: 1 day
 		restartEveryDayRegister.setTimer(timer);
 	}
