@@ -1,11 +1,6 @@
 package com.feerbox.client.registers;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -14,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import com.feerbox.client.model.Command;
 import com.feerbox.client.services.CommandService;
-import com.google.gson.JsonObject;
 
 public class RestartEveryDayRegister extends TimerTask {
 	final static Logger logger = Logger.getLogger(RestartEveryDayRegister.class);
@@ -24,8 +18,8 @@ public class RestartEveryDayRegister extends TimerTask {
 	@Override
 	public void run() {
 		try {
-			//sendYesterdayLog();
-			//sendConfiguration();
+			sendYesterdayLog();
+			sendConfiguration();
 			ProcessBuilder reboot = new ProcessBuilder("/bin/bash", "restart.sh");
 			reboot.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts"));
 			logger.info("Scheduled restarted as planned");
