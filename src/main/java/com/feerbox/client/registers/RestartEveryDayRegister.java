@@ -1,6 +1,8 @@
 package com.feerbox.client.registers;
 
 import java.io.File;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -49,7 +51,13 @@ public class RestartEveryDayRegister extends TimerTask {
 		command.setStartTime(new Date());
 		command.setParameter("");
 		command.setOutput(executeUnsoCommand(command));
-		command.setFinishTime(new Date());
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, -1);
+		calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+		command.setFinishTime(calendar.getTime());
 		sendUnsoCommand(command);
 	}
 
@@ -61,7 +69,13 @@ public class RestartEveryDayRegister extends TimerTask {
 		command.setStartTime(new Date());
 		command.setParameter("");
 		command.setOutput(executeUnsoCommand(command));
-		command.setFinishTime(new Date());
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, -1);
+		calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+		command.setFinishTime(calendar.getTime());
 		if(command.getOutput()!=null && !command.getOutput().equals("")) sendUnsoCommand(command);
 	}
 
