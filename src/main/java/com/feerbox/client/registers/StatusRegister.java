@@ -77,6 +77,7 @@ public class StatusRegister extends Register {
 				info.put(Status.infoKeys.PendingCPToUpload.name(), getPendingCP());
 				info.put(Status.infoKeys.PendingWeatherToUpload.name(), getPendingWeather());
 				info.put(Status.infoKeys.FreeDiskSpace.name(), getFreeDiskSpace());
+				info.put(Status.infoKeys.SSID_CONNECTED.name(), getSSID());
 				//logger.debug("Status7");
 				status.setInfo(info);
 				
@@ -137,6 +138,9 @@ public class StatusRegister extends Register {
 		}
 	}
 	
+	private String getSSID() {
+		return executeCommandLine("iwgetid -r");
+	}
 	private String getFreeDiskSpace() {
 		return executeCommandLine("df -P / | awk '/%/ {print 100 -$5 \"%\"}'");
 	}
