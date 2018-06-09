@@ -38,7 +38,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.7.1.2";
+	public static final String version = "1.7.1.3";
 	public static final String path_conf = "/opt/FeerBoxClient/FeerBoxClient/config/";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
@@ -59,6 +59,7 @@ public class StartFeerBoxClient {
         StartLedPower();
         StartInternetAccessThread();
         StartStatusThreat();
+        cleanCommandsUnderExecution();
         saveInformationServerThread();
         StartWifiDetectionThread();
         StartNFCReaderThreat();
@@ -83,6 +84,10 @@ public class StartFeerBoxClient {
         // gpio.shutdown();   <--- implement this method call if you wish to terminate the Pi4J GPIO controller        
     }
 	
+	private static void cleanCommandsUnderExecution() {
+		CommandService.cleanUnderExecution();
+	}
+
 	private static void sendConfandLastLog() {
 		if(!CommandService.wasExecutedToday("cat-config.sh")) sendYesterdayLog();
 		if(!CommandService.wasExecutedToday("cat-yesterday.sh")) sendConfiguration();

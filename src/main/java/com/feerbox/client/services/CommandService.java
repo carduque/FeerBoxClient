@@ -249,4 +249,8 @@ public class CommandService {
 		return false;
 	}
 
+	public static void cleanUnderExecution() {
+		SaveCommand.cleanUnderExecution();
+	}
+
 }
