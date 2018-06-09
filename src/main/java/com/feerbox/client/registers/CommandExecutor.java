@@ -32,6 +32,7 @@ public class CommandExecutor implements Runnable {
 				//logger.debug("Command: "+command);
 				executeCommand(command);
 			} else{
+				logger.info("Command is under execution");
 				if(CommandService.forceCleanQueue()){
 					//In case commands are hang
 					CommandService.cleanQueue();

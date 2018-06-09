@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -232,6 +233,20 @@ public class CommandService {
 			if(conn!=null) conn.disconnect();
 		}
 		return out;
+	}
+
+	public static boolean wasExecutedToday(String script) {
+		Command command = ReadCommand.getLastExecuted(script);
+		if(command!=null && command.getTime()!=null){
+			Calendar calendar = Calendar.getInstance();
+			//calendar.add(Calendar.DATE, -1);
+			calendar.set(Calendar.MILLISECOND, 0);
+	        calendar.set(Calendar.SECOND, 0);
+	        calendar.set(Calendar.MINUTE, 0);
+	        calendar.set(Calendar.HOUR_OF_DAY, 0);
+			if(command.getTime().after(calendar.getTime())) return true;
+		}
+		return false;
 	}
 
 }

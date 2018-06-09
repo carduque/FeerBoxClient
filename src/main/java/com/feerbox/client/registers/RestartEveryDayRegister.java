@@ -20,7 +20,6 @@ public class RestartEveryDayRegister extends TimerTask {
 	@Override
 	public void run() {
 		try {
-			sendConfandLastLog();
 			ProcessBuilder reboot = new ProcessBuilder("/bin/bash", "restart.sh");
 			reboot.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts"));
 			logger.info("Scheduled restarted as planned");
@@ -39,54 +38,5 @@ public class RestartEveryDayRegister extends TimerTask {
 		this.timer = timer;
 	}
 	
-	private static void sendConfandLastLog() {
-		sendYesterdayLog();
-		sendConfiguration();
-	}
-	
-	private static void sendConfiguration() {
-		Command command = new Command();
-		command.setCommand("cat-config.sh");
-		command.setRestart(false);
-		command.setStartTime(new Date());
-		command.setParameter("");
-		command.setOutput(executeUnsoCommand(command));
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DATE, -1);
-		calendar.set(Calendar.MILLISECOND, 0);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-		command.setFinishTime(calendar.getTime());
-		sendUnsoCommand(command);
-	}
-
-
-	private static void sendYesterdayLog() {
-		Command command = new Command();
-		command.setCommand("cat-yesterday-log.sh");
-		command.setRestart(false);
-		command.setStartTime(new Date());
-		command.setParameter("");
-		command.setOutput(executeUnsoCommand(command));
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DATE, -1);
-		calendar.set(Calendar.MILLISECOND, 0);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-		command.setFinishTime(calendar.getTime());
-		if(command.getOutput()!=null && !command.getOutput().equals("")) sendUnsoCommand(command);
-	}
-
-
-	private static String executeUnsoCommand(Command command) {
-		return CommandExecutor.executeCommand(command);
-	}
-
-
-	private static void sendUnsoCommand(Command command) {
-		CommandService.sendUnsoCommand(command);
-	}
 
 }

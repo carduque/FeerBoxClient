@@ -66,14 +66,20 @@ public class Command {
 		return df.format(time);
 	}
 	public String getStartTimeFormatted() {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-		df.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
-		return df.format(startTime);
+		if(startTime!=null){
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+			df.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
+			return df.format(startTime);
+		}
+		return null;
 	}
 	public String getFinishTimeFormatted() {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-		df.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
-		return df.format(finishTime);
+		if(finishTime!=null){
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+			df.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
+			return df.format(finishTime);
+		}
+		return null;
 	}
 	public int getServerId() {
 		return serverId;
@@ -87,10 +93,13 @@ public class Command {
 	public void setServerCreationTime(Date serverCreationTime) {
 		this.serverCreationTime = serverCreationTime;
 	}
-	public String getsetServerCreationTimeFormatted(){
-		//dd-MMM-yyyy HH:mm:ss.SSS
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-		return df.format(this.serverCreationTime);
+	public String getServerCreationTimeFormatted(){
+		if(serverCreationTime!=null){
+			//dd-MMM-yyyy HH:mm:ss.SSS
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+			return df.format(this.serverCreationTime);
+		}
+		return null;
 	}
 	public boolean getRestart() {
 		return restart;

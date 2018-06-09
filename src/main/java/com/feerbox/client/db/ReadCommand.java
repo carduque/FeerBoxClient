@@ -125,4 +125,46 @@ public class ReadCommand extends FeerboxDB {
 		}
 		return command;
 	}
+
+	public static Command getLastExecuted(String script) {
+		Statement statement = null;
+		Command command = new Command();
+		try {
+			// create a database connection
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+			// statement.executeUpdate("drop table if exists person");
+			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload, serverId, output, parameter from Commands where finishTime is not null and command='"+script+"' order by time desc limit 1");
+			while (rs.next()) {
+				command.setId(rs.getInt("id"));
+				String time = rs.getString("time");
+				command.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(time));
+				command.setCommand(rs.getString("command"));
+				String startTime = rs.getString("startTime");
+				command.setStartTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(startTime));
+				String finishTime = rs.getString("finishTime");
+				command.setFinishTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(finishTime));
+				command.setUpload(rs.getInt("upload")==1); //1: true - 0: false
+				command.setServerId(rs.getInt("serverId"));
+				command.setOutput(rs.getString("output"));
+				command.setParameter(rs.getString("parameter"));
+			}
+		} catch (SQLException e) {
+			logger.error("SQLException", e);
+			command = null;
+		} catch (ParseException e) {
+			logger.error("ParseException", e);
+			command = null;
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.error("SQLException", e);
+				command = null;
+			}
+		}
+		return command;
+	}
 }

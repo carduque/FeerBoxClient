@@ -38,7 +38,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.7.1.1";
+	public static final String version = "1.7.1.2";
 	public static final String path_conf = "/opt/FeerBoxClient/FeerBoxClient/config/";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
@@ -71,7 +71,7 @@ public class StartFeerBoxClient {
         registerButtonListeners();
         restartEveryDay();
         MonitorInternetConnection();
-        
+        sendConfandLastLog();
         
         // keep program running until user aborts (CTRL-C)
         for (;;) {
@@ -82,6 +82,69 @@ public class StartFeerBoxClient {
         // (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
         // gpio.shutdown();   <--- implement this method call if you wish to terminate the Pi4J GPIO controller        
     }
+	
+	private static void sendConfandLastLog() {
+		if(!CommandService.wasExecutedToday("cat-config.sh")) sendYesterdayLog();
+		if(!CommandService.wasExecutedToday("cat-yesterday.sh")) sendConfiguration();
+	}
+	
+	private static void sendConfiguration() {
+		Command command = new Command();
+		command.setTime(new Date());
+		command.setCommand("cat-config.sh");
+		command.setRestart(false);
+		command.setStartTime(new Date());
+		command.setParameter("");
+		command.setOutput(executeUnsoCommand(command));
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, -1);
+		calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+		command.setFinishTime(calendar.getTime());
+		if(sendUnsoCommand(command)){
+			command.setUpload(true);
+			command.setFinishTime(new Date());
+			CommandService.save(command);
+		}
+		
+	}
+
+
+	private static void sendYesterdayLog() {
+		Command command = new Command();
+		command.setTime(new Date());
+		command.setCommand("cat-yesterday-log.sh");
+		command.setRestart(false);
+		command.setStartTime(new Date());
+		command.setParameter("");
+		command.setOutput(executeUnsoCommand(command));
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, -1);
+		calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+		command.setFinishTime(calendar.getTime());
+		if(command.getOutput()!=null && !command.getOutput().equals("")){
+			if(sendUnsoCommand(command)){
+				command.setUpload(true);
+				command.setFinishTime(new Date());
+				CommandService.save(command);
+			}
+		}
+	}
+
+
+	private static String executeUnsoCommand(Command command) {
+		return CommandExecutor.executeCommand(command);
+	}
+
+
+	private static boolean sendUnsoCommand(Command command) {
+		return CommandService.sendUnsoCommand(command);
+	}
 
 
 	private static void MonitorInternetConnection() {
