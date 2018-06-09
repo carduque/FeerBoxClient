@@ -72,7 +72,7 @@ public class StartFeerBoxClient {
         registerButtonListeners();
         restartEveryDay();
         MonitorInternetConnection();
-        //sendConfandLastLog();
+        sendConfandLastLog();
         logger.debug("Initialization completed");
         // keep program running until user aborts (CTRL-C)
         for (;;) {
