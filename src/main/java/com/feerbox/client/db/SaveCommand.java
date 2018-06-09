@@ -124,6 +124,7 @@ public class SaveCommand extends FeerboxDB {
 	}
 
 	public static void cleanUnderExecution() {
+		logger.debug("Going to clean commands under execution");
 		Statement statement = null;
 		int updated = 0;
 		try {
@@ -131,7 +132,6 @@ public class SaveCommand extends FeerboxDB {
 			Connection con = getConnection();
 			statement = con.createStatement();
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
-			String output = null;
 
 			// statement.executeUpdate("drop table if exists person");
 			updated = statement.executeUpdate("update Commands set startTime=null where startTime is not null and finishTime is null and upload=0");
@@ -145,5 +145,6 @@ public class SaveCommand extends FeerboxDB {
 			}
 		}
 		if(updated>0) logger.debug("Cleaned "+updated+" commands under execution");
+		logger.debug("Finished cleaning commands under execution");
 	}
 }

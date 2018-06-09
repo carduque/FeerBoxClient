@@ -59,7 +59,7 @@ public class StartFeerBoxClient {
         StartLedPower();
         StartInternetAccessThread();
         StartStatusThreat();
-        //cleanCommandsUnderExecution();
+        cleanCommandsUnderExecution();
         saveInformationServerThread();
         StartWifiDetectionThread();
         StartNFCReaderThreat();
