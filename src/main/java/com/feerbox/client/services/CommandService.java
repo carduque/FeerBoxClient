@@ -190,7 +190,7 @@ public class CommandService {
 	}
 
 	public static boolean sendUnsoCommand(Command command) {
-		logger.debug("Going to send UNSO Comand:" + command);
+		logger.debug("Going to send UNSO Comand:" + command.getCommand());
 		boolean out = true;
 		HttpURLConnection conn = null;
 		OutputStream os = null;
