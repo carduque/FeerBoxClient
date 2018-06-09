@@ -47,7 +47,7 @@ public class CommandExecutor implements Runnable {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("Exception at CommandExecutor");
+			logger.error("Exception at CommandExecutor",e);
 		}
 	}
 
