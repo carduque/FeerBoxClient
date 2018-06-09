@@ -59,7 +59,7 @@ public class StartFeerBoxClient {
         StartLedPower();
         StartInternetAccessThread();
         StartStatusThreat();
-        cleanCommandsUnderExecution();
+        //cleanCommandsUnderExecution();
         saveInformationServerThread();
         StartWifiDetectionThread();
         StartNFCReaderThreat();
@@ -73,7 +73,7 @@ public class StartFeerBoxClient {
         restartEveryDay();
         MonitorInternetConnection();
         //sendConfandLastLog();
-        
+        logger.debug("Initialization completed");
         // keep program running until user aborts (CTRL-C)
         for (;;) {
             //Thread.sleep(500);

@@ -73,7 +73,7 @@ public class StatusRegister extends Register {
 				info.put(Status.infoKeys.FreeMemory.name(), getFreeMemory());
 				info.put(Status.infoKeys.MemoryProcess.name(), getMemoryProcess());
 				info.put(Status.infoKeys.JavaMemory.name(), getJavaMemory());
-				info.put(Status.infoKeys.AverageUptime.name(), getAverageUptime());
+				//info.put(Status.infoKeys.AverageUptime.name(), getAverageUptime());
 				info.put(Status.infoKeys.PendingAnswersToUpload.name(), getPendingAnswersToUpload());
 				info.put(Status.infoKeys.PendingCPToUpload.name(), getPendingCP());
 				info.put(Status.infoKeys.PendingWeatherToUpload.name(), getPendingWeather());
