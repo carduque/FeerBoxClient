@@ -214,4 +214,8 @@ public class CounterPeopleService {
 		return ok;
 	}
 
+	public static CounterPeople getLastSaved() {
+		return ReadCounterPeople.getLastSaved();
+	}
+
 }

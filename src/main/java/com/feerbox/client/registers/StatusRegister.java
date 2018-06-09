@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 
 import com.feerbox.client.StartFeerBoxClient;
 import com.feerbox.client.db.ReadAnswer;
+import com.feerbox.client.db.ReadCounterPeople;
 import com.feerbox.client.db.ReadWeather;
 import com.feerbox.client.model.CounterPeople;
 import com.feerbox.client.model.Status;
@@ -157,9 +158,9 @@ public class StatusRegister extends Register {
 	private String getLastCPime() {
 		String out = "";
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
-		Date last = ClientRegister.getInstance().getLastCPSaved();
-		if(last!=null){
-			out = df.format(last);
+		CounterPeople counterpeople = CounterPeopleService.getLastSaved();
+		if(counterpeople!=null && counterpeople.getTime()!=null){
+			out = df.format(counterpeople.getTime());
 		}
 		return out;
 	}

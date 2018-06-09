@@ -38,7 +38,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.7.1";
+	public static final String version = "1.7.1.1";
 	public static final String path_conf = "/opt/FeerBoxClient/FeerBoxClient/config/";
 	public static MACDetection sniffer;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
