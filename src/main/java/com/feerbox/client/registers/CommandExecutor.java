@@ -97,11 +97,12 @@ public class CommandExecutor implements Runnable {
 			} catch (IOException e) {
 				logger.error("IOException", e);
 			}
+			return command.getOutput();
 		}
 		else{
 			//logger.debug("There is no command to be executed");
 		}
-		return command.getOutput();
+		return null;
 	}
 
 }
