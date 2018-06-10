@@ -179,7 +179,7 @@ public class ReadAnswer extends FeerboxDB{
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			ResultSet rs = statement.executeQuery("select id, time, button, reference from Answers order by id desc limit 1");
+			ResultSet rs = statement.executeQuery("select id, time, button, reference from Answers order by time desc limit 1");
 			while (rs.next()) {
 				answer.setId(rs.getInt("id"));
 				String time = rs.getString("time");
