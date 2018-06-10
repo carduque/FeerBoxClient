@@ -168,6 +168,38 @@ public class ReadAnswer extends FeerboxDB{
 		}
 		return total;
 	}
+
+	public static Answer getLastSaved() {
+		Statement statement = null;
+		Answer answer = new Answer();
+		try {
+			// create a database connection
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+			// statement.executeUpdate("drop table if exists person");
+			ResultSet rs = statement.executeQuery("select id, time, button, reference from Answers order by id desc limit 1");
+			while (rs.next()) {
+				answer.setId(rs.getInt("id"));
+				String time = rs.getString("time");
+				answer.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time));
+				answer.setButton(rs.getInt("button"));
+				answer.setReference("reference");
+			}
+		} catch (SQLException e) {
+			logger.debug("SQLException", e);
+		} catch (ParseException e) {
+			logger.debug("ParseException", e);
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.debug("SQLException", e);
+			}
+		}
+		return answer;
+	}
 	
 	
 

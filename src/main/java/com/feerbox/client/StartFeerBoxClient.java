@@ -30,7 +30,7 @@ import com.feerbox.client.registers.WeatherSensorRegister;
 import com.feerbox.client.services.ButtonService;
 import com.feerbox.client.services.CommandService;
 import com.feerbox.client.services.LedService;
-import com.feerbox.client.services.SaveAnswerService;
+import com.feerbox.client.services.AnswerService;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.PinPullResistance;
@@ -315,7 +315,7 @@ public class StartFeerBoxClient {
 		LedService.getLed6().pulse(500, true);
 		LedService.getLed7().pulse(500, true);
 		try {
-			SaveAnswerService.tryConnection();
+			AnswerService.tryConnection();
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {

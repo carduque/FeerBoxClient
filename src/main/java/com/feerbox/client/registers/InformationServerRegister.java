@@ -23,7 +23,7 @@ import com.feerbox.client.services.CleaningServiceService;
 import com.feerbox.client.services.CommandService;
 import com.feerbox.client.services.CounterPeopleService;
 import com.feerbox.client.services.MACService;
-import com.feerbox.client.services.SaveAnswerService;
+import com.feerbox.client.services.AnswerService;
 import com.feerbox.client.services.WeatherService;
 
 public class InformationServerRegister extends Thread {
@@ -267,7 +267,7 @@ public class InformationServerRegister extends Thread {
 			int i=1;
 			for(Answer answer: list){
 				ClientRegister.getInstance().setAnswersUploaded(false);
-				boolean ok = SaveAnswerService.saveAnswerInternet(answer);
+				boolean ok = AnswerService.saveAnswerInternet(answer);
 				logger.debug("Upload to Internet ("+i+"/"+list.size()+")? "+ok);
 				if(ok){
 					SaveAnswer.upload(answer);

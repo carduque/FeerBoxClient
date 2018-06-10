@@ -12,7 +12,7 @@ import com.feerbox.client.db.SaveCommand;
 import com.feerbox.client.model.Command;
 import com.feerbox.client.registers.CommandExecutor;
 import com.feerbox.client.registers.CommandQueueRegister;
-import com.feerbox.client.services.SaveAnswerService;
+import com.feerbox.client.services.AnswerService;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
@@ -55,7 +55,7 @@ public class ButtonListenerAndExecuteCommand implements GpioPinListenerDigital {
         			commandQueue.run();
         		}
         		else{
-                    SaveAnswerService.saveAnswer(buttonNumber);
+                    AnswerService.saveAnswer(buttonNumber);
         		}
         	}
 		}

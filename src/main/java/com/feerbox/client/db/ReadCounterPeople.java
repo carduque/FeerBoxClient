@@ -196,7 +196,7 @@ public class ReadCounterPeople extends FeerboxDB {
 			Connection con = getConnection();
 			statement = con.createStatement();
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
-			ResultSet rs = statement.executeQuery("select id, time, distance, type, reference, upload from counterPeople where upload=0 order by time desc limit 1");
+			ResultSet rs = statement.executeQuery("select id, time, distance, type, reference, upload from counterPeople order by time desc limit 1");
 			while (rs.next()) {
 				counterPeople.setId(rs.getLong("id"));
 				String time = rs.getString("time");

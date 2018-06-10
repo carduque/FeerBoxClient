@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
-import com.feerbox.client.services.SaveAnswerService;
+import com.feerbox.client.services.AnswerService;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
@@ -27,7 +27,7 @@ public class ButtonListener implements GpioPinListenerDigital {
 
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
         if(event.getState().equals(PinState.LOW)){
-            SaveAnswerService.saveAnswer(buttonNumber);
+            AnswerService.saveAnswer(buttonNumber);
 		}
         if(event.getState().equals(PinState.HIGH)){
         	this.exactTime = new Date();

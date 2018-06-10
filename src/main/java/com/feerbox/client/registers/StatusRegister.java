@@ -25,9 +25,11 @@ import com.feerbox.client.StartFeerBoxClient;
 import com.feerbox.client.db.ReadAnswer;
 import com.feerbox.client.db.ReadCounterPeople;
 import com.feerbox.client.db.ReadWeather;
+import com.feerbox.client.model.Answer;
 import com.feerbox.client.model.CounterPeople;
 import com.feerbox.client.model.Status;
 import com.feerbox.client.model.Weather;
+import com.feerbox.client.services.AnswerService;
 import com.feerbox.client.services.CounterPeopleService;
 import com.feerbox.client.services.StatusService;
 import com.feerbox.client.services.WeatherService;
@@ -328,9 +330,9 @@ public class StatusRegister extends Register {
 	private String getLastAnswerTime() {
 		String out = "";
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
-		Date last = ClientRegister.getInstance().getLastAnswerSaved();
-		if(last!=null){
-			out = df.format(last);
+		Answer answer = AnswerService.getLastSaved();
+		if(answer!=null && answer.getTime()!=null){
+			out = df.format(answer.getTime());
 		}
 		return out;
 	}

@@ -5,7 +5,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
-import com.feerbox.client.services.SaveAnswerService;
+import com.feerbox.client.services.AnswerService;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
@@ -42,7 +42,7 @@ public class ButtonListenerAndPowerOff implements GpioPinListenerDigital {
 					}
         		}
         		else{
-                    SaveAnswerService.saveAnswer(buttonNumber);
+                    AnswerService.saveAnswer(buttonNumber);
         		}
         	}
 		}

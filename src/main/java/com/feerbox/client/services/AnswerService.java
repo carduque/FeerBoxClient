@@ -11,14 +11,15 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
+import com.feerbox.client.db.ReadAnswer;
 import com.feerbox.client.db.SaveAnswer;
 import com.feerbox.client.db.SaveAnswerError;
 import com.feerbox.client.model.Answer;
 import com.feerbox.client.registers.ClientRegister;
 import com.google.gson.JsonObject;
 
-public class SaveAnswerService{
-	protected final static Logger logger = Logger.getLogger(SaveAnswerService.class);
+public class AnswerService{
+	protected final static Logger logger = Logger.getLogger(AnswerService.class);
 	public static Integer saveAnswer(int buttonNumber) {
 		int id = 0;
 		Answer answer = new Answer();
@@ -132,6 +133,10 @@ public class SaveAnswerService{
 			logger.debug("IOException", e);
 		}
 		
+	}
+
+	public static Answer getLastSaved() {
+		return ReadAnswer.getLastSaved();
 	}
 
 }
