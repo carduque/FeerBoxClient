@@ -19,7 +19,7 @@ public class SaveAlert extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 			
 			statement.executeUpdate(
-					"insert into Alerts (severity, generator, threshold, name, reference, time, type, weekday) values("
+					"insert into Alerts (severity, generator, threshold, name, reference, time, type, active, upload) values("
 					+ "'"+alert.getSeverity().name()+"',"
 					+ "'"+alert.getGenerator().name()+"',"
 					+ alert.getThreshold()+","
@@ -27,7 +27,8 @@ public class SaveAlert extends FeerboxDB {
 					+ "'"+alert.getReference()+"',"
 					+ "STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime')," 
 					+ "'"+alert.getType().name()+"',"
-					+alert.getWeekday()
+					+(alert.getActive()?1:0)+","
+					+alert.getUpload()
 					+")");
 			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM Alerts LIMIT 1");
 			while (rs.next()) {

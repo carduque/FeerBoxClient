@@ -1,12 +1,15 @@
 package com.feerbox.client.model;
 
+import java.util.Date;
 import java.util.Map;
 
 public class Status {
 	private String reference;
 	private Map<String, String> info;
-	public enum infoKeys {INTERNET,LAST_ANSWER,TIME_UP, SYSTEM_TIME, SW_VERSION, IP, CommandExecutor, CommandQueue, PendingAnswersToUpload, CPU, MemoryProcess, JavaMemory, FreeMemory, AverageUptime, PendingCPToUpload, PendingWeatherToUpload, LAST_CP, LAST_WEATHER, FreeDiskSpace, SSID_CONNECTED};
+	public enum infoKeys {INTERNET,LAST_ANSWER,TIME_UP, SYSTEM_TIME, SW_VERSION, IP, CommandExecutor, CommandQueue, PendingAnswersToUpload, CPU, MemoryProcess, 
+		JavaMemory, FreeMemory, AverageUptime, PendingCPToUpload, PendingWeatherToUpload, LAST_CP, LAST_WEATHER, FreeDiskSpace, SSID_CONNECTED, OS_KERNEL_Version};
 	private int upload;
+	private Date time;
 	
 	public Status(String reference) {
 		super();
@@ -32,6 +35,12 @@ public class Status {
 	}
 	public void setUpload(int upload) {
 		this.upload = upload;
+	}
+	public Date getTime() {
+		return time;
+	}
+	public void setTime(Date time) {
+		this.time = time;
 	}
 	
 

@@ -38,7 +38,7 @@ public class AlertTest {
 		alert.setThreshold(1000L);
 		alert.setTime(new Date());
 		alert.setType(Alert.AlertType.NotEnoughDataBeenCollected);
-		alert.setWeekday(1);
+		//alert.setWeekday(1);
 		return alert;
 	}
 

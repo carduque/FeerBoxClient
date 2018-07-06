@@ -29,25 +29,35 @@ public class DataAlertsRegister extends TimerTask {
 	@Override
 	public void run() {
 		try {
-			loadAlerts();
-			//ANSWERS
-			long total_answers = ReadAnswer.readAnswersDayBefore();
-			NotEnoughAnswersBeenCollected(total_answers);
-			TooMuchAnswersBeenCollected(total_answers);
-			AnswersOutTime();
+			//OS: read /var/log/dmesg
+			//grep -r "kernel panic" /var/log
 			
-			//COUNTERPEOPLE
-			long total_counterpeople = ReadCounterPeople.readCounterPeopleDayBefore();
-			NotEnoughCounterPeopleBeenCollected(total_counterpeople);
-			TooMuchCounterPeopleBeenCollected(total_counterpeople);
-			CounterPeopleOutOfTime();
+			//BD
+			//Is db locked somehow?
+			//
 			
-			//RASPBIAN
-			NotEnoughUpTime();
+			//SW & Configuration
+			ChangeOfFeerBoxReference();
+			
+			//Network: netstat -at
+			//dig feerbox.herokuapp.com
+			//ethtool wlan
+			
+			//Time
+			//timedatectl status
+			
+			//GPIO
+			
+			//Disk
 			RunningOutOfDisk();
 			
-			//CLIENT
-			ChangeOfFeerBoxReference();
+			//UpTime
+			NotEnoughUpTime();
+			
+			//Power
+			//https://askubuntu.com/questions/103015/how-do-i-check-if-last-shutdown-was-clean
+			//last reboot
+			
 			
 		} catch (Throwable  t) {
 			logger.error("Error in DataAlertsRegister");
@@ -164,46 +174,6 @@ public class DataAlertsRegister extends TimerTask {
 	}
 
 
-	private void CounterPeopleOutOfTime() {
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DAY_OF_YEAR, -1);
-		int day_of_week = calendar.get(Calendar.DAY_OF_WEEK);
-		AlertConfiguration config = alerts.get(AlertConfiguration.TypeAlertConfiguration.COUNTERPEOPLE.name());
-		if(config!=null){
-			for(AlertTimeTable timeTable: config.getAlertTimeTables()){
-				if(timeTable.getWeekDay()==day_of_week){
-					long total_answers = ReadCounterPeople.readCounterPeopleDayBefore(timeTable.getStartingTime(), timeTable.getClosingTime());
-					if(total_answers>timeTable.getThreshold()){
-						Alert alert = createAnswerOutOfTimeAlert(timeTable.getThreshold(), day_of_week,timeTable.getStartingTime(), timeTable.getClosingTime());
-						SaveAlert.save(alert);
-					}
-				}
-			}
-		}
-	}
-
-
-	private void TooMuchCounterPeopleBeenCollected(long total_counterpeople) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DAY_OF_YEAR, -1);
-		int day_of_week = calendar.get(Calendar.DAY_OF_WEEK);
-		AlertConfiguration config = alerts.get(AlertConfiguration.TypeAlertConfiguration.COUNTERPEOPLE.name());
-		if(config!=null){
-			List<AlertThreshold> thresholds = config.getAlertThresholds();
-			long yesterday_threshold = 0;
-			for(AlertThreshold threshold : thresholds){
-				if(threshold.getWeekDay()==day_of_week){
-					yesterday_threshold = threshold.getThreshold();
-				}
-			}
-			if(total_counterpeople>yesterday_threshold){
-				Alert alert = createTooMuchCounterPeopleAlert(yesterday_threshold, day_of_week);
-				SaveAlert.save(alert);
-			}
-		}
-	}
-
-
 	private Alert createTooMuchCounterPeopleAlert(long threshold, int day_of_week) {
 		Alert alert = new Alert();
 		alert.setSeverity(Alert.AlertSeverity.HIGH);
@@ -213,30 +183,9 @@ public class DataAlertsRegister extends TimerTask {
 		alert.setReference(ClientRegister.getInstance().getReference());
 		alert.setTime(new Date());
 		alert.setType(Alert.AlertType.TooMuchDataBeenCollected);
-		alert.setWeekday(day_of_week);
 		return alert;
 	}
 
-
-	private void NotEnoughCounterPeopleBeenCollected(long total_counterpeople) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DAY_OF_YEAR, -1);
-		int day_of_week = calendar.get(Calendar.DAY_OF_WEEK);
-		AlertConfiguration config = alerts.get(AlertConfiguration.TypeAlertConfiguration.COUNTERPEOPLE.name());
-		if(config!=null){
-			List<AlertThreshold> thresholds = config.getAlertThresholds();
-			long yesterday_threshold = 0;
-			for(AlertThreshold threshold : thresholds){
-				if(threshold.getWeekDay()==day_of_week){
-					yesterday_threshold = threshold.getThreshold();
-				}
-			}
-			if(total_counterpeople<yesterday_threshold){
-				Alert alert = createNotEnoughCounterPeopleAlert(yesterday_threshold, day_of_week);
-				SaveAlert.save(alert);
-			}
-		}
-	}
 
 
 	private Alert createNotEnoughCounterPeopleAlert(long threshold, int day_of_week) {
@@ -248,27 +197,7 @@ public class DataAlertsRegister extends TimerTask {
 		alert.setReference(ClientRegister.getInstance().getReference());
 		alert.setTime(new Date());
 		alert.setType(Alert.AlertType.NotEnoughDataBeenCollected);
-		alert.setWeekday(day_of_week);
 		return alert;
-	}
-
-
-	private void AnswersOutTime() {
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DAY_OF_YEAR, -1);
-		int day_of_week = calendar.get(Calendar.DAY_OF_WEEK);
-		AlertConfiguration config = alerts.get(AlertConfiguration.TypeAlertConfiguration.ANSWERS.name());
-		if(config!=null){
-			for(AlertTimeTable timeTable: config.getAlertTimeTables()){
-				if(timeTable.getWeekDay()==day_of_week){
-					long total_answers = ReadAnswer.readAnswersDayBefore(timeTable.getStartingTime(), timeTable.getClosingTime());
-					if(total_answers>timeTable.getThreshold()){
-						Alert alert = createAnswerOutOfTimeAlert(timeTable.getThreshold(), day_of_week,timeTable.getStartingTime(), timeTable.getClosingTime());
-						SaveAlert.save(alert);
-					}
-				}
-			}
-		}
 	}
 
 
@@ -281,7 +210,6 @@ public class DataAlertsRegister extends TimerTask {
 		alert.setReference(ClientRegister.getInstance().getReference());
 		alert.setTime(new Date());
 		alert.setType(Alert.AlertType.OutOfTimeDataCollected);
-		alert.setWeekday(day_of_week);
 		return alert;
 	}
 
@@ -316,7 +244,6 @@ public class DataAlertsRegister extends TimerTask {
 		alert.setReference(ClientRegister.getInstance().getReference());
 		alert.setTime(new Date());
 		alert.setType(Alert.AlertType.TooMuchDataBeenCollected);
-		alert.setWeekday(day_of_week);
 		return alert;
 	}
 
@@ -356,7 +283,6 @@ public class DataAlertsRegister extends TimerTask {
 		alert.setReference(ClientRegister.getInstance().getReference());
 		alert.setTime(new Date());
 		alert.setType(Alert.AlertType.NotEnoughDataBeenCollected);
-		alert.setWeekday(day_of_week);
 		return alert;
 	}
 

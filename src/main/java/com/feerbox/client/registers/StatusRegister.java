@@ -25,6 +25,8 @@ import com.feerbox.client.StartFeerBoxClient;
 import com.feerbox.client.db.ReadAnswer;
 import com.feerbox.client.db.ReadCounterPeople;
 import com.feerbox.client.db.ReadWeather;
+import com.feerbox.client.db.SaveAlert;
+import com.feerbox.client.model.Alert;
 import com.feerbox.client.model.Answer;
 import com.feerbox.client.model.CounterPeople;
 import com.feerbox.client.model.Status;
@@ -81,6 +83,7 @@ public class StatusRegister extends Register {
 				info.put(Status.infoKeys.PendingWeatherToUpload.name(), getPendingWeather());
 				info.put(Status.infoKeys.FreeDiskSpace.name(), getFreeDiskSpace());
 				info.put(Status.infoKeys.SSID_CONNECTED.name(), getSSID());
+				info.put(Status.infoKeys.OS_KERNEL_Version.name(), getRaspbianKernelVersion());
 				//logger.debug("Status7");
 				status.setInfo(info);
 				
@@ -141,6 +144,11 @@ public class StatusRegister extends Register {
 		}
 	}
 	
+	private String getRaspbianKernelVersion() {
+		String out = executeCommandLine("awk -F= '$1==\"PRETTY_NAME\" { print $2 ;}' /etc/os-release");
+		out += " - kernel: " + executeCommandLine("uname -r");
+		return out;
+	}
 	private String getSSID() {
 		return executeCommandLine("iwgetid -r");
 	}
@@ -248,25 +256,45 @@ public class StatusRegister extends Register {
 	private void checkStatusTime() {
 		if(checkStatusTime){
 			if(lastStatusTime==null){
-				lastStatusTime = new Date();
+				lastStatusTime = StatusService.getLastStatusTime();
 			}
-			else{
+			if(lastStatusTime!=null){
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
 				Date now = new Date();
 				long interval = now.getTime() - lastStatusTime.getTime();
 				int buffer = 10 * 60 * 1000; //10 minutes
 				int statusInterval = ClientRegister.getInstance().getSaveStatusInterval() * 60 * 1000;
 				if(interval>statusInterval+buffer){
-					logger.error("Time ERROR - Time moved forward. Now: "+ df.format(now)+" - LastStatus: "+ df.format(lastStatusTime));
+					String error_message = "Time ERROR - Time moved forward. Now: "+ df.format(now)+" - LastStatus: "+ df.format(lastStatusTime);
+					logger.error(error_message);
+					//generateAlert(error_message);
 				}
 				else if(interval<statusInterval-buffer){
-					logger.error("Time ERROR - Time moved backward. Now: "+ df.format(now)+" - LastStatus: "+ df.format(lastStatusTime));
+					String error_message = "Time ERROR - Time moved backward. Now: "+ df.format(now)+" - LastStatus: "+ df.format(lastStatusTime);
+					logger.error(error_message);
+					//generateAlert(error_message);
+				} else {
+					//DisableAlertIfExists();
 				}
 				lastStatusTime = now;
 			}
 		}
 	}
 
+	private void generateAlert(String error_message) {
+		Alert alert = new Alert();
+		alert.setSeverity(Alert.AlertSeverity.HIGH);
+		alert.setGenerator(Alert.AlertGenerator.StatusRegister);
+		alert.setThreshold(10 * 60 * 1000L); //10 minutes
+		alert.setName(error_message);
+		alert.setReference(ClientRegister.getInstance().getReference());
+		alert.setTime(new Date());
+		alert.setType(Alert.AlertType.TIME);
+		alert.setActive(true);
+		alert.setUpload(0);
+		alert.setReference(ClientRegister.getInstance().getReference());
+		SaveAlert.save(alert);
+	}
 	private void changeDelay() {
 		if(ClientRegister.getInstance().getSaveStatusInterval()!=this.interval){
 			boolean res = future.cancel(false);

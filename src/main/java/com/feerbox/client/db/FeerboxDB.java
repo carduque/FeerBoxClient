@@ -30,9 +30,9 @@ public class FeerboxDB {
 	private static void createTables() {
 		try {
 			createMACTableIfNotExists();
-			createAlertConfigurationTableIfNotExists();
-			createAlertTimeTablesTableIfNotExists();
-			createAlertThresholdsTableIfNotExists();
+			//createAlertConfigurationTableIfNotExists();
+			//createAlertTimeTablesTableIfNotExists();
+			//createAlertThresholdsTableIfNotExists();
 			createAlertsTableIfNotExists();
 			createWeatherSensorTableIfNotExists();
 			createCleanersTableIfNotExists();
@@ -157,7 +157,7 @@ public class FeerboxDB {
 		Statement statement = connection.createStatement();
 		statement.setQueryTimeout(30); // set timeout to 30 sec.
 		// severity, generator, threshold, name, reference, time, type, weekday
-		String sql = "create table if not exists Alerts (id INTEGER PRIMARY KEY AUTOINCREMENT, severity varchar, generator varchar, threshold integer, name varchar, time timestamp, type varchar, weekday integer, reference varchar, upload integer)";
+		String sql = "create table if not exists Alerts (id INTEGER PRIMARY KEY AUTOINCREMENT, severity varchar, generator varchar, threshold integer, name varchar, time timestamp, type varchar, active integer, reference varchar, upload integer)";
 		// logger.debug(sql);
 		statement.executeUpdate(sql);
 	}

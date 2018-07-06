@@ -4,8 +4,8 @@ import java.util.Date;
 
 public class Alert {
 	public enum AlertSeverity { HIGH, MEDIUM, LOW, INFORMATIONAL;}
-	public enum AlertGenerator { DB, LOG, CATCH_EXCEPTION, RASPBIAN;}
-	public enum AlertType { NotEnoughDataBeenCollected,TooMuchDataBeenCollected, PoorUpTime, TuptimeNotInstalled, OutOfTimeDataCollected;}
+	public enum AlertGenerator { DB, LOG, CATCH_EXCEPTION, RASPBIAN, StatusRegister;}
+	public enum AlertType { NotEnoughDataBeenCollected,TooMuchDataBeenCollected, PoorUpTime, TuptimeNotInstalled, OutOfTimeDataCollected, TIME;}
 	
 	private AlertSeverity severity;
 	private AlertGenerator generator;
@@ -14,7 +14,8 @@ public class Alert {
 	private String reference;
 	private Date time;
 	private AlertType type;
-	private int weekday;
+	private int upload;
+	private boolean active;
 	
 	public AlertSeverity getSeverity() {
 		return severity;
@@ -58,11 +59,17 @@ public class Alert {
 	public void setType(AlertType type) {
 		this.type = type;
 	}
-	public void setWeekday(int day_of_week) {
-		this.weekday = day_of_week;
+	public boolean getActive() {
+		return active;
 	}
-	public int getWeekday() {
-		return weekday;
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	public int getUpload() {
+		return upload;
+	}
+	public void setUpload(int upload) {
+		this.upload = upload;
 	}
 
 }
