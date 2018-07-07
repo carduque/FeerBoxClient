@@ -23,7 +23,7 @@ public class ReadStatus extends FeerboxDB {
 			ResultSet rs = statement.executeQuery("select id, time from Status order by time desc limit 1");
 			while (rs.next()) {
 				String time = rs.getString("time");
-				out.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(time));
+				out.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time));
 			}
 		} catch (SQLException e) {
 			logger.error("SQLException", e);
