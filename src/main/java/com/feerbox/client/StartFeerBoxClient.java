@@ -89,8 +89,8 @@ public class StartFeerBoxClient {
 	}
 
 	private static void sendConfandLastLog() {
-		if(!CommandService.wasExecutedToday("cat-config.sh")) sendYesterdayLog();
-		if(!CommandService.wasExecutedToday("cat-yesterday.sh")) sendConfiguration();
+		if(!CommandService.wasExecutedToday("cat-yesterday-log.sh")) sendYesterdayLog();
+		if(!CommandService.wasExecutedToday("cat-config.sh")) sendConfiguration();
 	}
 	
 	private static void sendConfiguration() {
