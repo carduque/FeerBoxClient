@@ -14,7 +14,7 @@ public class FeerboxDB {
 	public static Connection getConnection() {
 		try {
 			if (connection == null || connection.isClosed()) {
-				if (System.getenv("TEST") != null) {
+				if (System.getenv("TEST") != null || System.getProperty("TEST")!=null) {
 					createConnectionTEST();
 				} else {
 					createConnection();

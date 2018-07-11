@@ -19,11 +19,17 @@ import com.feerbox.client.model.AlertConfiguration;
 import com.feerbox.client.model.AlertOS;
 import com.feerbox.client.model.AlertThreshold;
 import com.feerbox.client.model.AlertTimeTable;
+import com.feerbox.client.oslevel.OSExecutor;
 
 public class DataAlertsRegister extends TimerTask {
 	final static Logger logger = Logger.getLogger(DataAlertsRegister.class);
 	private Timer timer;
 	Map<String, AlertConfiguration> alerts = null;
+	private final OSExecutor oSExecutor;
+	
+	public DataAlertsRegister(OSExecutor oSExecutor) {
+		this.oSExecutor = oSExecutor;
+	}
 	
 	
 	@Override
@@ -113,8 +119,7 @@ public class DataAlertsRegister extends TimerTask {
 
 	private double getDiskOccupancy() {
 		double occupancy = 0.0;
-		StatusRegister register = new StatusRegister();
-		String txt = register.executeCommandLine("df -h | grep \"/dev/sda1\" | awk '{print $5}'");
+		String txt = oSExecutor.executeCommandLine("df -h | grep \"/dev/sda1\" | awk '{print $5}'");
 		occupancy = Double.parseDouble(txt);
 		return occupancy;
 	}
@@ -148,10 +153,9 @@ public class DataAlertsRegister extends TimerTask {
 
 	private double getUptime() {
 		double uptime = 0.0;
-		StatusRegister register = new StatusRegister();
-		String line =  register.executeCommandLine("command -v tuptime");
+		String line =  oSExecutor.executeCommandLine("command -v tuptime");
 		if(line!=null && !"".equals(line)){
-			String txt = register.executeCommandLine("sudo tuptime | grep \"System uptime:\" | awk '{print $3}'");
+			String txt = oSExecutor.executeCommandLine("sudo tuptime | grep \"System uptime:\" | awk '{print $3}'");
 			uptime = Double.parseDouble(txt);
 		}
 		else{

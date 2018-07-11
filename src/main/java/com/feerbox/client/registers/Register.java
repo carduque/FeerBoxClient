@@ -7,45 +7,19 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
+import com.feerbox.client.oslevel.OSExecutor;
+
 public abstract class Register implements Runnable {
 	final static Logger logger = Logger.getLogger(Register.class);
-
+	protected final OSExecutor oSExecutor;
+	
+	public Register(OSExecutor oSExecutor) {
+		this.oSExecutor = oSExecutor;
+	}
 	abstract public void run();
 	
 	public String executeCommandLine(String command) {
-		String out = "";
-		BufferedReader in = null;
-		Process proc = null;
-		try {
-			String[] cmd = { "/bin/sh", "-c", command };
-			proc = Runtime.getRuntime().exec(cmd);
-			in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-			String line = null;
-			 while ((line = in.readLine()) != null) {
-				out += line;
-			}
-		} catch (IOException e) {
-			logger.error("Error executing command: "+e.getMessage());
-		}
-		finally{
-			if(in!=null){
-				try {
-					in.close();
-				} catch (IOException e) {
-					logger.error("Error executing command: "+e.getMessage());
-				}
-			}
-			try {
-				if(!proc.waitFor(1, TimeUnit.MINUTES)) {
-				    //timeout - kill the process. 
-				    proc.destroyForcibly();
-				}
-			} catch (InterruptedException e) {
-				logger.error("Error executing command: "+e.getMessage());
-			}
-			
-		}
-        return out;
+		return oSExecutor.executeCommandLine(command);
 	}
 
 }

@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import com.feerbox.client.db.SaveCommand;
 import com.feerbox.client.model.Command;
+import com.feerbox.client.oslevel.OSExecutor;
 import com.feerbox.client.registers.CommandExecutor;
 import com.feerbox.client.registers.CommandQueueRegister;
 import com.feerbox.client.services.AnswerService;
@@ -26,12 +27,14 @@ public class ButtonListenerAndExecuteCommand implements GpioPinListenerDigital {
 	private int buttonNumber = 0;
 	private Date exactTime = null;
 	private PinState lastState = PinState.HIGH;
+	protected final OSExecutor oSExecutor;
 	final static Logger logger = Logger.getLogger(ButtonListenerAndExecuteCommand.class);
 
-	public ButtonListenerAndExecuteCommand(GpioPinDigitalInput button, GpioPinDigitalOutput led, int number) {
+	public ButtonListenerAndExecuteCommand(GpioPinDigitalInput button, GpioPinDigitalOutput led, int number, OSExecutor oSExecutor) {
 		Button = button;
 		Led = led;
 		buttonNumber = number;
+		this.oSExecutor = oSExecutor;
 	}
 
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
@@ -48,7 +51,7 @@ public class ButtonListenerAndExecuteCommand implements GpioPinListenerDigital {
         			updateScripts();
         			CommandQueueRegister commandQueue = new CommandQueueRegister();
         			commandQueue.run();
-        	        CommandExecutor commandExecutor = new CommandExecutor();
+        	        CommandExecutor commandExecutor = new CommandExecutor(oSExecutor);
         	        commandExecutor.run(); //Just start one next command pending
         	        //Send information to server
         	        commandQueue = new CommandQueueRegister();

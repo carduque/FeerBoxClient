@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
+import com.feerbox.client.oslevel.OSExecutor;
 import com.feerbox.client.registers.StatusRegister;
 import com.feerbox.client.services.AnswerService;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
@@ -20,12 +21,14 @@ public class ButtonListenerAndSendStatus implements GpioPinListenerDigital {
 	private int buttonNumber = 0;
 	private Date exactTime = null;
 	private PinState lastState = PinState.HIGH;
+	protected final OSExecutor oSExecutor;
 	final static Logger logger = Logger.getLogger(ButtonListenerAndSendStatus.class);
 
-	public ButtonListenerAndSendStatus(GpioPinDigitalInput button, GpioPinDigitalOutput led, int number) {
+	public ButtonListenerAndSendStatus(GpioPinDigitalInput button, GpioPinDigitalOutput led, int number, OSExecutor oSExecutor) {
 		Button = button;
 		Led = led;
 		buttonNumber = number;
+		this.oSExecutor = oSExecutor;
 	}
 
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
@@ -39,7 +42,7 @@ public class ButtonListenerAndSendStatus implements GpioPinListenerDigital {
         		if(seconds>10){
         			logger.debug("Going to send status");
         			Led.blink(500, 10000); // continuously blink the led every 1/2 second for 10 seconds
-        			StatusRegister status = new StatusRegister(false);
+        			StatusRegister status = new StatusRegister(oSExecutor);
 					status.run();
         		}
         		else{

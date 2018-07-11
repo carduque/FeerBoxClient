@@ -31,6 +31,7 @@ import com.feerbox.client.model.Answer;
 import com.feerbox.client.model.CounterPeople;
 import com.feerbox.client.model.Status;
 import com.feerbox.client.model.Weather;
+import com.feerbox.client.oslevel.OSExecutor;
 import com.feerbox.client.services.AnswerService;
 import com.feerbox.client.services.CounterPeopleService;
 import com.feerbox.client.services.StatusService;
@@ -47,13 +48,10 @@ public class StatusRegister extends Register {
 	final static Logger logger = Logger.getLogger(StatusRegister.class);
 	private static Date lastStatusTime = null;
 	
-	public StatusRegister(){
-		super();
+	public StatusRegister(OSExecutor oSExecutor) {
+		super(oSExecutor);
 	}
-	public StatusRegister(boolean checkStatusTime){
-		super();
-		this.checkStatusTime = checkStatusTime;
-	}
+	
 	public void run() {
 		try{
 			Status status = new Status();
@@ -138,7 +136,7 @@ public class StatusRegister extends Register {
 			if(ClientRegister.getInstance().getSaveStatusLocally()){
 				StatusService.save(status);
 			}
-			checkStatusTime();
+			//checkStatusTime();
 		}catch(Throwable  t){
 			logger.error("Exception in StatusRegister", t);
 		}
@@ -299,7 +297,7 @@ public class StatusRegister extends Register {
 		if(ClientRegister.getInstance().getSaveStatusInterval()!=this.interval){
 			boolean res = future.cancel(false);
 	        logger.info("Previous StatusRegister cancelled: " + res);
-	        StatusRegister ipRegister = new StatusRegister();
+	        StatusRegister ipRegister = new StatusRegister(this.oSExecutor);
 	        future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(ipRegister, ClientRegister.getInstance().getSaveStatusInterval(), ClientRegister.getInstance().getSaveStatusInterval(), TimeUnit.MINUTES);
 	        this.interval = ClientRegister.getInstance().getSaveStatusInterval();
 		}
@@ -415,9 +413,11 @@ public class StatusRegister extends Register {
 		//JsonElement element = new JsonParser().parse(new Gson().toJson(status.getInfo()));
 		JsonArray array = new JsonArray();
 		for(String key : status.getInfo().keySet()){
-			JsonObject element = new JsonObject();
-			element.add(key, new JsonPrimitive(status.getInfo().get(key)));
-			array.add(element);
+			if(status.getInfo().get(key)!=null){
+				JsonObject element = new JsonObject();
+				element.add(key, new JsonPrimitive(status.getInfo().get(key)));
+				array.add(element);
+			}
 		}
 		json.add("info", array);
 		return json;

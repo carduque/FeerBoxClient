@@ -13,6 +13,9 @@ import org.apache.log4j.Logger;
 
 import com.feerbox.client.db.SaveAnswerError;
 import com.feerbox.client.model.Command;
+import com.feerbox.client.oslevel.OSExecutor;
+import com.feerbox.client.oslevel.OSExecutorRaspbian;
+import com.feerbox.client.oslevel.OSExecutorWindows;
 import com.feerbox.client.registers.AliveRegister;
 import com.feerbox.client.registers.CleanerRegister;
 import com.feerbox.client.registers.ClientRegister;
@@ -38,38 +41,50 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.7.1.4";
-	public static final String path_conf = "/opt/FeerBoxClient/FeerBoxClient/config/";
+	public static final String version = "1.7.2.0";
+	public static String app_path = "/opt/FeerBoxClient/FeerBoxClient";
 	public static MACDetection sniffer;
+	public static boolean windows = false;
+	public static OSExecutor oSExecutor;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
 	
 	
-	private static final GpioController gpio = GpioFactory.getInstance();
+	private static GpioController gpio = null;
 	
 	public static void main(String args[]) throws InterruptedException {
         logger.debug("FeerBoxClient Started version "+version);
-        try {
-			Files.write(Paths.get(path_conf+"version.txt"), version.getBytes());
-		} catch (IOException e) {
-			logger.error("Error writing version file: "+e.getMessage());
-		}
+        if(!windows){
+        	oSExecutor = new OSExecutorRaspbian();
+        	gpio = GpioFactory.getInstance();
+        	try {
+    			Files.write(Paths.get(app_path+"/config/"+"version.txt"), version.getBytes());
+    		} catch (IOException e) {
+    			logger.error("Error writing version file: "+e.getMessage());
+    		}
+        	InitGPIO();
+            lights();
+            StartLedPower();
+            StartNFCReaderThreat();
+            StartCounterPeoplePolling();
+            StartWeatherSensorThread();
+            StartWifiDetectionThread();
+            registerButtonListeners();
+        } else {
+        	oSExecutor = new OSExecutorWindows();
+        	System.out.println("TEST: "+System.getProperty("TEST"));
+        	System.out.println(app_path);
+        }
         // create gpio controller
-        InitGPIO();
-        lights();
-        StartLedPower();
         StartInternetAccessThread();
         StartStatusThreat();
         cleanCommandsUnderExecution();
         saveInformationServerThread();
-        StartWifiDetectionThread();
-        StartNFCReaderThreat();
         StartCommandServerPolling();
         StartCleanerServerPolling();
-        StartCounterPeoplePolling();
-        StartWeatherSensorThread();
+        
         //checkForAlertsThread();
         // create and register gpio pin listener
-        registerButtonListeners();
+       
         restartEveryDay();
         MonitorInternetConnection();
         sendConfandLastLog();
@@ -143,7 +158,7 @@ public class StartFeerBoxClient {
 
 
 	private static String executeUnsoCommand(Command command) {
-		return CommandExecutor.executeCommand(command);
+		return oSExecutor.executeCommand(command);
 	}
 
 
@@ -201,7 +216,7 @@ public class StartFeerBoxClient {
 	private static void StartCommandServerPolling() {
 		if(ClientRegister.getInstance().getCommandExecutorEnabled()){
 	        CommandQueueRegister commandQueue = new CommandQueueRegister();
-	        CommandExecutor commandExecutor = new CommandExecutor();
+	        CommandExecutor commandExecutor = new CommandExecutor(oSExecutor);
 	        ScheduledFuture<?> future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(commandQueue, 0, ClientRegister.getInstance().getCommandQueueRegisterInterval(), TimeUnit.MINUTES);
 	        ScheduledFuture<?> future2 = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(commandExecutor, 0, ClientRegister.getInstance().getCommandExecutorInterval(), TimeUnit.MINUTES);
 		}
@@ -210,7 +225,7 @@ public class StartFeerBoxClient {
 			//Poll for any command at start time even it is disabled, so in case of update software it could be just at starting point
 			CommandQueueRegister commandQueue = new CommandQueueRegister();
 			commandQueue.run();
-	        CommandExecutor commandExecutor = new CommandExecutor();
+	        CommandExecutor commandExecutor = new CommandExecutor(oSExecutor);
 	        commandExecutor.run(); //Just start one next command pending
 		}
 	}
@@ -254,14 +269,14 @@ public class StartFeerBoxClient {
 
 
 	private static void StartStatusThreat() {
-		StatusRegister ipRegister = new StatusRegister();
+		StatusRegister ipRegister = new StatusRegister(oSExecutor);
 		ScheduledFuture<?> future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(ipRegister, 0, ClientRegister.getInstance().getSaveStatusInterval(), TimeUnit.MINUTES);
 		ipRegister.setFuture(future);
 	}
 	
 	private static void StartInternetAccessThread() {
 		//check Internet & alivelights & KismetServer alive
-		AliveRegister internetRegister = new AliveRegister();
+		AliveRegister internetRegister = new AliveRegister(oSExecutor);
 		ScheduledFuture<?> future = ClientRegister.getInstance().getScheduler().scheduleAtFixedRate(internetRegister, 0, 1, TimeUnit.MINUTES);
 		internetRegister.setFuture(future);
 	}
@@ -279,7 +294,7 @@ public class StartFeerBoxClient {
 			today.set(Calendar.HOUR_OF_DAY, 0);
 			today.set(Calendar.MINUTE, 0);
 			today.set(Calendar.SECOND, 0);
-			DataAlertsRegister dataAlertsRegister = new DataAlertsRegister();
+			DataAlertsRegister dataAlertsRegister = new DataAlertsRegister(oSExecutor);
 			Timer timer = new Timer();
 			timer.schedule(dataAlertsRegister, today.getTime(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)); // period: 1 day
 			dataAlertsRegister.setTimer(timer);
@@ -288,13 +303,13 @@ public class StartFeerBoxClient {
 
 
 	private static void registerButtonListeners() {
-		ButtonListenerAndExecuteCommand buttonListener1 = new ButtonListenerAndExecuteCommand(ButtonService.getButton1(), LedService.getLed1(), 1);
+		ButtonListenerAndExecuteCommand buttonListener1 = new ButtonListenerAndExecuteCommand(ButtonService.getButton1(), LedService.getLed1(), 1, oSExecutor);
 		ButtonService.getButton1().addListener(buttonListener1);
 		ButtonListener buttonListener2 = new ButtonListener(ButtonService.getButton2(), LedService.getLed2(), 2);
 		ButtonService.getButton2().addListener(buttonListener2);
 		ButtonListenerAndPowerOff buttonListener3 = new ButtonListenerAndPowerOff(ButtonService.getButton3(), LedService.getLed3(), 3);
 		ButtonService.getButton3().addListener(buttonListener3);
-		ButtonListenerAndSendStatus buttonListener4 = new ButtonListenerAndSendStatus(ButtonService.getButton4(), LedService.getLed4(), 4);
+		ButtonListenerAndSendStatus buttonListener4 = new ButtonListenerAndSendStatus(ButtonService.getButton4(), LedService.getLed4(), 4, oSExecutor);
 		ButtonService.getButton4().addListener(buttonListener4);
 		//ButtonListener buttonListener5 = new ButtonListener(ButtonService.getButton5(), LedService.getLed5(), 5);
 		ButtonListenerAndReboot buttonListener5 = new ButtonListenerAndReboot(ButtonService.getButton5(), LedService.getLed5(), 5);

@@ -114,9 +114,9 @@ public class InformationServerRegister extends Thread {
 			if(list_failed!=null && list_failed.size()!=0){
 				int size = list_failed.size();
 				logger.debug("Going to update CounterPeople failed "+size);
-				System.out.println("ids failed: "+getIds(list_failed));
+				//System.out.println("ids failed: "+getIds(list_failed));
 				String ok = CounterPeopleService.saveFailedServerBulky(list_failed);
-				System.out.println("ids failed: "+ok);
+				//System.out.println("ids failed: "+ok);
 				if(ok==null){
 					logger.error("Error on saveFailedServerBulky");
 				}
@@ -135,9 +135,9 @@ public class InformationServerRegister extends Thread {
 				int total = CounterPeopleService.notUploadedTotal();
 				//activeFastUpdate(total);
 				logger.debug("Going to update CounterPeople "+size+"/"+total);
-				System.out.println("ids: "+getIds(list));
+				//System.out.println("ids: "+getIds(list));
 				String ok = CounterPeopleService.saveServerBulky(list);
-				System.out.println("ids: "+ok);
+				//System.out.println("ids: "+ok);
 				if(ok==null){
 					logger.error("Error on bulky, back to normal update");
 					//activeFastUpdate(0);

@@ -78,7 +78,7 @@ public class AlertTest {
 	
 	@Test
 	public void DataAlertsRegister() {
-		DataAlertsRegister register = new DataAlertsRegister();
+		DataAlertsRegister register = new DataAlertsRegister(null);
 		register.run();
 	}
 }
