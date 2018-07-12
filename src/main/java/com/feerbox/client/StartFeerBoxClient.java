@@ -63,6 +63,7 @@ public class StartFeerBoxClient {
     		}
         	InitGPIO();
         	logger.debug("GPIO initialized");
+        	LedService.getLed1().pulse(5000, true);
             lights();
             logger.debug("Lights done");
             StartLedPower();
