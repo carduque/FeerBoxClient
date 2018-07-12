@@ -62,10 +62,7 @@ public class StartFeerBoxClient {
     			logger.error("Error writing version file: "+e.getMessage());
     		}
         	InitGPIO();
-        	logger.debug("GPIO initialized");
-        	LedService.getLed1().pulse(5000, true);
             lights();
-            logger.debug("Lights done");
             StartLedPower();
             StartNFCReaderThreat();
             StartCounterPeoplePolling();
