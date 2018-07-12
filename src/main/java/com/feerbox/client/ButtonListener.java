@@ -30,11 +30,9 @@ public class ButtonListener implements GpioPinListenerDigital {
             AnswerService.saveAnswer(buttonNumber);
 		}
         if(event.getState().equals(PinState.HIGH)){
-        	logger.debug("button pulsed");
         	this.exactTime = new Date();
         	//We would like to light led when push
         	Led.pulse(1000, true); // set second argument to 'true' use a blocking call
-        	logger.debug("light on");
         }
 	}
 
