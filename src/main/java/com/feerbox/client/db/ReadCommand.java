@@ -66,8 +66,9 @@ public class ReadCommand extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload from Commands where finishTime is null and startTime is not null");
+			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload from Commands where finishTime is null and startTime is not null and upload=0");
 			while (rs.next()) {
+				logger.debug("Command under execution: "+rs.getString("command")+" - "+rs.getString("startTime")+" - "+rs.getString("finishTime"));
 				out = true;
 			}
 		} catch (SQLException e) {
