@@ -1,12 +1,15 @@
 package com.feerbox.client.model;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class CounterPeople {
-	public static enum Type {PIR, DISTANCE_SENSOR, LASER};
+public class CounterPeople implements Serializable{
+	
+	private static final long serialVersionUID = -3681854687185186760L;
+	public static enum Type {PIR, DISTANCE_SENSOR, LASER, SDI};
 	private long id;
 	private Date time;
 	private double distance;
@@ -56,5 +59,9 @@ public class CounterPeople {
 	public Type getType() {
 		return type;
 	}
-	
+	@Override
+	public String toString() {
+		return "CounterPeople [id=" + id + ", time=" + time + ", distance=" + distance + ", feerBoxReference="
+				+ feerBoxReference + ", upload=" + upload + ", type=" + type + "]";
+	}
 }
