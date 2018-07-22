@@ -14,6 +14,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.feerbox.client.db.ReadCounterPeople;
+import com.feerbox.client.db.RemoveCounterPeople;
 import com.feerbox.client.db.SaveCounterPeople;
 import com.feerbox.client.model.CounterPeople;
 import com.feerbox.client.registers.ClientRegister;
@@ -216,6 +217,14 @@ public class CounterPeopleService {
 
 	public static CounterPeople getLastSaved() {
 		return ReadCounterPeople.getLastSaved();
+	}
+
+	public static long save(CounterPeople counterpeople) {
+		return SaveCounterPeople.save(counterpeople);
+	}
+
+	public static int delete(CounterPeople counterpeople) {
+		return RemoveCounterPeople.delete(counterpeople);
 	}
 
 }

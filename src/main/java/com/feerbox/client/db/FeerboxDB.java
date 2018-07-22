@@ -16,6 +16,8 @@ public class FeerboxDB {
 			if (connection == null || connection.isClosed()) {
 				if (System.getenv("TEST") != null || System.getProperty("TEST")!=null) {
 					createConnectionTEST();
+				} else if(System.getProperty("SDI2Feerbox")!=null){
+					createConnectionSDI2Feerbox();
 				} else {
 					createConnection();
 				}
@@ -25,6 +27,20 @@ public class FeerboxDB {
 			logger.error("SQLException", e);
 		}
 		return connection;
+	}
+
+	private static void createConnectionSDI2Feerbox() {
+		connection = null;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			connection = DriverManager.getConnection(
+					"jdbc:sqlite:"+System.getProperty("SDI2Feerbox"));
+			connection.setAutoCommit(true);
+		} catch (SQLException e) {
+			logger.error("SQLException", e);
+		} catch (ClassNotFoundException e) {
+			logger.error("ClassNotFoundException", e);
+		}
 	}
 
 	private static void createTables() {
