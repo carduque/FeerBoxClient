@@ -6,9 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class CounterPeople implements Serializable{
+public class CounterPeople{
 	
-	private static final long serialVersionUID = -3681854687185186760L;
 	public static enum Type {PIR, DISTANCE_SENSOR, LASER, SDI};
 	private long id;
 	private Date time;
