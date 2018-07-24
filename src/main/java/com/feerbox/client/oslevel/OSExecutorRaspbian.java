@@ -128,11 +128,11 @@ public class OSExecutorRaspbian implements OSExecutor {
 		} else {
 			InternetAccess.getInstance().setAccess(false);
 			if(ClientRegister.getInstance().getUSB3G()){
-				String line2 = executeCommandLine("sudo ifup gprs");
+				String line2 = executeCommandLine("sudo systemctl restart networking");
 				if(line2!=null && "".equals(line)){
-					logger.info("GPRS interface restarted succesfully");
+					logger.info("All interfaces restarted succesfully");
 				} else {
-					logger.warn("GPRS interface was already up or there is an issue with it: "+line2);
+					logger.warn("All interfaces was already up or there is an issue with it: "+line2);
 				}
 			}
 		}
