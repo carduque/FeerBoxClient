@@ -226,6 +226,16 @@ public class ClientRegister {
 			}
 			logger.info("Property "+key+" added with value "+value);
 		}
+		if(key.equals("windows")){
+			value = "false";
+			configuration.setProperty(key, value);
+			try {
+				configuration.save();
+			} catch (ConfigurationException e) {
+				logger.error("Storing config file: "+e.getMessage());
+			}
+			logger.info("Property "+key+" added with value "+value);
+		}
 		return value;
 	}
 
@@ -601,6 +611,16 @@ public class ClientRegister {
 
 	public void setLastWeatherSaved(Date lastWeatherSaved) {
 		this.lastWeatherSaved = lastWeatherSaved;
+	}
+	
+	public boolean getWindows() {
+		boolean out = false;
+		try {
+			out = Boolean.parseBoolean(getProperty("windows"));
+		} catch (Exception e) {
+			logger.error("windows: "+e.getMessage());
+		}
+		return out;
 	}
 
 }

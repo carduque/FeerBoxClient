@@ -44,7 +44,7 @@ public class StartFeerBoxClient {
 	public static final String version = "1.7.2.0";
 	public static String app_path = "/opt/FeerBoxClient/FeerBoxClient";
 	public static MACDetection sniffer;
-	public static boolean windows = false;
+	public static boolean windows = ClientRegister.getInstance().getWindows();
 	public static OSExecutor oSExecutor;
 	final static Logger logger = Logger.getLogger(StartFeerBoxClient.class);
 	
