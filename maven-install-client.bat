@@ -1,1 +1,2 @@
+rem mvn exec:java -DSDI2Feerbox=C:/Software/HCB/FeerBoxClient/db/feerboxclient.db -Dsun.security.smartcardio.library=/usr/lib/arm-linux-gnueabihf/libpcsclite.so.1 -Dexec.mainClass="com.feerbox.client.StartFeerBoxClient"
 mvn clean install -Dmaven.test.skip=true -Dmaven.clean.failOnError=false

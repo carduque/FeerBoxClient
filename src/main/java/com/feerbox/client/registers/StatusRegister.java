@@ -398,6 +398,10 @@ public class StatusRegister extends Register {
 			        	this.ip = addr.getHostAddress();
 			        	out = "true";
 			        }
+			        if((this.ip==null || "".equals(this.ip.trim())) && iface.getName().toUpperCase().contains("eth")){
+			        	this.ip = addr.getHostAddress();
+			        	out = "true";
+			        }
 		        }
 		    }
 		}
