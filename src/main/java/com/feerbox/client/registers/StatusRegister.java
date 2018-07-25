@@ -398,7 +398,7 @@ public class StatusRegister extends Register {
 			        	this.ip = addr.getHostAddress();
 			        	out = "true";
 			        }
-			        if((this.ip==null || "".equals(this.ip.trim())) && iface.getName().toUpperCase().contains("ETH")){
+			        if((this.ip==null || "".equals(this.ip.trim())) && iface.getName().toUpperCase().contains("ETH1")){
 			        	this.ip = addr.getHostAddress();
 			        	out = "true";
 			        }
