@@ -305,9 +305,7 @@ public class StatusRegister extends Register {
 	}
 
 	private String getIp() throws SocketException, InterruptedException {
-		if(this.ip!=null && this.ip.equals("")){
-			getInternetStatus();
-		}
+		getInternetStatus();
 		return this.ip;
 	}
 
@@ -378,6 +376,7 @@ public class StatusRegister extends Register {
 	private String getInternetStatus() throws SocketException, InterruptedException {
 		//logger.debug("going to check wifi conection");
 		String out = "false";
+		this.ip = "";
 		Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 		while (interfaces.hasMoreElements()) {
 		    NetworkInterface iface = interfaces.nextElement();
@@ -389,16 +388,16 @@ public class StatusRegister extends Register {
 		    while(addresses.hasMoreElements()) {
 		        InetAddress addr = addresses.nextElement();
 		        //logger.debug(iface.getName());
-		        if(iface.getName().toUpperCase().contains("WLAN0")){
+		        if(iface.getName().toUpperCase().contains("WLAN0") && addr!=null && !addr.getHostAddress().equals("")){
 		        	this.ip = addr.getHostAddress();
 		        	out = "true";
 		        }
 		        if(ClientRegister.getInstance().getUSB3G()){
-			        if((this.ip==null || "".equals(this.ip.trim())) && iface.getName().toUpperCase().contains("PPP0")){
+			        if((this.ip==null || "".equals(this.ip.trim())) && iface.getName().toUpperCase().contains("PPP0") && addr!=null && !addr.getHostAddress().equals("")){
 			        	this.ip = addr.getHostAddress();
 			        	out = "true";
 			        }
-			        if((this.ip==null || "".equals(this.ip.trim())) && iface.getName().toUpperCase().contains("ETH1")){
+			        if((this.ip==null || "".equals(this.ip.trim())) && iface.getName().toUpperCase().contains("ETH1") && addr!=null && !addr.getHostAddress().equals("")){
 			        	if(addr.getHostAddress()!=null && addr.getHostAddress().matches("\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b"))
 			        	this.ip = addr.getHostAddress();
 			        	out = "true";

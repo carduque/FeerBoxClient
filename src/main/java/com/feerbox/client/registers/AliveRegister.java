@@ -15,6 +15,7 @@ public class AliveRegister extends Register {
 	final static Logger logger = Logger.getLogger(AliveRegister.class);
 	private static boolean firstTimeTethering = false;
 	private ScheduledFuture<?> future;
+	private String ssid_before = "";
 
 	public AliveRegister(OSExecutor oSExecutor) {
 		super(oSExecutor);
@@ -45,7 +46,6 @@ public class AliveRegister extends Register {
 
 	private void checkTetheringDetection() {
 		try {
-			String ssid = "";
 			Process uptimeProc = Runtime.getRuntime().exec("iwgetid -r");
 			BufferedReader in = new BufferedReader(new InputStreamReader(uptimeProc.getInputStream()));
 			String line = in.readLine();
@@ -62,6 +62,11 @@ public class AliveRegister extends Register {
 					firstTimeTethering = true;
 				} else {
 					firstTimeTethering = false;
+					if(!ssid_before.equals(line)){
+						ssid_before = line;
+						StatusRegister status = new StatusRegister(this.oSExecutor);
+						status.run();
+					}
 				}
 			}
 		} catch (IOException e) {

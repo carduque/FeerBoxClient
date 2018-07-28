@@ -20,7 +20,6 @@ public class MonitorInternetConnectionRegister extends TimerTask {
 		}
 		else{
 			logger.warn("Internet connection NOT ALIVE");
-			//TODO maybe restart all connections?
 			//service networking restart
 			String line = executeCommandLine("sudo systemctl restart networking");
 			if(line!=null && "".equals(line)){
