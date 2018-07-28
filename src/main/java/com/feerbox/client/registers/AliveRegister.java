@@ -44,26 +44,28 @@ public class AliveRegister extends Register {
 	}
 
 	private void checkTetheringDetection() {
-		if (ClientRegister.getInstance().getTetheringLightsEnabled()) {
-			try {
-				String ssid = "";
-				Process uptimeProc = Runtime.getRuntime().exec("iwgetid -r");
-				BufferedReader in = new BufferedReader(new InputStreamReader(uptimeProc.getInputStream()));
-				String line = in.readLine();
-				// 07:33:54 up 11 min, 1 user, load average: 1.14, 0.96, 0.55
-				// 16:30:34 up 6:40, 1 user, load average: 0.01, 0.01, 0.00
-				if (line != null) {
-					if ((line.trim().equals("feerbox-wifi") || line.trim().equals("feerbox.com")) && firstTimeTethering == false) {
-						// Tethering activated
+		try {
+			String ssid = "";
+			Process uptimeProc = Runtime.getRuntime().exec("iwgetid -r");
+			BufferedReader in = new BufferedReader(new InputStreamReader(uptimeProc.getInputStream()));
+			String line = in.readLine();
+			// 07:33:54 up 11 min, 1 user, load average: 1.14, 0.96, 0.55
+			// 16:30:34 up 6:40, 1 user, load average: 0.01, 0.01, 0.00
+			if (line != null) {
+				if ((line.trim().equals("feerbox-wifi") || line.trim().equals("feerbox.com")) && firstTimeTethering == false) {
+					// Tethering activated
+					if (ClientRegister.getInstance().getTetheringLightsEnabled()) {
 						LedService.animation();
-						firstTimeTethering = true;
-					} else {
-						firstTimeTethering = false;
 					}
+					StatusRegister status = new StatusRegister(this.oSExecutor);
+					status.run();
+					firstTimeTethering = true;
+				} else {
+					firstTimeTethering = false;
 				}
-			} catch (IOException e) {
-				logger.error("IOException", e);
 			}
+		} catch (IOException e) {
+			logger.error("IOException", e);
 		}
 	}
 
