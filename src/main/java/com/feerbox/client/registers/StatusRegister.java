@@ -399,6 +399,7 @@ public class StatusRegister extends Register {
 			        	out = "true";
 			        }
 			        if((this.ip==null || "".equals(this.ip.trim())) && iface.getName().toUpperCase().contains("ETH1")){
+			        	if(addr.getHostAddress()!=null && addr.getHostAddress().matches("\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b"))
 			        	this.ip = addr.getHostAddress();
 			        	out = "true";
 			        }
