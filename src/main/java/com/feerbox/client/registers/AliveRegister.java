@@ -13,7 +13,7 @@ import com.feerbox.client.services.LedService;
 
 public class AliveRegister extends Register {
 	final static Logger logger = Logger.getLogger(AliveRegister.class);
-	private static boolean firstTimeTethering = false;
+	private static boolean teTheringActivated = false;
 	private ScheduledFuture<?> future;
 	private String ssid_before = "";
 
@@ -52,20 +52,26 @@ public class AliveRegister extends Register {
 			// 07:33:54 up 11 min, 1 user, load average: 1.14, 0.96, 0.55
 			// 16:30:34 up 6:40, 1 user, load average: 0.01, 0.01, 0.00
 			if (line != null) {
-				if ((line.trim().equals("feerbox-wifi") || line.trim().equals("feerbox.com")) && firstTimeTethering == false) {
+				if ((line.trim().equals("feerbox-wifi") || line.trim().equals("feerbox.com")) && teTheringActivated == false) {
 					// Tethering activated
 					if (ClientRegister.getInstance().getTetheringLightsEnabled()) {
 						LedService.animation();
 					}
 					StatusRegister status = new StatusRegister(this.oSExecutor);
 					status.run();
-					firstTimeTethering = true;
+					teTheringActivated = true;
 				} else {
-					firstTimeTethering = false;
+					teTheringActivated = false;
 					if(!ssid_before.equals(line)){
 						ssid_before = line;
 						StatusRegister status = new StatusRegister(this.oSExecutor);
 						status.run();
+					}
+					if(ClientRegister.getInstance().getUSB3G()){
+						String wlan = oSExecutor.executeCommandLine("sudo ifup wlan0");
+						if(wlan!=null && !"ifup: interface wlan0 already configured".equals(wlan)){
+							logger.info("WLAN interface was down, restarted");
+						}
 					}
 				}
 			}
