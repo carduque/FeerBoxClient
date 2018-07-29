@@ -11,19 +11,17 @@ import com.feerbox.client.db.ReadAnswer;
 import com.feerbox.client.db.ReadCleaningService;
 import com.feerbox.client.db.SaveAnswer;
 import com.feerbox.client.db.SaveCleaningService;
-import com.feerbox.client.model.Alert;
 import com.feerbox.client.model.Answer;
 import com.feerbox.client.model.CleaningService;
 import com.feerbox.client.model.Command;
 import com.feerbox.client.model.CounterPeople;
 import com.feerbox.client.model.MAC;
 import com.feerbox.client.model.Weather;
-import com.feerbox.client.services.AlertService;
+import com.feerbox.client.services.AnswerService;
 import com.feerbox.client.services.CleaningServiceService;
 import com.feerbox.client.services.CommandService;
 import com.feerbox.client.services.CounterPeopleService;
 import com.feerbox.client.services.MACService;
-import com.feerbox.client.services.AnswerService;
 import com.feerbox.client.services.WeatherService;
 
 public class InformationServerRegister extends Thread {
