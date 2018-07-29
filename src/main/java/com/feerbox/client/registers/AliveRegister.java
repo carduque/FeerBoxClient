@@ -67,12 +67,12 @@ public class AliveRegister extends Register {
 						StatusRegister status = new StatusRegister(this.oSExecutor);
 						status.run();
 					}
-					if(ClientRegister.getInstance().getUSB3G()){
-						String wlan = oSExecutor.executeCommandLine("sudo ifup wlan0");
-						if(wlan!=null && !"ifup: interface wlan0 already configured".equals(wlan)){
-							logger.info("WLAN interface was down, restarted");
-						}
-					}
+				}
+			}
+			if(ClientRegister.getInstance().getUSB3G() && (line==null || "".equals(line))){
+				String wlan = oSExecutor.executeCommandLine("sudo ifup wlan0");
+				if(wlan!=null && !"ifup: interface wlan0 already configured".equals(wlan)){
+					logger.info("WLAN interface was down, restarted");
 				}
 			}
 		} catch (IOException e) {
