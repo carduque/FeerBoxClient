@@ -254,4 +254,8 @@ public class CommandService {
 		SaveCommand.cleanUnderExecution();
 	}
 
+	public static void cleanOutputSentLogs() {
+		SaveCommand.cleanOutputSent();
+	}
+
 }

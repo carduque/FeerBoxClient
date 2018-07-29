@@ -145,4 +145,27 @@ public class SaveCommand extends FeerboxDB {
 		}
 		if(updated>0) logger.debug("Cleaned "+updated+" commands under execution");
 	}
+
+	public static void cleanOutputSent() {
+		Statement statement = null;
+		int updated = 0;
+		try {
+			// create a database connection
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+			// statement.executeUpdate("drop table if exists person");
+			updated = statement.executeUpdate("update Commands set output=null where upload=1");
+		} catch (SQLException e) {
+			logger.error("SQLException", e);
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.error("SQLException", e);
+			}
+		}
+		if(updated>0) logger.debug("Cleaned "+updated+" command's output already sent");
+	}
 }

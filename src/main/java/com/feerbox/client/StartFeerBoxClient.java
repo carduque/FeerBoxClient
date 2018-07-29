@@ -101,17 +101,41 @@ public class StartFeerBoxClient {
 	
 	private static void cleanCommandsUnderExecution() {
 		CommandService.cleanUnderExecution();
+		CommandService.cleanOutputSentLogs();
 	}
 
 	private static void sendConfandLastLog() {
 		if(!CommandService.wasExecutedToday("cat-yesterday-log.sh")) sendYesterdayLog();
 		if(!CommandService.wasExecutedToday("cat-config.sh")) sendConfiguration();
+		if(!CommandService.wasExecutedToday("cat-network-config.sh")) sendNetworkConfiguration();
 	}
 	
 	private static void sendConfiguration() {
 		Command command = new Command();
 		command.setTime(new Date());
 		command.setCommand("cat-config.sh");
+		command.setRestart(false);
+		command.setStartTime(new Date());
+		command.setParameter("");
+		command.setOutput(executeUnsoCommand(command));
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, -1);
+		calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+		command.setFinishTime(calendar.getTime());
+		if(sendUnsoCommand(command)){
+			command.setUpload(true);
+			command.setFinishTime(new Date());
+			CommandService.save(command);
+		}
+		
+	}
+	private static void sendNetworkConfiguration() {
+		Command command = new Command();
+		command.setTime(new Date());
+		command.setCommand("cat-network-config.sh");
 		command.setRestart(false);
 		command.setStartTime(new Date());
 		command.setParameter("");
