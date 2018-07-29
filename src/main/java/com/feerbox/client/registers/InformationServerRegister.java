@@ -51,20 +51,6 @@ public class InformationServerRegister extends Thread {
 	}
 	private void uploadAlerts() {
 		if(ClientRegister.getInstance().getAlertsEnabled()){
-			List<Alert> list = AlertService.notUploaded();
-			if(list!=null && list.size()!=0){
-				logger.debug("Going to update alert data "+list.size());
-				int i=1;
-				for(Alert alert: list){
-					boolean ok = AlertService.saveServer(alert);
-					if(ok){
-						AlertService.uploaded(alert);
-					} else{
-						logger.info("Not able to upload alert data on server");
-					}
-					i++;
-				}
-			}
 		}
 	}
 	private void uploadWeather() {
