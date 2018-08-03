@@ -94,7 +94,7 @@ public class ReadCommand extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 			// statement.executeUpdate("drop table if exists person");
 			//createCommandsTableIfNotExists(statement);
-			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload, restart, parameter from Commands where upload=0 and startTime is null and finishTime is null order by time asc limit 1");
+			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload, restart, parameter, retry_counter from Commands where upload=0 and startTime is null and finishTime is null order by time asc limit 1");
 			while (rs.next()) {
 				command = new Command();
 				command.setId(rs.getInt("id"));
@@ -112,6 +112,7 @@ public class ReadCommand extends FeerboxDB {
 				}
 				command.setUpload(rs.getInt("upload")==1); //1: true - 0: false
 				command.setRestart(rs.getInt("restart")==1); //1: true - 0: false
+				command.setRetryCounter(rs.getInt("retry_counter"));
 			}
 		} catch (SQLException e) {
 			logger.error("SQLException", e);
@@ -137,7 +138,7 @@ public class ReadCommand extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload, serverId, output, parameter from Commands where finishTime is not null and command='"+script+"' order by time desc limit 1");
+			ResultSet rs = statement.executeQuery("select id, time, command, startTime, finishTime, upload, serverId, output, parameter, retry_counter from Commands where finishTime is not null and command='"+script+"' order by time desc limit 1");
 			while (rs.next()) {
 				command.setId(rs.getInt("id"));
 				String time = rs.getString("time");
@@ -151,6 +152,7 @@ public class ReadCommand extends FeerboxDB {
 				command.setServerId(rs.getInt("serverId"));
 				command.setOutput(rs.getString("output"));
 				command.setParameter(rs.getString("parameter"));
+				command.setRetryCounter(rs.getInt("retry_counter"));
 			}
 		} catch (SQLException e) {
 			logger.error("SQLException", e);

@@ -30,11 +30,11 @@ public class SaveCommand extends FeerboxDB {
 			if(command.getParameter()!=null){
 				parameter = command.getParameter().replaceAll("'","''");
 			}
-			String sql = "insert into Commands (time, command, serverId, upload, serverCreationTime, restart, parameter, startTime, finishTime) "
+			String sql = "insert into Commands (time, command, serverId, upload, serverCreationTime, restart, parameter, startTime, finishTime, retry_counter) "
 					+ "values(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW', 'localtime'),'" + command.getCommand() + "',  "+command.getServerId()+", "+upload
 							+", STRFTIME('%Y-%m-%d %H:%M:%f', '"+ command.getServerCreationTimeFormatted()+"'), "
 									+restart+",'"+parameter+"',STRFTIME('%Y-%m-%d %H:%M:%f', '"+ command.getStartTimeFormatted()+"'),"
-									+"STRFTIME('%Y-%m-%d %H:%M:%f', '"+ command.getFinishTimeFormatted()+"'))";
+									+"STRFTIME('%Y-%m-%d %H:%M:%f', '"+ command.getFinishTimeFormatted()+"'), "+command.getRetryCounter()+")";
 			//logger.debug(sql);
 			statement.executeUpdate(sql);
 			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM Commands LIMIT 1");
@@ -133,7 +133,7 @@ public class SaveCommand extends FeerboxDB {
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
 			// statement.executeUpdate("drop table if exists person");
-			updated = statement.executeUpdate("update Commands set startTime=null where startTime is not null and finishTime is null and upload=0");
+			updated = statement.executeUpdate("update Commands set startTime=null, retry_counter=retry_counter+1 where startTime is not null and finishTime is null and upload=0");
 		} catch (SQLException e) {
 			logger.error("SQLException", e);
 		} finally {

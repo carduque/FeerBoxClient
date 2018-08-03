@@ -2,6 +2,7 @@ package com.feerbox.client.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -164,9 +165,20 @@ public class FeerboxDB {
 		statement.setQueryTimeout(30); // set timeout to 30 sec.		
 		// logger.debug("Creating table if not exists...");
 		// table = ClientRegister.getInstance().getCustomer();
-		String sql = "create table if not exists Commands (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, command varchar, output varchar, startTime timestamp, finishTime timestamp, serverId integer, upload integer, serverCreationTime timestamp, restart integer, parameter varchar)";
+		String sql = "create table if not exists Commands (id INTEGER PRIMARY KEY AUTOINCREMENT, time timestamp, command varchar, output varchar, startTime timestamp, finishTime timestamp, serverId integer, upload integer, serverCreationTime timestamp, restart integer, parameter varchar, retry_counter integer)";
 		// logger.debug(sql);
 		statement.executeUpdate(sql);
+		
+		//Going to check if new column needs to be added
+		boolean retry_created = false;
+		ResultSet rs = statement.executeQuery("PRAGMA table_info(commands)");
+		while (rs.next()) {
+			String column_name = rs.getString("name");
+			if(column_name.equals("retry_counter")) retry_created = true;
+		}
+		if(!retry_created){
+			statement.executeUpdate("alter table Commands add column retry_counter integer default 0");
+		}
 	}
 
 	private static void createAlertsTableIfNotExists() throws SQLException {

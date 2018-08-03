@@ -109,7 +109,14 @@ public class CommandService {
 	}
 
 	public static Command startNextExecution() {
-		return ReadCommand.startNextExecution();
+		Command command = ReadCommand.startNextExecution();
+		if(command.getRetryCounter()>1){
+			//Report as issue with this command
+			command.setOutput("COMMAND_NOT_EXECUTED_AFTER_2_RETRIES");
+			SaveCommand.saveFinishExecution(command);
+			command = null;
+		}
+		return command;
 	}
 
 

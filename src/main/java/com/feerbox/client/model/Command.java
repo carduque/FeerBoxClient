@@ -17,6 +17,7 @@ public class Command {
 	private Date serverCreationTime;
 	private boolean restart;
 	private String parameter;
+	private int retryCounter;
 	
 	public String getOutput() {
 		return output;
@@ -113,12 +114,19 @@ public class Command {
 	public void setParameter(String parameter) {
 		this.parameter = parameter;
 	}
+	public int getRetryCounter() {
+		return retryCounter;
+	}
+	public void setRetryCounter(int retryCounter) {
+		this.retryCounter = retryCounter;
+	}
 	@Override
 	public String toString() {
 		return "Command [id=" + id + ", command=" + command + ", output=" + output + ", time=" + time + ", startTime="
 				+ startTime + ", finishTime=" + finishTime + ", upload=" + upload + ", serverId=" + serverId
 				+ ", serverCreationTime=" + serverCreationTime + ", restart=" + restart + ", parameter=" + parameter
-				+ "]";
+				+ ", retryCounter=" + retryCounter + "]";
 	}
+	
 	
 }
