@@ -95,4 +95,43 @@ public class SaveCounterPeople extends FeerboxDB {
 		
 	}
 
+	/*
+	 * To be used only for SDI boxes
+	 */
+	public static long saveDelayed(CounterPeople counterPeople) {
+		//logger.debug("going to save counterPeople locally");
+		long id = 0;
+		Statement statement = null;
+		try {
+			// create a database connection
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+
+			int upload = 0;
+			if(counterPeople.getUpload()){
+				upload=1;
+			}
+			String sql = "insert into CounterPeople (time, distance, reference, type, upload) "
+					+ "values(STRFTIME('%Y-%m-%d %H:%M:%f', '"+ counterPeople.getTimeFormatted()+"')," + counterPeople.getDistance() + ",  '"+counterPeople.getFeerBoxReference()+"', '"+counterPeople.getType().name()+"',"+upload+")";
+			//logger.debug(sql);
+			statement.executeUpdate(sql);
+			ResultSet rs = statement.executeQuery("SELECT last_insert_rowid() AS rowid FROM CounterPeople LIMIT 1");
+			while (rs.next()) {
+				id = rs.getLong("rowid");
+			}
+			//logger.debug("CounterPeople registered offline: "+id);
+		} catch (SQLException e) {
+			logger.error("SQLException", e);
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.error("SQLException", e);
+			}
+		}
+		ClientRegister.getInstance().setLastCPSaved(counterPeople.getTime());
+		return id;
+	}
+
 }

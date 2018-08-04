@@ -227,4 +227,8 @@ public class CounterPeopleService {
 		return RemoveCounterPeople.delete(counterpeople);
 	}
 
+	public static long saveDelayed(CounterPeople counterpeople) {
+		return SaveCounterPeople.saveDelayed(counterpeople);
+	}
+
 }
