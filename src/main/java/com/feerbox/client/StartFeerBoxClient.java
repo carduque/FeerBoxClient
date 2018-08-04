@@ -69,6 +69,9 @@ public class StartFeerBoxClient {
             StartWeatherSensorThread();
             StartWifiDetectionThread();
             registerButtonListeners();
+            restartEveryDay();
+            MonitorInternetConnection();
+            sendConfandLastLog();
         } else {
         	oSExecutor = new OSExecutorWindows();
         	System.out.println("TEST: "+System.getProperty("TEST"));
@@ -81,13 +84,7 @@ public class StartFeerBoxClient {
         saveInformationServerThread();
         StartCommandServerPolling();
         StartCleanerServerPolling();
-        
         //checkForAlertsThread();
-        // create and register gpio pin listener
-       
-        restartEveryDay();
-        MonitorInternetConnection();
-        sendConfandLastLog();
         logger.debug("Initialization completed");
         // keep program running until user aborts (CTRL-C)
         for (;;) {

@@ -38,7 +38,7 @@ public class AliveRegister extends Register {
 				}*/
 			}
 			aliveLights();
-			checkTetheringDetection();
+			if(!ClientRegister.getInstance().getWindows()) checkTetheringDetection();
 		} catch (Throwable  t) {
 			logger.error("Error at AliveRegister");
 		}
