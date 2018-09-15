@@ -6,11 +6,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import com.feerbox.client.db.SaveCommand;
 import com.feerbox.client.model.Command;
 import com.feerbox.client.registers.ClientRegister;
 import com.feerbox.client.registers.InternetAccess;
@@ -20,48 +18,27 @@ public class OSExecutorRaspbian implements OSExecutor {
 	
 	@Override
 	public String executeCommand(Command command) {
-		if(command!=null){
-			logger.debug("Going to execute a command: "+command.getCommand()+" "+command.getParameter());
-			ClientRegister.getInstance().setLastExecuteCommand(new Date());
-			SaveCommand.startExecution(command);
-			//List<String> commandParameters = command.getParameters();
-			//commandParameters.add(0, command.getCommand());
-			List<String> parameters = new ArrayList<String>();
-			parameters.add("/bin/bash");
-			parameters.add(command.getCommand());
-			if(command.getParameter()!=null){
-				String[] parametersArray = command.getParameter().split("\\s+");
-				parameters.addAll(Arrays.asList(parametersArray));
-			}
-			ProcessBuilder pb = new ProcessBuilder(parameters);
-			/*Map<String, String> env = pb.environment();
-			env.put("VAR1", "myValue");
-			env.remove("OTHERVAR");
-			env.put("VAR2", env.get("VAR1") + "suffix");*/
-			pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts"));
-			try {
-				Process process = pb.start();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-				StringBuilder builder = new StringBuilder();
-				String line = null;
-				while ( (line = reader.readLine()) != null) {
-				   builder.append(line);
-				   builder.append(System.getProperty("line.separator"));
-				}
-				command.setOutput(builder.toString());
-				logger.debug("Command executed succesfully: "+command.getCommand());
-				if(command.getId()!=0) SaveCommand.saveFinishExecution(command);
-				if(command.getRestart()){
-					logger.debug("Going to restart");
-					restart();
-				}
-			} catch (IOException e) {
-				logger.error("IOException", e);
-			}
-			return command.getOutput();
+		List<String> parameters = new ArrayList<String>();
+		parameters.add("/bin/bash");
+		parameters.add(command.getCommand());
+		if(command.getParameter()!=null){
+			String[] parametersArray = command.getParameter().split("\\s+");
+			parameters.addAll(Arrays.asList(parametersArray));
 		}
-		else{
-			//logger.debug("There is no command to be executed");
+		ProcessBuilder pb = new ProcessBuilder(parameters);
+		pb.directory(new File("/opt/FeerBoxClient/FeerBoxClient/scripts"));
+		try {
+			Process process = pb.start();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			StringBuilder builder = new StringBuilder();
+			String line = null;
+			while ( (line = reader.readLine()) != null) {
+			   builder.append(line);
+			   builder.append(System.getProperty("line.separator"));
+			}
+			return builder.toString();
+		} catch (IOException e) {
+			logger.error("IOException", e);
 		}
 		return null;
 	}

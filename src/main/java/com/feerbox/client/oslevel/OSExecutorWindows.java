@@ -17,7 +17,21 @@ public class OSExecutorWindows implements OSExecutor {
 
 	@Override
 	public String executeCommand(Command command) {
-		// TODO Auto-generated method stub
+		try {
+			ProcessBuilder pb= new ProcessBuilder(command.getCommand());
+			pb.redirectErrorStream(true);
+			Process process=pb.start();
+			BufferedReader inStreamReader = new BufferedReader(new InputStreamReader(process.getInputStream())); 
+			StringBuilder builder = new StringBuilder();
+			String line = null;
+			while ( (line = inStreamReader.readLine()) != null) {
+				 builder.append(line);
+				 builder.append(System.getProperty("line.separator"));
+			}
+			return builder.toString();
+		} catch (IOException e) {
+			logger.error("IOException", e);
+		}
 		return null;
 	}
 
