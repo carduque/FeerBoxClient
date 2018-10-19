@@ -69,7 +69,7 @@ public class AliveRegister extends Register {
 					}
 				}
 			}
-			if(ClientRegister.getInstance().getUSB3G() && (line==null || "".equals(line))){
+			if(!ClientRegister.getInstance().getUSB3G() && (line==null || "".equals(line))){
 				String wlan = oSExecutor.executeCommandLine("sudo ifup wlan0");
 				if(wlan!=null && !"ifup: interface wlan0 already configured".equals(wlan)){
 					logger.info("WLAN interface was down, restarted: "+wlan);
