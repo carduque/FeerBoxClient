@@ -8,7 +8,7 @@ import java.util.TimeZone;
 
 public class CounterPeople{
 	
-	public static enum Type {PIR, DISTANCE_SENSOR, LASER, SDI};
+	public static enum Type {PIR, DISTANCE_SENSOR, LASER, SDI,SDI_USB};
 	private long id;
 	private Date time;
 	private double distance;
