@@ -623,4 +623,14 @@ public class ClientRegister {
 		return out;
 	}
 
+	public boolean getTempSensor() {
+		boolean out = false;
+		try {
+			out = Boolean.parseBoolean(getProperty("tempsensor"));
+		} catch (Exception e) {
+			logger.error("tempsensor: "+e.getMessage());
+		}
+		return out;
+	}
+
 }

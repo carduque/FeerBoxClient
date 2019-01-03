@@ -29,6 +29,7 @@ import com.feerbox.client.registers.MonitorInternetConnectionRegister;
 import com.feerbox.client.registers.NFCReader;
 import com.feerbox.client.registers.RestartEveryDayRegister;
 import com.feerbox.client.registers.StatusRegister;
+import com.feerbox.client.registers.TempSensorRegister;
 import com.feerbox.client.registers.WeatherSensorRegister;
 import com.feerbox.client.services.ButtonService;
 import com.feerbox.client.services.CommandService;
@@ -41,7 +42,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.7.3.1";
+	public static final String version = "1.7.4";
 	public static String app_path = "/opt/FeerBoxClient/FeerBoxClient";
 	public static MACDetection sniffer;
 	public static boolean windows = ClientRegister.getInstance().getWindows();
@@ -68,6 +69,7 @@ public class StartFeerBoxClient {
             StartCounterPeoplePolling();
             StartWeatherSensorThread();
             StartWifiDetectionThread();
+            //StartTempSensorThread();
             registerButtonListeners();
             restartEveryDay();
             MonitorInternetConnection();
@@ -96,6 +98,13 @@ public class StartFeerBoxClient {
         // gpio.shutdown();   <--- implement this method call if you wish to terminate the Pi4J GPIO controller        
     }
 	
+	private static void StartTempSensorThread() {
+		if(ClientRegister.getInstance().getTempSensor()){
+			TempSensorRegister tempSensor = new TempSensorRegister();
+			tempSensor.start();
+		}
+	}
+
 	private static void cleanCommandsUnderExecution() {
 		CommandService.cleanUnderExecution();
 		CommandService.cleanOutputSentLogs();

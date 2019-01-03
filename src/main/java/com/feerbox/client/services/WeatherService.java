@@ -85,7 +85,7 @@ public class WeatherService {
 			json.addProperty("humidity", weather.getHumidity());
 		}
 		json.addProperty("time", weather.getTimeFormatted());
-		json.addProperty("feerboxReference", weather.getFeerBoxReference());
+		json.addProperty("feerBoxReference", weather.getFeerBoxReference());
 		return json;
 	}
 
