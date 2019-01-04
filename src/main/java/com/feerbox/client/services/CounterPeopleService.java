@@ -231,4 +231,8 @@ public class CounterPeopleService {
 		return SaveCounterPeople.saveDelayed(counterpeople);
 	}
 
+	public static CounterPeople getLastSaved(String feerBoxReference) {
+		return ReadCounterPeople.getLastSaved(feerBoxReference);
+	}
+
 }

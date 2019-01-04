@@ -220,4 +220,35 @@ public class ReadCounterPeople extends FeerboxDB {
 		return counterPeople;
 	}
 
+	public static CounterPeople getLastSaved(String feerBoxReference) {
+		CounterPeople counterPeople = new CounterPeople();
+		Statement statement = null;
+		try {
+			Connection con = getConnection();
+			statement = con.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+			ResultSet rs = statement.executeQuery("select id, time, distance, type, reference, upload from counterPeople where reference='"+feerBoxReference+"' order by time desc limit 1");
+			while (rs.next()) {
+				counterPeople.setId(rs.getLong("id"));
+				String time = rs.getString("time");
+				counterPeople.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(time));
+				counterPeople.setDistance(rs.getDouble("distance"));
+				counterPeople.setType(CounterPeople.Type.valueOf(rs.getString("type")));
+				counterPeople.setFeerBoxReference(rs.getString("reference"));
+				counterPeople.setUpload(rs.getInt("upload")==1); //1: true - 0: false
+			}
+		} catch (SQLException e) {
+			logger.error("SQLException", e);
+		} catch (ParseException e) {
+			logger.error("ParseException", e);
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.error("SQLException", e);
+			}
+		}
+		return counterPeople;
+	}
+
 }
