@@ -29,6 +29,7 @@ public class ClientRegister {
 	private Date lastExecuteCommand;
 	private Date lastCPSaved;
 	private Date lastWeatherSaved;
+	private boolean voiceAnswer;
 
 	static
 	    {
@@ -236,6 +237,16 @@ public class ClientRegister {
 			}
 			logger.info("Property "+key+" added with value "+value);
 		}
+		if(key.equals("voice_answer")){
+			value = "false";
+			configuration.setProperty(key, value);
+			try {
+				configuration.save();
+			} catch (ConfigurationException e) {
+				logger.error("Storing config file: "+e.getMessage());
+			}
+			logger.info("Property "+key+" added with value "+value);
+		}
 		return value;
 	}
 
@@ -391,6 +402,14 @@ public class ClientRegister {
 
 	public ScheduledExecutorService getScheduler() {
 		return scheduler;
+	}
+
+	public boolean getVoiceAnswer() {
+		return Boolean.parseBoolean(getProperty("voice_answer"));
+	}
+
+	public void setVoiceAnswer(boolean voiceAnswer) {
+		this.voiceAnswer = voiceAnswer;
 	}
 
 	public void setScheduler(ScheduledExecutorService scheduler) {

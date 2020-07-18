@@ -42,7 +42,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class StartFeerBoxClient {
-	public static final String version = "1.7.4.2";
+	public static final String version = "1.7.5.0";
 	public static String app_path = "/opt/FeerBoxClient/FeerBoxClient";
 	public static MACDetection sniffer;
 	public static boolean windows = ClientRegister.getInstance().getWindows();
