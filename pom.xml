@@ -15,6 +15,17 @@
 		</snapshots>
 	</repository>
 	</repositories>
+	<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>libraries-bom</artifactId>
+      <version>7.0.0</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
 	<dependencies>
 		<dependency>
 		  <groupId>com.pi4j</groupId>
@@ -57,7 +68,14 @@
 		    <artifactId>pi4j-device</artifactId>
 		    <version>1.0</version>
 		</dependency>
-		
+		  	<dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-speech</artifactId>
+      </dependency>
+    <dependency>
+    <groupId>com.google.cloud</groupId>
+    <artifactId>google-cloud-storage</artifactId>
+  </dependency>
 	</dependencies>
 
 	<properties>
