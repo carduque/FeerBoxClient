@@ -17,6 +17,7 @@ import com.feerbox.client.db.SaveAnswerError;
 import com.feerbox.client.model.Answer;
 import com.feerbox.client.registers.ClientRegister;
 import com.feerbox.client.services.voice.AskQuestion;
+import com.feerbox.client.services.voice.AskRecordAndTranscribe;
 import com.google.gson.JsonObject;
 
 public class AnswerService{
@@ -44,7 +45,7 @@ public class AnswerService{
 		if(ClientRegister.getInstance().getVoiceAnswer()) {
 			if(answer.getButton()==1 || answer.getButton()==2) {
 				logger.debug("Voice active and bad answer, going to reproduce a sound");
-				AskQuestion.main(null);
+				AskRecordAndTranscribe.main(null);
 			}
 		}
 		return id;
