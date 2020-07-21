@@ -94,7 +94,7 @@ public class AskRecordAndTranscribe implements Runnable {
             logger.debug("Ending in: "+Duration.between(start, end).getSeconds());
             
             
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException | InterruptedException  e1) {
+        } catch (Throwable  e1) {
         	logger.error(e1.getMessage(), e1);
         } finally {
         	logger.debug("Finally");
@@ -163,7 +163,17 @@ public class AskRecordAndTranscribe implements Runnable {
 
          // start recording
          logger.debug("Can write? "+wavFile.canWrite());
-         AudioSystem.write(ais, fileType, wavFile);
+         while(ais.available() > 0)
+         {
+        	 if (AudioSystem.isFileTypeSupported(fileType, ais)) 
+             {
+        		 logger.debug("just before"); //test statement
+                 AudioSystem.write(ais, fileType, wavFile);
+                 logger.debug(ais.getFrameLength()); //test statement
+             }
+             logger.debug(fileType); //test statement
+         }
+         //AudioSystem.write(ais, fileType, wavFile);
          logger.debug("sleep");
          Thread.sleep(RECORD_TIME);
          logger.debug("Finished sleep");
