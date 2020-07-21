@@ -9,6 +9,8 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -48,11 +50,23 @@ public class AskRecordAndTranscribe implements Runnable {
  
     // the line from which audio data is captured
     TargetDataLine line;
+    
+    private static Lock lock = new ReentrantLock();
 	
     public static void main(String[] args){
-        Thread t = new Thread(new AskRecordAndTranscribe());
-        t.start();
+    	if (AskRecordAndTranscribe.lock.tryLock())
+        {
+    	try {
+	        Thread t = new Thread(new AskRecordAndTranscribe());
+	        t.start();
+        } catch(Exception e) {
+        	e.printStackTrace();
+        } finally
+        {
+        	AskRecordAndTranscribe.lock.unlock();
+        }
     }   
+   }
 
     @Override
     public void run() {
@@ -65,6 +79,7 @@ public class AskRecordAndTranscribe implements Runnable {
             Clip clip;
             clip = AudioSystem.getClip();
             clip.open(audioIn);
+            logger.debug("Reproducing sound");
             clip.start();
             Thread.sleep(clip.getMicrosecondLength()/1000);
             
@@ -99,7 +114,7 @@ public class AskRecordAndTranscribe implements Runnable {
 		      Path path = Paths.get(fileName);
 		      byte[] data = Files.readAllBytes(path);
 		      ByteString audioBytes = ByteString.copyFrom(data);
-
+		      logger.debug("Start google transcribe");
 		      // Builds the sync recognize request
 		      RecognitionConfig config =
 		          RecognitionConfig.newBuilder()
@@ -121,6 +136,7 @@ public class AskRecordAndTranscribe implements Runnable {
 		        logger.info("Transcription: "+alternative.getTranscript());
 		        //System.out.printf("Transcription: %s%n", alternative.getTranscript());
 		      }
+		      logger.debug("Finish google transcribe");
 		    }
 	}
 
@@ -145,6 +161,7 @@ public class AskRecordAndTranscribe implements Runnable {
 
          // start recording
          AudioSystem.write(ais, fileType, wavFile);
+         logger.debug("Finish recording");
 	}
 	
 	AudioFormat getAudioFormat() {
