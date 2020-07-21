@@ -60,7 +60,7 @@ public class AskRecordAndTranscribe implements Runnable {
 	        Thread t = new Thread(new AskRecordAndTranscribe());
 	        t.start();
         } catch(Exception e) {
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
         } finally
         {
         	AskRecordAndTranscribe.lock.unlock();
@@ -97,7 +97,7 @@ public class AskRecordAndTranscribe implements Runnable {
             logger.debug("Ending in: "+Duration.between(start, end).getSeconds());
             
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException | InterruptedException  e1) {
-            e1.printStackTrace();
+        	logger.error(e1.getMessage(), e1);
         }
     }
 
@@ -140,7 +140,7 @@ public class AskRecordAndTranscribe implements Runnable {
 		    }
 	}
 
-	private void RecordAnswer() throws LineUnavailableException, IOException {
+	private void RecordAnswer() throws LineUnavailableException, IOException, InterruptedException {
 		 AudioFormat format = getAudioFormat();
          DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
 
@@ -161,6 +161,9 @@ public class AskRecordAndTranscribe implements Runnable {
 
          // start recording
          AudioSystem.write(ais, fileType, wavFile);
+         Thread.sleep(RECORD_TIME);
+         line.stop();
+         line.close();
          logger.debug("Finish recording");
 	}
 	
