@@ -40,7 +40,7 @@ import com.google.protobuf.ByteString;
 public class AskRecordAndTranscribe implements Runnable {
 	private final static Logger logger = Logger.getLogger(AskRecordAndTranscribe.class);
 	// record duration, in milliseconds
-    static final long RECORD_TIME = 5000;  // 5 secs
+    static final long RECORD_TIME = 4000;  // 4 secs
  
     // path of the wav file
     File wavFile = new File("RecordAudio.wav");
@@ -59,12 +59,9 @@ public class AskRecordAndTranscribe implements Runnable {
     	try {
 	        Thread t = new Thread(new AskRecordAndTranscribe());
 	        t.start();
-        } catch(Exception e) {
+        } catch(Throwable e) {
         	logger.error(e.getMessage(), e);
-        } finally
-        {
-        	AskRecordAndTranscribe.lock.unlock();
-        }
+        } 
     }   
    }
 
@@ -96,8 +93,12 @@ public class AskRecordAndTranscribe implements Runnable {
             Instant end = Instant.now();
             logger.debug("Ending in: "+Duration.between(start, end).getSeconds());
             
+            
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException | InterruptedException  e1) {
         	logger.error(e1.getMessage(), e1);
+        } finally {
+        	logger.debug("Finally");
+        	AskRecordAndTranscribe.lock.unlock();
         }
     }
 
@@ -150,6 +151,7 @@ public class AskRecordAndTranscribe implements Runnable {
              return;
          }
          line = (TargetDataLine) AudioSystem.getLine(info);
+         logger.debug(line.getLineInfo());
          line.open(format);
          line.start();   // start capturing
 
@@ -160,8 +162,11 @@ public class AskRecordAndTranscribe implements Runnable {
          logger.debug("Start recording...");
 
          // start recording
+         logger.debug("Can write? "+wavFile.canWrite());
          AudioSystem.write(ais, fileType, wavFile);
+         logger.debug("sleep");
          Thread.sleep(RECORD_TIME);
+         logger.debug("Finished sleep");
          line.stop();
          line.close();
          logger.debug("Finish recording");
