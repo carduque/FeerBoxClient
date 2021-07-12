@@ -41,10 +41,9 @@ public class ButtonListenerAndPowerOff implements GpioPinListenerDigital {
 					} catch (IOException e) {
 						logger.debug("IOException", e);
 					}
-        		}
-        		else{
+        		} else {
+        			AudioService.playAnswerSound(buttonNumber);
                     AnswerService.saveAnswer(buttonNumber);
-					AudioService.playAnswerSound(buttonNumber);
         		}
         	}
 		}

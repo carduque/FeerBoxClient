@@ -45,11 +45,8 @@ public class ButtonListenerAndSendStatus implements GpioPinListenerDigital {
         			Led.blink(500, 10000); // continuously blink the led every 1/2 second for 10 seconds
         			StatusRegister status = new StatusRegister(oSExecutor);
 					status.run();
-        		}
-        		else{
-					logger.debug("Button clicked");
+        		} else {
 					AudioService.playAnswerSound(buttonNumber);
-					logger.debug("Save answer");
                     AnswerService.saveAnswer(buttonNumber);
         		}
         	}
