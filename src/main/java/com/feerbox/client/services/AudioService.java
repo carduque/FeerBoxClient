@@ -7,11 +7,12 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
 public class AudioService {
-    protected final static Logger logger = Logger.getLogger(AnswerService.class);
+    protected final static Logger logger = Logger.getLogger(AudioService.class);
 
     public static void playAnswerSound(int buttonNumber) {
         try {
             final CountDownLatch syncLatch = new CountDownLatch(1);
+            logger.debug("Going to play sound");
 
             try {
                 String soundPath = "audios/answer_" + buttonNumber + ".wav";
