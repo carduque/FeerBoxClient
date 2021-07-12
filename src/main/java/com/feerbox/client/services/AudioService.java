@@ -39,11 +39,10 @@ public class AudioService {
             clip.start();
 
             logger.debug("Playing answer " + buttonNumber + " sound (" + soundPath + ")");
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException  e) {
-            logger.debug("Error playing answer sound: " + e.getMessage());
+        } catch (Exception  e) {
+            logger.debug("Error playing answer sound: " + e.getMessage(), e);
+            logger.error("Error playing answer sound: " + e.getMessage(), e);
             e.printStackTrace();
-        } catch (Exception e) {
-            logger.debug("Other error: " + e.getMessage(), e.getCause());
         }
     }
 }
