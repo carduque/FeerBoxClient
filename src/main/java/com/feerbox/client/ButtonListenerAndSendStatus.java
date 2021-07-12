@@ -3,6 +3,7 @@ package com.feerbox.client;
 import java.io.IOException;
 import java.util.Date;
 
+import com.feerbox.client.services.AudioService;
 import org.apache.log4j.Logger;
 
 import com.feerbox.client.oslevel.OSExecutor;
@@ -46,6 +47,7 @@ public class ButtonListenerAndSendStatus implements GpioPinListenerDigital {
 					status.run();
         		}
         		else{
+					AudioService.playAnswerSound(buttonNumber);
                     AnswerService.saveAnswer(buttonNumber);
         		}
         	}

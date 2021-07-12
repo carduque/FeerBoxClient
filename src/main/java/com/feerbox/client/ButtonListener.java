@@ -2,6 +2,7 @@ package com.feerbox.client;
 
 import java.util.Date;
 
+import com.feerbox.client.services.AudioService;
 import org.apache.log4j.Logger;
 
 import com.feerbox.client.services.AnswerService;
@@ -27,6 +28,7 @@ public class ButtonListener implements GpioPinListenerDigital {
 
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
         if(event.getState().equals(PinState.LOW)){
+			AudioService.playAnswerSound(buttonNumber);
             AnswerService.saveAnswer(buttonNumber);
 		}
         if(event.getState().equals(PinState.HIGH)){

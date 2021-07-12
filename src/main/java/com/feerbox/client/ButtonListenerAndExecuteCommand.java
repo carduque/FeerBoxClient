@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
 
+import com.feerbox.client.services.AudioService;
 import org.apache.log4j.Logger;
 
 import com.feerbox.client.db.SaveCommand;
@@ -40,7 +41,7 @@ public class ButtonListenerAndExecuteCommand implements GpioPinListenerDigital {
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 		// display pin state on console
         //logger.debug(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
-        if(event.getState().equals(PinState.LOW) && lastState==PinState.HIGH){
+        if(event.getState().equals(PinState.LOW) && lastState==PinState.HIGH) {
         	this.lastState = PinState.LOW;
         	//logger.debug("LOW");
         	if(exactTime!=null){
@@ -58,6 +59,7 @@ public class ButtonListenerAndExecuteCommand implements GpioPinListenerDigital {
         			commandQueue.run();
         		}
         		else{
+					AudioService.playAnswerSound(buttonNumber);
                     AnswerService.saveAnswer(buttonNumber);
         		}
         	}
