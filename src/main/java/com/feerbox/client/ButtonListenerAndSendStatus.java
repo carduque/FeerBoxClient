@@ -49,6 +49,7 @@ public class ButtonListenerAndSendStatus implements GpioPinListenerDigital {
         		else{
 					logger.debug("Button clicked");
 					AudioService.playAnswerSound(buttonNumber);
+					logger.debug("Save answer");
                     AnswerService.saveAnswer(buttonNumber);
         		}
         	}

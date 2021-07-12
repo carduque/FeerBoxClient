@@ -12,9 +12,11 @@ public class AudioService {
     public static void playAnswerSound(int buttonNumber) {
         try {
             final CountDownLatch syncLatch = new CountDownLatch(1);
-            final String soundPath = "audios/answer_" + buttonNumber + ".wav";
 
-            try (AudioInputStream stream = AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream(soundPath))) {
+            try {
+                String soundPath = "audios/answer_" + buttonNumber + ".wav";
+                AudioInputStream stream = AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream(soundPath));
+
                 final Clip clip = AudioSystem.getClip();
 
                 // Listener which allow method return once sound is completed
@@ -31,10 +33,14 @@ public class AudioService {
                 clip.open(stream);
                 clip.start();
                 logger.debug("Playing answer " + buttonNumber + " sound (" + soundPath + ")");
+            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException  e) {
+                syncLatch.countDown();
+                logger.error("Error playing answer sound: " + e.getMessage());
             }
+
             syncLatch.await();
-        }  catch (UnsupportedAudioFileException | IOException | LineUnavailableException | InterruptedException e) {
-            logger.error("Error playing answer sound: " + e.getMessage());
+        }  catch (InterruptedException e) {
+            logger.error("Error sound sync" + e.getMessage());
         }
     }
 }
