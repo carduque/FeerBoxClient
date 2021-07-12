@@ -12,12 +12,12 @@ public class AudioService {
     public static void playAnswerSound(int buttonNumber) {
         try {
             final CountDownLatch syncLatch = new CountDownLatch(1);
-            logger.debug("Going to play sound");
 
             try {
                 String soundPath = "audios/answer_" + buttonNumber + ".wav";
                 AudioInputStream stream = AudioSystem.getAudioInputStream(ClassLoader.getSystemResourceAsStream(soundPath));
 
+                logger.debug("Going to play sound");
                 final Clip clip = AudioSystem.getClip();
 
                 // Listener which allow method return once sound is completed
@@ -36,7 +36,8 @@ public class AudioService {
                 logger.debug("Playing answer " + buttonNumber + " sound (" + soundPath + ")");
             } catch (UnsupportedAudioFileException | IOException | LineUnavailableException  e) {
                 syncLatch.countDown();
-                logger.error("Error playing answer sound: " + e.getMessage());
+                logger.debug("Error playing answer sound: " + e.getMessage());
+                e.printStackTrace();
             }
 
             syncLatch.await();
