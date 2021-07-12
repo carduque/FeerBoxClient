@@ -16,9 +16,13 @@ public class AudioService {
             logger.debug("Going to play sound - Step 1");
             String soundPath = "audios/answer_" + buttonNumber + ".wav";
 
+            URL url = ClassLoader.getSystemResource(soundPath);
+            logger.debug("URL: " + url.getPath());
+
             logger.debug("Going to play sound - Step 2");
             InputStream inputStream = ClassLoader.getSystemResourceAsStream(soundPath);
 
+            logger.debug("inputStream is null: " + (inputStream == null));
             logger.debug("Going to play sound - Step 3");
             AudioInputStream stream = AudioSystem.getAudioInputStream(inputStream);
 
@@ -40,7 +44,6 @@ public class AudioService {
 
             logger.debug("Playing answer " + buttonNumber + " sound (" + soundPath + ")");
         } catch (Exception  e) {
-            logger.debug("Error playing answer sound: " + e.getMessage(), e);
             logger.error("Error playing answer sound: " + e.getMessage(), e);
             e.printStackTrace();
         }
