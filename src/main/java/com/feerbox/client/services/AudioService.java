@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import javax.sound.sampled.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.concurrent.CountDownLatch;
 
 public class AudioService {
@@ -18,10 +19,10 @@ public class AudioService {
             String soundPath = "audios/answer_" + buttonNumber + ".wav";
 
             logger.debug("Going to play sound - Step 2");
-            InputStream inputStream = ClassLoader.getSystemResourceAsStream(soundPath);
+            URL audioURL = ClassLoader.getSystemResource(soundPath);
 
-            logger.debug("Going to play sound - Step 3");
-            AudioInputStream stream = AudioSystem.getAudioInputStream(inputStream);
+            logger.debug("Going to play sound - Step 3: " + audioURL.getFile());
+            AudioInputStream stream = AudioSystem.getAudioInputStream(audioURL);
 
             logger.debug("Going to play sound - Step 4");
             final Clip clip = AudioSystem.getClip();
