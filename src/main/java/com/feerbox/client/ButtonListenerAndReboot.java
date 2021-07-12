@@ -46,7 +46,6 @@ public class ButtonListenerAndReboot implements GpioPinListenerDigital {
 					}
         		}
         		else{
-
 					AudioService.playAnswerSound(buttonNumber);
                     AnswerService.saveAnswer(buttonNumber);
         		}

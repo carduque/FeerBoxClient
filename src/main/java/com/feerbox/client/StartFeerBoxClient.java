@@ -53,7 +53,7 @@ public class StartFeerBoxClient {
 	private static GpioController gpio = null;
 	
 	public static void main(String args[]) throws InterruptedException {
-        logger.debug("FeerBoxClient Started version "+version);
+        logger.debug("FeerBoxClient Started version "+version + "test");
         if(!windows){
         	oSExecutor = new OSExecutorRaspbian();
         	gpio = GpioFactory.getInstance();
