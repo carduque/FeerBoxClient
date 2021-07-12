@@ -14,7 +14,7 @@ public class AudioService {
     public static void playAnswerSound(int buttonNumber) {
         try {
             logger.debug("Going to play sound - Step 1");
-            String soundPath = "audios/answer_" + buttonNumber + ".wav";
+            String soundPath = "/audios/answer_" + buttonNumber + ".wav";
 
             logger.debug("Going to play sound - Step 2");
             InputStream inputStream = ClassLoader.getSystemResourceAsStream(soundPath);
@@ -43,7 +43,7 @@ public class AudioService {
             logger.debug("Error playing answer sound: " + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            logger.debug("Other error: " + e.getMessage());
+            logger.debug("Other error: " + e.getMessage(), e.getCause());
         }
     }
 }
