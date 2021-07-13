@@ -36,8 +36,8 @@ public class AudioService implements Runnable {
             clip = AudioSystem.getClip();
             clip.open(audioIn);
             clip.start();
-            logger.error("Playing answer file " + url.getFile());
-            Thread.sleep(clip.getMicrosecondLength());
+            logger.debug("Playing sound " + url.getFile());
+            Thread.sleep(clip.getMicrosecondLength() / 1000);
         } catch (Exception  e) {
             logger.error("Error playing answer sound: " + e.getMessage(), e);
         }
