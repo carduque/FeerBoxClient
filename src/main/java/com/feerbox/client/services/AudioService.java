@@ -4,9 +4,12 @@ import org.apache.log4j.Logger;
 
 import javax.sound.sampled.*;
 import java.net.URL;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class AudioService implements Runnable {
     protected final static Logger logger = Logger.getLogger(AudioService.class);
+    private final static Lock lock = new ReentrantLock();
     private String name;
 
     public AudioService(String name) {
@@ -25,18 +28,19 @@ public class AudioService implements Runnable {
 
     @Override
     public void run() {
-        AudioInputStream audioIn;
+        lock.lock();
         try {
             URL url = this.getClass().getClassLoader().getResource("audios/" + name + ".wav");
-            audioIn = AudioSystem.getAudioInputStream(url);
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
             Clip clip;
             clip = AudioSystem.getClip();
             clip.open(audioIn);
             clip.start();
             logger.error("Playing answer file " + url.getFile());
-            Thread.sleep(clip.getMicrosecondLength()/1000);
+            Thread.sleep(clip.getMicrosecondLength());
         } catch (Exception  e) {
             logger.error("Error playing answer sound: " + e.getMessage(), e);
         }
+        lock.unlock();
     }
 }
