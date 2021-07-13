@@ -32,8 +32,16 @@ public class AudioService implements Runnable {
         try {
             URL url = this.getClass().getClassLoader().getResource("audios/" + name + ".wav");
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
-            Clip clip;
+            final Clip clip;
             clip = AudioSystem.getClip();
+            clip.addLineListener(new LineListener() {
+                @Override
+                public void update(LineEvent event) {
+                    if (LineEvent.Type.STOP.equals(event.getType())) {
+                        clip.close();
+                    }
+                }
+            });
             clip.open(audioIn);
             clip.start();
             logger.debug("Playing sound " + url.getFile());
