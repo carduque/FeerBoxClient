@@ -9,6 +9,7 @@ import java.util.Timer;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import com.feerbox.client.registers.*;
 import org.apache.log4j.Logger;
 
 import com.feerbox.client.db.SaveAnswerError;
@@ -16,21 +17,6 @@ import com.feerbox.client.model.Command;
 import com.feerbox.client.oslevel.OSExecutor;
 import com.feerbox.client.oslevel.OSExecutorRaspbian;
 import com.feerbox.client.oslevel.OSExecutorWindows;
-import com.feerbox.client.registers.AliveRegister;
-import com.feerbox.client.registers.CleanerRegister;
-import com.feerbox.client.registers.ClientRegister;
-import com.feerbox.client.registers.CommandExecutor;
-import com.feerbox.client.registers.CommandQueueRegister;
-import com.feerbox.client.registers.CounterPeopleRegister;
-import com.feerbox.client.registers.DataAlertsRegister;
-import com.feerbox.client.registers.InformationServerRegister;
-import com.feerbox.client.registers.MACDetection;
-import com.feerbox.client.registers.MonitorInternetConnectionRegister;
-import com.feerbox.client.registers.NFCReader;
-import com.feerbox.client.registers.RestartEveryDayRegister;
-import com.feerbox.client.registers.StatusRegister;
-import com.feerbox.client.registers.TempSensorRegister;
-import com.feerbox.client.registers.WeatherSensorRegister;
 import com.feerbox.client.services.ButtonService;
 import com.feerbox.client.services.CommandService;
 import com.feerbox.client.services.LedService;
@@ -70,6 +56,7 @@ public class StartFeerBoxClient {
             StartWeatherSensorThread();
             StartWifiDetectionThread();
             //StartTempSensorThread();
+			StartPresenceDetectorThread();
             registerButtonListeners();
             restartEveryDay();
             MonitorInternetConnection();
@@ -235,6 +222,12 @@ public class StartFeerBoxClient {
 		}
 	}
 
+	private static void StartPresenceDetectorThread() {
+		if(ClientRegister.getInstance().getPresenceDetectorEnabled()){
+			PresenceDetectorRegister presenceDetectorRegister = new PresenceDetectorRegister();
+			presenceDetectorRegister.start();
+		}
+	}
 
 	private static void StartLedPower() {
 		if(ClientRegister.getInstance().getLedPowerOn()){

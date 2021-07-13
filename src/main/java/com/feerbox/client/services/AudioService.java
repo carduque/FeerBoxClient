@@ -7,14 +7,19 @@ import java.net.URL;
 
 public class AudioService implements Runnable {
     protected final static Logger logger = Logger.getLogger(AudioService.class);
-    private int buttonNumber;
+    private String name;
 
-    public AudioService(int buttonNumber) {
-        this.buttonNumber = buttonNumber;
+    public AudioService(String name) {
+        this.name = name;
+    }
+
+    public static void playSound(String name) {
+        Thread t = new Thread(new AudioService(name));
+        t.start();
     }
 
     public static void playAnswerSound(int buttonNumber) {
-        Thread t = new Thread(new AudioService(buttonNumber));
+        Thread t = new Thread(new AudioService("answer_" + buttonNumber));
         t.start();
     }
 
@@ -22,7 +27,7 @@ public class AudioService implements Runnable {
     public void run() {
         AudioInputStream audioIn;
         try {
-            URL url = this.getClass().getClassLoader().getResource("audios/answer_" + buttonNumber + ".wav");
+            URL url = this.getClass().getClassLoader().getResource("audios/" + name + ".wav");
             audioIn = AudioSystem.getAudioInputStream(url);
             Clip clip;
             clip = AudioSystem.getClip();
