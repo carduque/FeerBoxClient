@@ -30,7 +30,7 @@ public class AudioService implements Runnable {
     @Override
     public void run() {
         try {
-            File file = new File("/opt/FeerBoxClient/audios");
+            File file = new File("/opt/FeerBoxClient/audios/" + name + ".wav");
 
             URL url;
             if (file.exists()) { // Custom audio
