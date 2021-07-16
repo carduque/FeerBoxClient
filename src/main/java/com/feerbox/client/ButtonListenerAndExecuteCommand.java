@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
 
+import com.feerbox.client.registers.ClientRegister;
 import com.feerbox.client.services.AudioService;
 import org.apache.log4j.Logger;
 
@@ -21,54 +22,54 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
-public class ButtonListenerAndExecuteCommand implements GpioPinListenerDigital {
-	
-	private GpioPinDigitalInput Button = null;
-	private GpioPinDigitalOutput Led = null;
-	private int buttonNumber = 0;
-	private Date exactTime = null;
-	private PinState lastState = PinState.HIGH;
-	protected final OSExecutor oSExecutor;
+public class ButtonListenerAndExecuteCommand extends ButtonListener {
 	final static Logger logger = Logger.getLogger(ButtonListenerAndExecuteCommand.class);
 
+	private PinState lastState = PinState.HIGH;
+	protected final OSExecutor oSExecutor;
+
 	public ButtonListenerAndExecuteCommand(GpioPinDigitalInput button, GpioPinDigitalOutput led, int number, OSExecutor oSExecutor) {
-		Button = button;
-		Led = led;
-		buttonNumber = number;
+		super(button, led, number);
 		this.oSExecutor = oSExecutor;
 	}
 
+	@Override
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 		// display pin state on console
         //logger.debug(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
-        if(event.getState().equals(PinState.LOW) && lastState==PinState.HIGH) {
-        	this.lastState = PinState.LOW;
-        	//logger.debug("LOW");
-        	if(exactTime!=null){
-        		long seconds = (new Date().getTime()-exactTime.getTime())/1000;  //5 seconds
-        		if(seconds>10){
-        			logger.debug("Going to retrieve command and execute it");
-        			Led.blink(500, 10000); // continuously blink the led every 1/2 second for 10 seconds
-        			updateScripts();
-        			CommandQueueRegister commandQueue = new CommandQueueRegister();
-        			commandQueue.run();
-        	        CommandExecutor commandExecutor = new CommandExecutor(oSExecutor);
-        	        commandExecutor.run(); //Just start one next command pending
-        	        //Send information to server
-        	        commandQueue = new CommandQueueRegister();
-        			commandQueue.run();
-        		} else {
-        			AudioService.playAnswerSound(buttonNumber);
-        			AnswerService.saveAnswer(buttonNumber);
-        		}
-        	}
+
+		if (isActive()) {
+			if (event.getState().equals(PinState.LOW) && lastState == PinState.HIGH) {
+				this.lastState = PinState.LOW;
+				//logger.debug("LOW");
+				if (exactTime != null) {
+					long seconds = (new Date().getTime() - exactTime.getTime()) / 1000;  //5 seconds
+					if (seconds > 10) {
+						logger.debug("Going to retrieve command and execute it");
+						Led.blink(500, 10000); // continuously blink the led every 1/2 second for 10 seconds
+						updateScripts();
+						CommandQueueRegister commandQueue = new CommandQueueRegister();
+						commandQueue.run();
+						CommandExecutor commandExecutor = new CommandExecutor(oSExecutor);
+						commandExecutor.run(); //Just start one next command pending
+						//Send information to server
+						commandQueue = new CommandQueueRegister();
+						commandQueue.run();
+					} else {
+						if (ClientRegister.getInstance().getButtonSoundEnabled()) {
+							AudioService.playAnswerSound(buttonNumber);
+						}
+						AnswerService.saveAnswer(buttonNumber);
+					}
+				}
+			}
+			if (event.getState().equals(PinState.HIGH)) {
+				this.exactTime = new Date();
+				this.lastState = PinState.HIGH;
+				//We would like to light led when push
+				Led.pulse(1000, true); // set second argument to 'true' use a blocking call
+			}
 		}
-        if(event.getState().equals(PinState.HIGH)){
-        	this.exactTime = new Date();
-        	this.lastState = PinState.HIGH;
-        	//We would like to light led when push
-        	Led.pulse(1000, true); // set second argument to 'true' use a blocking call
-        }
 	}
 
 	private void updateScripts() {
@@ -93,5 +94,4 @@ public class ButtonListenerAndExecuteCommand implements GpioPinListenerDigital {
 			logger.error("IOException", e);
 		}
 	}
-
 }

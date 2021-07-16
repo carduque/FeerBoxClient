@@ -267,6 +267,26 @@ public class ClientRegister {
 			}
 			logger.info("Property "+key+" added with value "+value);
 		}
+		if(key.equals("button_sound_enabled")){
+			value = "false"; //ms
+			configuration.setProperty(key, value);
+			try {
+				configuration.save();
+			} catch (ConfigurationException e) {
+				logger.error("Storing config file: "+e.getMessage());
+			}
+			logger.info("Property "+key+" added with value "+value);
+		}
+		if(key.equals("button_pause_between_mesurements")){
+			value = "0"; //ms
+			configuration.setProperty(key, value);
+			try {
+				configuration.save();
+			} catch (ConfigurationException e) {
+				logger.error("Storing config file: "+e.getMessage());
+			}
+			logger.info("Property "+key+" added with value "+value);
+		}
 		return value;
 	}
 
@@ -686,6 +706,26 @@ public class ClientRegister {
 		int millis = 0;
 		try {
 			millis = Integer.parseInt(getProperty("presence_detector_pause_between_mesurements"));
+		} catch (NumberFormatException e) {
+			logger.error("NumberFormatException", e);
+		}
+		return millis;
+	}
+
+	public boolean getButtonSoundEnabled() {
+		boolean out = false;
+		try {
+			out = Boolean.parseBoolean(getProperty("button_sound_enabled"));
+		} catch (Exception e) {
+			logger.error("presence_detector_enabled: "+e.getMessage());
+		}
+		return out;
+	}
+
+	public long getButtonPauseBetweenMesurements() {
+		int millis = 0;
+		try {
+			millis = Integer.parseInt(getProperty("button_pause_between_mesurements"));
 		} catch (NumberFormatException e) {
 			logger.error("NumberFormatException", e);
 		}
