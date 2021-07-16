@@ -42,9 +42,6 @@ public class ButtonListenerAndReboot extends ButtonListener {
 							logger.debug("IOException", e);
 						}
 					} else {
-						if (ClientRegister.getInstance().getButtonSoundEnabled()) {
-							AudioService.playAnswerSound(buttonNumber);
-						}
 						AnswerService.saveAnswer(buttonNumber);
 					}
 				}
@@ -54,6 +51,9 @@ public class ButtonListenerAndReboot extends ButtonListener {
 				this.lastState = PinState.HIGH;
 				//We would like to light led when push
 				Led.pulse(1000, true); // set second argument to 'true' use a blocking call
+				if (ClientRegister.getInstance().getButtonSoundEnabled()) {
+					AudioService.playAnswerSound(buttonNumber);
+				}
 			}
 		}
 	}
