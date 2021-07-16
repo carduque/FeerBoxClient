@@ -6,3 +6,7 @@ sudo java -Dsun.security.smartcardio.library=/usr/lib/arm-linux-gnueabihf/libpcs
 disown
 echo $! > /opt/FeerBoxClient/FeerBoxClient/feerbox.pid
 pgrep java > /opt/FeerBoxClient/FeerBoxClient/feerbox2.pid
+
+#Sound config
+amixer set PCM 100%
+amixer cset numid=3 1

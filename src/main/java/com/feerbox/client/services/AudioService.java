@@ -3,13 +3,14 @@ package com.feerbox.client.services;
 import org.apache.log4j.Logger;
 
 import javax.sound.sampled.*;
+import java.io.File;
 import java.net.URL;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class AudioService implements Runnable {
     protected final static Logger logger = Logger.getLogger(AudioService.class);
-    private final static Lock lock = new ReentrantLock();
+    private static Clip clip;
     private String name;
 
     public AudioService(String name) {
@@ -28,12 +29,25 @@ public class AudioService implements Runnable {
 
     @Override
     public void run() {
-        lock.lock();
         try {
-            URL url = this.getClass().getClassLoader().getResource("audios/" + name + ".wav");
+            File file = new File("/opt/FeerBoxClient/audios");
+
+            URL url;
+            if (file.exists()) { // Custom audio
+                url = file.toURI().toURL();
+            } else { // Default audio
+                url = this.getClass().getClassLoader().getResource("audios/" + name + ".wav");
+            }
+
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
-            final Clip clip;
-            clip = AudioSystem.getClip();
+            if (clip == null) {
+                clip = AudioSystem.getClip();
+            }
+            if (clip.isRunning() || clip.isOpen()) {
+                clip.stop();
+                clip.close();
+            }
+
             clip.addLineListener(new LineListener() {
                 @Override
                 public void update(LineEvent event) {
@@ -42,6 +56,7 @@ public class AudioService implements Runnable {
                     }
                 }
             });
+
             clip.open(audioIn);
             clip.start();
             logger.debug("Playing sound " + url.getFile());
@@ -49,6 +64,5 @@ public class AudioService implements Runnable {
         } catch (Exception  e) {
             logger.error("Error playing answer sound: " + e.getMessage(), e);
         }
-        lock.unlock();
     }
 }
