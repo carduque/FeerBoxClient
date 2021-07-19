@@ -34,7 +34,8 @@ public class ButtonListener implements GpioPinListenerDigital {
 		Button = button;
 		Led = led;
 		buttonNumber = number;
-		soundUrl = getSoundUrl();
+		soundUrl = AudioService.getAudioUrl("answer_" + buttonNumber);
+		//soundUrl = getSoundUrl();
 	}
 
 	@Override
@@ -62,7 +63,7 @@ public class ButtonListener implements GpioPinListenerDigital {
 	protected void onClick() {
 		Led.pulse(1000, true); // set second argument to 'true' use a blocking call
 		if (ClientRegister.getInstance().getButtonSoundEnabled()) {
-			AudioService.playAnswerSound(buttonNumber);
+			AudioService.playSound(soundUrl);
 		}
 		AnswerService.saveAnswer(buttonNumber);
 	}

@@ -32,34 +32,40 @@ public class AudioService implements Runnable {
         t.start();
     }
 
-    public static void playAnswerSound(int buttonNumber) {
-        Thread t = new Thread(new AudioService("answer_" + buttonNumber));
-        t.start();
+    public static URL getAudioUrl(String name) {
+        try {
+            File file = new File("/opt/FeerBoxClient/audios/" + name + ".wav");
+            URL url;
+            if (file.exists()) { // Custom audio
+                url = file.toURI().toURL();
+            } else { // Default audio
+                url = AudioService.class.getClassLoader().getResource("audios/" + name + ".wav");
+            }
+            return url;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
     public void run() {
         try {
             if (url == null && name != null) {
-                File file = new File("/opt/FeerBoxClient/audios/" + name + ".wav");
+                getAudioUrl(name);
+            }
 
-                if (file.exists()) { // Custom audio
-                    url = file.toURI().toURL();
-                } else { // Default audio
-                    url = this.getClass().getClassLoader().getResource("audios/" + name + ".wav");
+            if (clip != null) {
+                if (clip.isRunning()) {
+                    clip.stop();
                 }
+                if(clip.isOpen()) {
+                    clip.close();
+                }
+                clip = null;
             }
 
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
-            if (clip == null) {
-                clip = AudioSystem.getClip();
-            }
-            if (clip.isRunning()) {
-                clip.stop();
-            }
-            if(clip.isOpen()) {
-                clip.close();
-            }
+            clip = AudioSystem.getClip();
 
             clip.addLineListener(new LineListener() {
                 @Override
