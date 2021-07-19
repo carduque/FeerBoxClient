@@ -21,7 +21,7 @@ public class ButtonListenerAndPowerOff extends ButtonListener {
 		super(button, led, number);
 	}
 
-	@Override
+	/*@Override
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 		// display pin state on console
         //logger.debug(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
@@ -51,6 +51,16 @@ public class ButtonListenerAndPowerOff extends ButtonListener {
 				}
 			}
 		}
-	}
+	}*/
 
+	@Override
+	protected void onLongClick() {
+		logger.debug("Going to poweroff");
+		Led.blink(500, 10000); // continuously blink the led every 1/2 second for 10 seconds
+		try {
+			Runtime.getRuntime().exec("shutdown -h now");
+		} catch (IOException e) {
+			logger.debug("IOException", e);
+		}
+	}
 }

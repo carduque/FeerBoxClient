@@ -27,7 +27,7 @@ public class ButtonListenerAndSendStatus extends ButtonListener {
 		this.oSExecutor = oSExecutor;
 	}
 
-	@Override
+	/*@Override
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 		// display pin state on console
         //logger.debug(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
@@ -60,5 +60,13 @@ public class ButtonListenerAndSendStatus extends ButtonListener {
 				}
 			}
 		}
+	}*/
+
+	@Override
+	protected void onLongClick() {
+		logger.debug("Going to send status");
+		Led.blink(500, 10000); // continuously blink the led every 1/2 second for 10 seconds
+		StatusRegister status = new StatusRegister(oSExecutor);
+		status.run();
 	}
 }

@@ -1,6 +1,8 @@
 package com.feerbox.client;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.feerbox.client.registers.ClientRegister;
 import com.feerbox.client.services.AudioService;
@@ -16,10 +18,13 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 public class ButtonListener implements GpioPinListenerDigital {
 	final static Logger logger = Logger.getLogger(ButtonListener.class);
 
+	final static ReentrantLock lock = new ReentrantLock();
+	static protected Date exactTime = null;
+
 	protected GpioPinDigitalInput Button = null;
 	protected GpioPinDigitalOutput Led = null;
 	protected int buttonNumber = 0;
-	protected Date exactTime = null;
+
 
 	public ButtonListener(GpioPinDigitalInput button, GpioPinDigitalOutput led, int number) {
 		Button = button;
@@ -29,19 +34,32 @@ public class ButtonListener implements GpioPinListenerDigital {
 
 	@Override
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+		lock.lock();
 		if (isActive()) {
 			if (event.getState().equals(PinState.LOW)) {
-				AnswerService.saveAnswer(buttonNumber);
+				long seconds = (new Date().getTime() - exactTime.getTime()) / 1000;
+				if (seconds > 10) {
+					onLongClick();
+				}
 			}
 			if (event.getState().equals(PinState.HIGH)) {
 				this.exactTime = new Date();
-				//We would like to light led when push
-				Led.pulse(1000, true); // set second argument to 'true' use a blocking call
-				if (ClientRegister.getInstance().getButtonSoundEnabled()) {
-					AudioService.playAnswerSound(buttonNumber);
-				}
+				onClick();
 			}
 		}
+		lock.unlock();
+	}
+
+	protected void onClick() {
+		Led.pulse(1000, true); // set second argument to 'true' use a blocking call
+		if (ClientRegister.getInstance().getButtonSoundEnabled()) {
+			AudioService.playAnswerSound(buttonNumber);
+		}
+		AnswerService.saveAnswer(buttonNumber);
+	}
+
+	protected void onLongClick() {
+
 	}
 
 	protected boolean isActive() {

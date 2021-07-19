@@ -33,7 +33,7 @@ public class ButtonListenerAndExecuteCommand extends ButtonListener {
 		this.oSExecutor = oSExecutor;
 	}
 
-	@Override
+	/*@Override
 	public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 		// display pin state on console
         //logger.debug(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
@@ -70,6 +70,20 @@ public class ButtonListenerAndExecuteCommand extends ButtonListener {
 				}
 			}
 		}
+	}*/
+
+	@Override
+	protected void onLongClick() {
+		logger.debug("Going to retrieve command and execute it");
+		Led.blink(500, 10000); // continuously blink the led every 1/2 second for 10 seconds
+		updateScripts();
+		CommandQueueRegister commandQueue = new CommandQueueRegister();
+		commandQueue.run();
+		CommandExecutor commandExecutor = new CommandExecutor(oSExecutor);
+		commandExecutor.run(); //Just start one next command pending
+		//Send information to server
+		commandQueue = new CommandQueueRegister();
+		commandQueue.run();
 	}
 
 	private void updateScripts() {
