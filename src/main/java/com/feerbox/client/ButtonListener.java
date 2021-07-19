@@ -1,5 +1,7 @@
 package com.feerbox.client;
 
+import java.io.File;
+import java.net.URL;
 import java.util.Date;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -25,12 +27,14 @@ public class ButtonListener implements GpioPinListenerDigital {
 	protected GpioPinDigitalInput Button = null;
 	protected GpioPinDigitalOutput Led = null;
 	protected int buttonNumber = 0;
+	protected URL soundUrl = null;
 
 
 	public ButtonListener(GpioPinDigitalInput button, GpioPinDigitalOutput led, int number) {
 		Button = button;
 		Led = led;
 		buttonNumber = number;
+		soundUrl = getSoundUrl();
 	}
 
 	@Override
@@ -82,5 +86,21 @@ public class ButtonListener implements GpioPinListenerDigital {
 		}
 
 		return false;
+	}
+
+	protected URL getSoundUrl() {
+		try {
+			File file = new File("/opt/FeerBoxClient/audios/answer_" + buttonNumber + ".wav");
+
+			URL url;
+			if (file.exists()) { // Custom audio
+				url = file.toURI().toURL();
+			} else { // Default audio
+				url = this.getClass().getClassLoader().getResource("audios/answer_" + buttonNumber + ".wav");
+			}
+			return url;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }
