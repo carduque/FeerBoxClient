@@ -35,7 +35,6 @@ public class ButtonListener implements GpioPinListenerDigital {
 		Led = led;
 		buttonNumber = number;
 		soundUrl = AudioService.getAudioUrl("answer_" + buttonNumber);
-		//soundUrl = getSoundUrl();
 	}
 
 	@Override
@@ -87,21 +86,5 @@ public class ButtonListener implements GpioPinListenerDigital {
 		}
 
 		return false;
-	}
-
-	protected URL getSoundUrl() {
-		try {
-			File file = new File("/opt/FeerBoxClient/audios/answer_" + buttonNumber + ".wav");
-
-			URL url;
-			if (file.exists()) { // Custom audio
-				url = file.toURI().toURL();
-			} else { // Default audio
-				url = this.getClass().getClassLoader().getResource("audios/answer_" + buttonNumber + ".wav");
-			}
-			return url;
-		} catch (Exception e) {
-			return null;
-		}
 	}
 }

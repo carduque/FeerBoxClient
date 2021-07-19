@@ -42,12 +42,12 @@ public class AnswerService{
 		id = SaveAnswer.save(answer);
 		if(id==0) return null;
 		ClientRegister.getInstance().setLastAnswerSaved(date);
-		if(ClientRegister.getInstance().getVoiceAnswer()) {
+		/*if(ClientRegister.getInstance().getVoiceAnswer()) {
 			//if(answer.getButton()==1 || answer.getButton()==2) {
 				logger.debug("Voice active and bad answer, going to reproduce a sound");
 				AskRecordAndTranscribe.main(null);
 			//}
-		}
+		}*/
 		return id;
 	}
 
