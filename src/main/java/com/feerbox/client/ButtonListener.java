@@ -1,6 +1,5 @@
 package com.feerbox.client;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -19,7 +18,9 @@ public class ButtonListener implements GpioPinListenerDigital {
 	final static Logger logger = Logger.getLogger(ButtonListener.class);
 
 	final static ReentrantLock lock = new ReentrantLock();
-	static protected Date exactTime = null;
+
+	protected static Date exactTime = null;
+	protected static PinState lastState = null;
 
 	protected GpioPinDigitalInput Button = null;
 	protected GpioPinDigitalOutput Led = null;
@@ -37,13 +38,17 @@ public class ButtonListener implements GpioPinListenerDigital {
 		lock.lock();
 		if (isActive()) {
 			if (event.getState().equals(PinState.LOW)) {
-				long seconds = (new Date().getTime() - exactTime.getTime()) / 1000;
-				if (seconds > 10) {
-					onLongClick();
+				this.lastState = PinState.LOW;
+				if (exactTime != null) {
+					long seconds = (new Date().getTime() - exactTime.getTime()) / 1000;
+					if (seconds > 10) {
+						onLongClick();
+					}
 				}
 			}
 			if (event.getState().equals(PinState.HIGH)) {
 				this.exactTime = new Date();
+				this.lastState = PinState.HIGH;
 				onClick();
 			}
 		}
@@ -59,7 +64,7 @@ public class ButtonListener implements GpioPinListenerDigital {
 	}
 
 	protected void onLongClick() {
-
+		// Overridable in custom listeners
 	}
 
 	protected boolean isActive() {
