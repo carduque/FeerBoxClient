@@ -43,6 +43,7 @@ public class AudioService implements Runnable {
             }
             return url;
         } catch (Exception e) {
+            logger.error("Error getting audio URL: " + e.getMessage(), e);
             return null;
         }
     }
@@ -53,6 +54,8 @@ public class AudioService implements Runnable {
             if (url == null && name != null) {
                 getAudioUrl(name);
             }
+
+            if (url == null) return;
 
             if (clip != null) {
                 if (clip.isRunning()) {
