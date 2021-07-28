@@ -37,9 +37,13 @@ public class AudioService implements Runnable {
             File file = new File("/opt/FeerBoxClient/audios/" + name + ".wav");
             URL url;
             if (file.exists()) { // Custom audio
+                logger.debug("Trying to get custom audio file " + name);
                 url = file.toURI().toURL();
+                logger.debug("Custom audio file found: " + url.getFile());
             } else { // Default audio
+                logger.debug("Trying to get default audio file " + name);
                 url = AudioService.class.getClassLoader().getResource("audios/" + name + ".wav");
+                logger.debug("Default audio file found: " + url.getFile());
             }
             return url;
         } catch (Exception e) {
@@ -56,7 +60,7 @@ public class AudioService implements Runnable {
             }
 
             if (url == null) {
-                logger.error("Error URL not found");
+                logger.error("Error audio file not found");
                 return;
             }
 
