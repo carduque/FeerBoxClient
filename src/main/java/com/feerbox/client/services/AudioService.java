@@ -55,7 +55,10 @@ public class AudioService implements Runnable {
                 getAudioUrl(name);
             }
 
-            if (url == null) return;
+            if (url == null) {
+                logger.error("Error URL not found");
+                return;
+            }
 
             if (clip != null) {
                 if (clip.isRunning()) {

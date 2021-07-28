@@ -35,15 +35,13 @@ public class PresenceDetectorRegister extends Thread {
 
 	// create and register gpio pin listener
 	private void RegisterPIRListener() {
-		logger.debug("Register PIR PresenceDetector");
-
 		this.pirPin.addListener(new GpioPinListenerDigital() {
 			@Override       
 		    public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {        
 
 		        if(event.getState().isHigh()){
 		        	if(lastPIRDetection != 0 && ((new Date().getTime() - lastPIRDetection) > pauseBetween)) {
-						logger.debug("Register PIR PresenceDetector");
+						logger.debug("Presence detected");
 						AudioService.playSound("welcome");
 		        	}
 		        	lastPIRDetection = new Date().getTime();
