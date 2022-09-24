@@ -354,6 +354,11 @@ public class ClientRegister {
 		return environment;
 	}
 
+	public String getEnvironmentQrs() {
+		this.environment = getProperty("environment-qrs");
+		return environment;
+	}
+
 	public void setLastAnswerSaved(Date date) {
 		this.lastAnswerSaved = date;
 	}
