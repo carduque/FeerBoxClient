@@ -56,23 +56,20 @@ public class AnswerService{
 		HttpURLConnection conn = null;
 		OutputStream os = null;
 		try {
-			//URL myURL = new URL(ClientRegister.getInstance().getEnvironment() + "/answer/add");
-
-			URL myURL = new URL(ClientRegister.getInstance().getEnvironmentQrs() + "/api/v1/answer");
-
+			URL myURL = new URL(ClientRegister.getInstance().getEnvironment()+"/answer/add");
 			conn = (HttpURLConnection) myURL.openConnection();
 			conn.setRequestProperty("Content-Length", "1000");
 			conn.setRequestProperty("Content-Type", "application/json");
 			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
-
+			//String json = "{\"button\":\""+answer.getButton()+"\",\"reference\":\""+answer.getReference()+"\", \"time\":\""+answer.getTimeText()+"\"}";
 			JsonObject json = answerToJson(answer);
 			
 			os = conn.getOutputStream();
 			os.write(json.toString().getBytes());
 			os.flush();
 
-			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED && conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
 				logger.info("Failed : HTTP error code : "+ conn.getResponseCode());
 				ok = false;
 				//SaveAnswer.save(answer);
@@ -100,14 +97,9 @@ public class AnswerService{
 	
 	protected static JsonObject answerToJson(Answer answer) {
 		JsonObject json = new JsonObject();
-		/*json.addProperty("button", answer.getButton());
+		json.addProperty("button", answer.getButton());
 		json.addProperty("time", answer.getTimeFormatted());
-		json.addProperty("feerBoxReference", answer.getReference());*/
-
-		json.addProperty("datetime", answer.getTimeFormatted());
-		json.addProperty("deviceId", answer.getReference());
-		json.addProperty("value", answer.getButton());
-
+		json.addProperty("feerBoxReference", answer.getReference());
 		return json;
 	}
 	
