@@ -94,7 +94,9 @@ public class StatusRegister extends Register {
 				conn.setRequestMethod("POST");
 				//String json = "{\"button\":\""+answer.getButton()+"\",\"reference\":\""+answer.getReference()+"\", \"time\":\""+answer.getTimeText()+"\"}";
 				JsonObject json = statusToJson(status);
-				
+
+				logger.debug("Going to send status: " + json.toString());
+
 				os = conn.getOutputStream();
 				os.write(json.toString().getBytes());
 				os.flush();
